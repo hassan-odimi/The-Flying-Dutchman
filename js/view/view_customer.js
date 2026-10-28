@@ -90,7 +90,7 @@ var ecologic= ["Ecologic",
                 "Tree Hugga'"
 ];
 
-var specials= ["specials",
+var specials= ["Specials",
                 "Särskild",
                 "Speciali",
                 "Especiales",
@@ -153,3 +153,10 @@ var message_placed_order = ["Your order has been placed! Direct to the counter a
                     "Yer order has been placed! Direct t' th' counter 'n pay fer yer order afore ye can pick up yer drinks."         
                    ];
 
+
+// Accessible name of the small-screen category menu button
+var drink_categories = ["Drink categories",
+                        "Dryckeskategorier",
+                        "Categorie di bevande",
+                        "Categorías de bebidas",
+                        "Kinds o' Grog"];

@@ -42,7 +42,7 @@
       "refersTo": "button-primary",
       "description": "Brass Doubloon main action, such as Place Order.",
       "html": "<button class=\"ds-btn-primary\">Place Order</button>",
-      "css": ".ds-btn-primary { background: linear-gradient(#aa8139, #84642b); color: #000; font-family: 'Oswald', sans-serif; font-size: 1.25rem; padding: 10px 24px; border: 0; border-radius: 5px; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); cursor: pointer; } .ds-btn-primary:hover { filter: brightness(1.08); } .ds-btn-primary:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }"
+      "css": ".ds-btn-primary { background: linear-gradient(#926e30, #84642b); color: #fff; font-family: 'Oswald', sans-serif; font-size: 1.25rem; padding: 10px 24px; border: 0; border-radius: 5px; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); cursor: pointer; } .ds-btn-primary:hover { filter: brightness(1.08); } .ds-btn-primary:focus-visible { outline: 3px solid #fff; box-shadow: 0 0 0 6px #000; }"
     },
     {
       "name": "Danger Button",
@@ -50,7 +50,7 @@
       "refersTo": "button-danger",
       "description": "Rum Red exit or destructive action, such as Log Out.",
       "html": "<button class=\"ds-btn-danger\">Log Out</button>",
-      "css": ".ds-btn-danger { background: linear-gradient(#ad2535, #8e1f2c); color: #000; font-family: 'Oswald', sans-serif; font-size: 1.25rem; padding: 10px 24px; border: 0; border-radius: 5px; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); cursor: pointer; } .ds-btn-danger:hover { filter: brightness(1.08); } .ds-btn-danger:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }"
+      "css": ".ds-btn-danger { background: linear-gradient(#ad2535, #8e1f2c); color: #fff; font-family: 'Oswald', sans-serif; font-size: 1.25rem; padding: 10px 24px; border: 0; border-radius: 5px; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); cursor: pointer; } .ds-btn-danger:hover { filter: brightness(1.08); } .ds-btn-danger:focus-visible { outline: 3px solid #fff; box-shadow: 0 0 0 6px #000; }"
     },
     {
       "name": "Landing Button",
@@ -58,7 +58,7 @@
       "refersTo": "button-landing",
       "description": "Dark green landing-page call to action.",
       "html": "<button class=\"ds-btn-landing\">Order your Drinks!</button>",
-      "css": ".ds-btn-landing { background: linear-gradient(#254540, #0c2924); color: #fff; font-family: 'Oswald', sans-serif; padding: 10px 32px; border: thin solid #000; border-radius: 7px; box-shadow: 2px 2px 10px black, -2px -2px 10px black; cursor: pointer; } .ds-btn-landing:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }"
+      "css": ".ds-btn-landing { background: linear-gradient(#254540, #0c2924); color: #fff; font-family: 'Oswald', sans-serif; padding: 10px 32px; border: thin solid #000; border-radius: 7px; box-shadow: 2px 2px 10px black, -2px -2px 10px black; cursor: pointer; } .ds-btn-landing:focus-visible { outline: 3px solid #fff; box-shadow: 0 0 0 6px #000; }"
     },
     {
       "name": "Category Tabs",
@@ -66,7 +66,7 @@
       "refersTo": "tab-active",
       "description": "Drink category tabs; active joins the panel below.",
       "html": "<div class=\"ds-tabs\"><button class=\"ds-tab ds-tab-active\">All</button><button class=\"ds-tab\">Beers</button><button class=\"ds-tab\">Wines</button></div>",
-      "css": ".ds-tabs { display: flex; gap: 4px; } .ds-tab { background: #567973; color: #000; font-family: 'Oswald', sans-serif; padding: 3px 16px; border: 0; border-radius: 10px 10px 0 0; box-shadow: 2px -2px 10px black, 2px 0 10px black; cursor: pointer; } .ds-tab-active { background: #a4b9b6; } .ds-tab:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }"
+      "css": ".ds-tabs { display: flex; gap: 4px; } .ds-tab { background: #5e817b; color: #000; font-family: 'Oswald', sans-serif; padding: 3px 16px; border: 0; border-radius: 10px 10px 0 0; box-shadow: 2px -2px 10px black, 2px 0 10px black; cursor: pointer; } .ds-tab-active { background: #a4b9b6; } .ds-tab:focus-visible { outline: 3px solid #fff; box-shadow: 0 0 0 6px #000; }"
     },
     {
       "name": "Drink Card",

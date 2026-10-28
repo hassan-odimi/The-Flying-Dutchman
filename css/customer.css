@@ -44,6 +44,15 @@ header h2 {
     display: inline-block;
 }
 
+/* credit line keeps the look of the old h2 pair */
+.credit {
+    display: inline-block;
+    margin: 0.83em 0 0.83em 3%;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #96b9a5;
+}
+
 .title {
  /*   background-color: #0A2521;*/
     float: left;
@@ -51,7 +60,7 @@ header h2 {
 }
 
 .info {
-    background-color: #797979;
+    background-color: #767676;
     position: absolute;
     top: 0px;
     right: 50px;
@@ -75,26 +84,31 @@ header h2 {
     list-style-type: none;
 }
 
-.menu a li {
+.menu li {
+    float: left;
+    margin-right:1.5%;
+    width: 11%;
+}
+
+.menu li button {
     display: block;
-    background-color: #567973;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #5e817b; /* black text 4.90:1 */
 
     text-align: center;
 
-    float: left;
-    margin-right:1.5%;
     padding:3px;
-    width: 11%;
     height: 30%;
     border: solid;
-    border-color: #567973;
+    border-color: #5e817b;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     box-shadow: 2px -2px 10px black, 2px 0 10px black;
 
 }
 
-.menu a:hover li {
+.menu li button:hover {
     background-color: #D6DDDC;
     border: solid;
     border-color: #D6DDDC;
@@ -293,6 +307,8 @@ header h2 {
 
 footer .small_button{
     float: left;
+    width: auto; /* hug the label so the undo/redo words fit beside the flags */
+    padding: 0.8% 24px;
     height: 50%;
     border: solid;
     border-radius: 5px;
@@ -319,10 +335,7 @@ body {
     text-align: center;
 }
 .welcome{
-    display: inline;
-    width: 50%;
-    margin-left: 35%;
-    margin-right: 35%;
+    display: block; /* one centred line; the old inline box pushed the credit below the clipped header */
     text-align:center;
 }
 
@@ -360,7 +373,8 @@ body {
     border-color: #3240ff;
 }
 
-.dropdown-content a {
+.dropdown-content button {
+    width: 100%;
     color: black;
     padding: 12px 16px;
     text-decoration: none;
@@ -368,11 +382,12 @@ body {
     border-bottom: solid;
 }
 
-.dropdown ul a:hover{
+.dropdown ul button:hover{
     background-color: lightgrey;
 }
 
-.dropdown:hover .dropdown-content {
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content {
      display: block;
  }
 
@@ -459,14 +474,14 @@ body {
         border-color: black;
 
     }
-    div.drink{
+    button.drink{
         display: inline;
         width: 91%;
         height: 25%;
         text-align: center;
         
     }
-    div.drink img{
+    button.drink img{
         display: flex;
         width:  auto;
         height: 85%;
@@ -474,7 +489,7 @@ body {
         float: left;
 
     }
-    h4{
+    h4, .drink .h4{
         display: inline-block;
         margin: 2%;
         margin-top: 20%;
@@ -556,10 +571,10 @@ body {
         display: inline-block;
 
     }
-    div.log_button{
+    button.log_button{
         display: inline-block;
     }
-    div.pay_button{
+    button.pay_button{
         display: inline-block;
     }
     

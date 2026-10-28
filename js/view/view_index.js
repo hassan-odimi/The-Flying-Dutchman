@@ -19,7 +19,7 @@
 */
 
 var welcome = ["Welcome to The Flying Dutchman!",
-               "Välkommen til Flygande Holländaren!",
+               "Välkommen till Flygande Holländaren!",
                "Benvenuti al'Olandese Volante!",
                "Bienvenidos al Holandés Volador!",
                "Ahoy t' Th' Flyin' Dutchman!"];
@@ -60,3 +60,15 @@ var login = ["Login",
              "Iniciar sesión",
              "Login"];
 
+
+var close_label = ["Close",
+                   "Stäng",
+                   "Chiudi",
+                   "Cerrar",
+                   "Batten down"];
+
+var logo_alt = ["The Flying Dutchman",
+                "Flygande Holländaren",
+                "L'Olandese Volante",
+                "El Holandés Volador",
+                "Th' Flyin' Dutchman"];

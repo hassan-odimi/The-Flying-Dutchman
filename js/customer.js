@@ -102,12 +102,12 @@ $(document).ready(function() {
     });
 
     $(document).on('click','#undo',function() {
-        var article_id = $(this).find('span').html();
         undo();
+        announce(undo_label[lang()] + ". " + $("#total").text());
     });
     $(document).on('click','#redo',function() {
-        var article_id = $(this).find('span').html();
         redo();
+        announce(redo_label[lang()] + ". " + $("#total").text());
     });
 
     $(document).on('click','#pay',function() {
@@ -130,8 +130,8 @@ $(document).ready(function() {
                 $('#cre').html( $('#cre').html() - total);
                 newOrder.paid = true;  // mark transaction as paid
                 newOrder.bartender_id = "VIP Self-Service";
-                alert(message_payed_order[localStorage.getItem("index")]);
-            } else { alert(message_placed_order[localStorage.getItem("index")]); }
+                showToast(message_payed_order[lang()]);
+            } else { showToast(message_placed_order[lang()]); }
 
             SESSIONS_TRANSACTIONS.push(newOrder);
 
@@ -157,11 +157,11 @@ $(document).ready(function() {
             // Clear all fields
             resetPage();
 
-        } else { alert(message_empty_order[localStorage.getItem("index")]); }
+        } else { showToast(message_empty_order[lang()], true); }
     });
 
     $(document).on('click','.drink',function(){
-        var article_id = $(this).find('span').html();
+        var article_id = $(this).find('span[hidden]').html();
         addOrder(article_id);
         
         updateStock(article_id, -1);  // update SESSION_STOCK_INFO accordingly
@@ -169,6 +169,7 @@ $(document).ready(function() {
         //Undo-Redo
         pushOrderTo(done); // update done stack
         clearUndone();     // clear undone stack after a 'proper' action
+        announceOrder(article_id, msg_added[lang()]);
     });
 
     $(document).on('click','.delete',function(){
@@ -185,6 +186,7 @@ $(document).ready(function() {
         order.splice(i, 1); // remove both order and quantity (same index)
         quantity.splice(i, 1);
 
+        announceOrder(article_id, msg_removed[lang()]);
         $(this).closest('.order').remove(); // remove from DOM       
         
         //Undo-Redo
@@ -221,6 +223,7 @@ function printToDOM (element) {
 
     var stock_message = "";
     var classes = "";
+    var disabled = "";
 
     if (checkStock(element.article_id) < 10) {  // low items
         stock_message = "<br> <b class='textRed'>LOW STOCK!</b>";
@@ -229,15 +232,16 @@ function printToDOM (element) {
     if (checkStock(element.article_id) < 1) {  // out of stock
         stock_message = "<br><b class='textRed alert'>OUT OF STOCK</b>";
         classes = " fade";
+        disabled = " disabled";
     }
 
     $("#drink_database").append(
-        '<div class="drink' + classes + '">' +
-        '<h4>' + element.name + '</h4>' +
-        '<img  src="img/drinks/' + element.article_id + '.png">' +
-        '<h4>SEK ' + parseInt(element.sale_price) + ':- ' +  stock_message +'</h4>' +
+        '<button type="button" class="drink' + classes + '"' + disabled + '>' +
+        '<span class="h4">' + element.name + '</span>' +
+        '<img  src="img/drinks/' + element.article_id + '.png" alt="">' +
+        '<span class="h4">SEK ' + parseInt(element.sale_price) + ':- ' +  stock_message +'</span>' +
         '<span hidden>' + element.article_id + '</span>' +
-        '</div>');
+        '</button>');
 }
 
 function addOrder (article_id) {
@@ -249,11 +253,11 @@ function addOrder (article_id) {
             if (this.article_id == article_id){ // retrieve article from the database
                 $("#drink_selection").prepend(
                     '<div class="order " id="'+ this.article_id +'">' +
-                    '<a class="delete">X</a>' +
+                    '<button type="button" class="delete" aria-labelledby="remove_word name' + this.article_id + '">X</button>' +
                     '<h4 class="price">SEK <span class="hidden_price">' + parseInt(this.sale_price) + '</span>:-</h4>' +
                     '<span class="sum" hidden>' + this.sale_price + '</span>' +
-                    '<img src="img/drinks/' + this.article_id + '.png">' +
-                    '<h4>' + this.name + '<span class="quantity textRed"></span></h4>' +
+                    '<img src="img/drinks/' + this.article_id + '.png" alt="">' +
+                    '<h4 id="name' + this.article_id + '">' + this.name + '<span class="quantity textRed"></span></h4>' +
                     '</div>'
                 )
                 total += parseInt(this.sale_price);
@@ -302,6 +306,7 @@ function formatDate (date) {
 /*ALL UNDO/REDO FUNCTIONS*/
 
 function undo() {
+    if (done.length <= 1) return; // keyboard can reach a faded button
     currentOrder = done.pop();
     previousOrder = done.pop();
 
@@ -318,6 +323,7 @@ function undo() {
 }
 
 function redo() {
+    if (undone.length < 1) return;
     undoneOrder = undone.pop();
 
     // change current order and update undo/redo stacks
@@ -426,12 +432,14 @@ function highlightTab(new_tab) {
     // reset previous tab display
     previous_tab = '*#' + current_tab;
     $(previous_tab).css("background", "");
-    $(previous_tab).css("border-color", "#567973");
+    $(previous_tab).css("border-color", "#5e817b");
     $(previous_tab + 's').css("background", "");   // ugly solution...
-    $(previous_tab + 's').css("border-color", "#567973"); 
+    $(previous_tab + 's').css("border-color", "#5e817b"); 
     // highlight current tab
     $(new_tab).css("background", "#A4B9B6");   
     $(new_tab).css("border-color", "#A4B9B6");
+    $(".menu_tabs button, .dropdown-content button").attr("aria-pressed", "false");
+    $(new_tab).attr("aria-pressed", "true");
 }
 
 function translate (index) {
@@ -453,4 +461,6 @@ function translate (index) {
     $("*#pay").text(pl_order[index]);
     $("#hello").text(hello[index]);		
     $("#your_credit").text(your_credit[index]);		
+    $("#drink_database").attr("aria-label", drinks_region[index]);
+    $("#menu_toggle").attr("aria-label", drink_categories[index]);
 }

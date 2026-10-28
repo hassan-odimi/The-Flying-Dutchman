@@ -65,3 +65,70 @@ Tools:
 - **Button text:** white labels on Rum Red and Brass. White on the current brass top (`#aa8139`) is only 3.55:1, so the brass gradient top darkens to `#926e30` (4.67:1). The bottom (`#84642b`, 5.47:1) and Rum Red (6.79 to 8.81:1) pass as they are.
 - **Drink images:** `alt=""`. The image is decorative because the drink name sits beside it.
 - **Feedback:** a transitions-dev toast plus one `aria-live` region replaces every `alert()`. Login errors also appear inline under the form.
+
+## After Phase 2 (2026-10-28)
+
+Same setup as the baseline: axe-core 4.10.2 from cdnjs, tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`, viewport 1280x800, `test` demo login, `dutchman` launch config. Each view was scanned twice: at rest, and in use (an order built, undo pressed so undo and redo are both enabled, and a toast open). Index was also scanned with a login error showing.
+
+| View | Rules failed (before → after) | Elements affected (before → after) | Needs review (before → after) |
+|------|-------------------------------|------------------------------------|-------------------------------|
+| index | 2 → 0 | 11 → 0 | 6 → 6 (10 with the login error showing) |
+| customer | 6 → 0 | 116 → 0 | 22 → 6 (8 in use) |
+| bartender | 5 → 0 | 117 → 0 | 2 → 2 |
+| management | 6 → 0 | 343 → 0 | 139 → 10 |
+
+Violations after each finding group (elements affected):
+
+| View | Baseline | 1. Keyboard | 2. Names | 3. Contrast | 4. Feedback |
+|------|----------|-------------|----------|-------------|-------------|
+| index | 11 | 11 | 0 | 0 | 0 |
+| customer | 116 | 106 | 12 | 0 | 0 |
+| bartender | 117 | 113 | 11 | 0 | 0 |
+| management | 343 | 337 | 134 | 0 | 0 |
+
+The index pages were not converted in group 1, so its count only dropped in group 2. The +1 colour-contrast element on bartender after group 1 came from a test order (one more red "ORDER PAID" label), not from a regression.
+
+### What the remaining "needs review" items are
+
+axe cannot compute contrast for text over a background image or a gradient, so it reports these items for a person to check:
+- White display text on the wood or storm photos (greetings, page titles, staff badge). This follows the DESIGN.md rule of Sail White on wood. It has the same limit as the 2018 version on the lightest planks.
+- Brass and Rum Red gradient buttons. Checked by hand: white is 4.67:1 at the top of the brass gradient and 5.47:1 at the bottom, and 6.79:1 to 8.81:1 on Rum Red.
+- Management drink details on the semi-transparent card. Black on about `#f6f8f8`, well above 4.5:1.
+
+### Findings 1 to 9
+
+1. **Keyboard:** fixed. Drinks, category tabs, remove, Log Out, Place Order, Cancel and Mark as Paid, Add +1/+10/+100, undo/redo, and the index launchers (Order your Drinks, staff logins, About, Get the passwords, close) are now native `<button>` elements. A full order and a full login were completed with the keyboard alone. The small-screen category menu also opens on keyboard focus.
+2. **Drink images:** fixed with `alt=""`. The index logo is named in all 5 languages.
+3. **Button contrast:** fixed with white labels; the brass top is now `#926e30`.
+4. **Flags and undo/redo:** flags are named with their own-language names ("Svenska") and `lang`, and the active flag has `aria-current`. Undo and Redo are buttons named in 5 languages, with `aria-disabled` while faded. The word is visible from 1250 px up.
+5. **Feedback:** fixed. All 10 `alert()` calls are replaced. There is one polite live region and one transitions-dev toast. Add, remove, undo and redo are announced with the new total.
+6. **Login labels:** fixed with `<label for>`. Errors appear inline under the form, mark the wrong field `aria-invalid`, and shake it (no shake under reduced motion).
+7. **Drink list scrolling:** the list is focusable and named as a region in 5 languages.
+8. **Focus:** one two-tone ring (white outline plus black halo), at least 4.58:1 on any surface.
+9. **Bartender hover:** fixed with Deep Kelp and a white label, 10.48:1.
+
+### Fixed along the way
+- P2 #10, broken list markup: fixed, because tabs are now `<li><button>`.
+- Bartender accordion: each page click added another listener, so from the third click on, an order panel would not open. Replaced with one delegated handler that also sets `aria-expanded`.
+- Bartender Cancel Order: the DOM traversal no longer matched once the buttons changed, so the code now uses `closest('.panel')`.
+- Out-of-stock drinks are `disabled`, so the keyboard cannot order them either.
+- Undo and redo ignore presses while faded. Before this, a keyboard press on an empty stack threw an error.
+- Index now loads Font Awesome, which the error and toast icons need.
+
+### P2 findings, closed before the Phase 2 commit
+11. **Reduced motion:** the old About and Passwords slide-out and the bartender accordion are now still under `prefers-reduced-motion`. The toast and the login shake already were.
+12. **`lang`:** `<html lang>` follows the chosen language (en, sv, it, es; Pirate uses en).
+13. **Data glitches:** management leaves out Volume and Cost per Liter when the database has no value, instead of printing "null". The customer credit was in the data all along (400 for `test`): an inline `.welcome` box started 35% in, so the number wrapped below the header, which clips its overflow. The greeting is now one centred line.
+14. **Console error on index:** `checkAccess()` no longer calls `.slice` on a missing id, and the user lookup stops when nobody is logged in. Index loads with no console errors.
+15. **Management layout:** at 1024 px and up, the order column sits right of the drink list, as in the customer view. At 1280x800, Place Stock Order is at y 720 (was 1455). Below 1024 px it stacks as before.
+16. **Copy:** "Välkommen till". "Acces Denied" was already replaced by the translated access-denied toast.
+17. **Flat type hierarchy:** a detector false positive. The rendered sizes are title 32 px, "Your Order" 24 px and body 16 px; the static detector does not apply the CSS cascade. No change.
+
+### Also closed
+- **Place Stock Order** clears the order in place (no reload). Focus stays on the button, the open tab reprints with the new stock count, and the toast shows at once. The old `resetPage()` used the wrong variable (`total`) and a function management does not have (`copyStock`); both are fixed.
+- **Accessibility-tree walkthrough** (in the browser, customer, bartender and index). Names, roles and states are correct, and hidden mobile duplicates are out of the tree. It found the customer greeting split into five headings ("Hello", "John", "!", "Your credit is", "400"); it is now one `h1` plus one line, with no visual change. It also found the English tab text "specials" in lowercase, now "Specials".
+- **Pirate-flag drag:** checked with synthetic drag events. The drag carries `pirateFlag`, the drop swaps the logo for the video, and a second drop restores the logo.
+
+### Still open
+- A real screen-reader pass (NVDA or VoiceOver). The tree check does not cover speech order or how verbose each item is.
+- A physical mouse drag of the pirate flag, and any test in Firefox or Safari.

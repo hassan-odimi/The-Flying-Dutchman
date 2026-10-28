@@ -6,6 +6,11 @@
 
 /*Style Sheet for the login page*/
 #user_name,#password{
+    display: block;
+    margin: 0.83em 0;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
     color: white;
     cursor: default;
 }
@@ -135,7 +140,7 @@ body {
     cursor: pointer;
 }
 
-#about:hover {
+#about:hover, #about:focus-visible {
     animation: appear 500ms cubic-bezier(.83,.67,.83,.67)forwards;
 }
 
@@ -201,7 +206,7 @@ body {
     cursor: pointer;
 }
 
-#passwords:hover {
+#passwords:hover, #passwords:focus-visible {
     animation: appear 500ms cubic-bezier(.83,.67,.83,.67)forwards;
 }
 
@@ -399,7 +404,7 @@ input[type=submit]:hover {
 @media only screen and (max-width: 414px)
 {
     /* only the customer is going to use the App on his phone to order drinks,therefore we hide the management login on phones*/
-    div.margin_button  {display: none;}
+    button.margin_button  {display: none;}
 
     /* enlarge the order button and the font for easy reading on small phones*/
     .login_button {
@@ -445,4 +450,77 @@ input[type=submit]:hover {
     }
 
     body{background-size: auto;}
+}
+
+/* Login error: pale-red border on the wrong field, bold message with icon under the form */
+.t-input {
+    border: 3px solid transparent;
+}
+
+.t-input.is-error {
+    border-color: #ffb4a8;
+}
+
+.login_error {
+    margin: 8px 0 0;
+    color: #fff; /* 7.74:1 on the lightest wood in the login box */
+    font-weight: bold;
+    font-size: 1.15em;
+    text-align: center;
+}
+
+.login_error .fa {
+    margin-right: 6px;
+    font-size: 1.3em;
+    vertical-align: -2px;
+    color: #ffb4a8;
+}
+
+/* transitions-dev: Error state shake (no auto-revert; typing clears the error) */
+.t-input {
+  transition: border-color 150ms ease-out;
+  will-change: transform;
+}
+.t-input.is-error {
+  transition: border-color var(--revert-dur, 280ms) ease-out;
+}
+
+.t-error-msg {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity    var(--revert-dur, 280ms) ease-out,
+    visibility 0s linear var(--revert-dur, 280ms);
+}
+.t-input-wrap.is-error .t-error-msg {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity    var(--revert-dur, 280ms) ease-out,
+    visibility 0s linear 0s;
+}
+
+.t-input.is-shaking {
+  animation: t-input-shake calc(
+      var(--shake-dur-a) * 2 + var(--shake-dur-b) * 2
+    ) linear;
+}
+@keyframes t-input-shake {
+  0%      { transform: translateX(0);                                 animation-timing-function: var(--shake-ease); }
+  28.57%  { transform: translateX(var(--shake-distance));             animation-timing-function: var(--shake-ease); }
+  57.14%  { transform: translateX(calc(var(--shake-distance) * -1)); animation-timing-function: var(--shake-ease); }
+  78.57%  { transform: translateX(var(--shake-overshoot));            animation-timing-function: var(--shake-ease); }
+  100%    { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-input { animation: none !important; transform: none !important; }
+}
+
+/* 2018 tab slide-out: jump straight to the open width when less motion is requested */
+@media (prefers-reduced-motion: reduce) {
+    #about:hover, #about:focus-visible, #passwords:hover, #passwords:focus-visible {
+        animation: none;
+        width: 180px;
+    }
 }

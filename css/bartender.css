@@ -35,14 +35,19 @@ h1 {
     color: white;
 }
 
-.menu a li {
-    display: block;
-    text-align: center;
+.menu li {
     float: left;
-
     margin-right:1%;
-    padding:3px;
     width: 20%;
+}
+
+.menu li button {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+
+    padding:3px;
 
     border: solid;
     border-color: #0C2924; /*#567973;*/
@@ -54,10 +59,10 @@ h1 {
     box-shadow: 2px -2px 10px black, 2px 0 10px black;
 }
 
-.menu a:hover li {
-    background-color: #D6DDDC;
+.menu li button:hover {
+    background-color: #254540; /* Deep Kelp, white text 10.48:1 */
     border: solid;
-    border-color: #D6DDDC;
+    border-color: #254540;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
@@ -104,7 +109,6 @@ h1 {
     cursor: pointer;
     padding: 7px;
 
-    outline: none;
     transition: 0.4s;
     padding-bottom: 12px;
 
@@ -130,12 +134,12 @@ h1 {
 }
 
 .left {
-    color: #ff2d1b;
+    color: #8b0000;
 }
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 .active, .accordion:hover {
-    color: rgb(211, 142, 79);
+    color: #254540;
     background-color: white;/*rgba(123,194,211,0.6);*/
 }
 
@@ -156,7 +160,7 @@ h1 {
 .accordion:after {
     content: 'Open Order'; /* '\02795' Unicode character for "plus" sign (+) */
     font-size: 13px;
-    color: #777;
+    color: #254540; /* 5.09:1 on sea glass */
     float: right;
     margin-left: 5px;
 }
@@ -271,4 +275,8 @@ footer {
     box-shadow: 2px -2px 10px black, 2px 0 10px black;
     pointer-events: auto;
     position: absolute; 
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .accordion, .panel { transition: none; }
 }

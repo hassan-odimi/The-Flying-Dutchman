@@ -9,32 +9,26 @@
 * The indexes and their corresponding languages: [0] English , [1] Swedish, [2] Italian, [3] Spanish, [4] Pirate
 */
 
-window.onload = translate(localStorage.getItem("index")); /* Call translate(index) with each page load (retrieved save index)*/
+var flags = ["eng", "sve", "ita", "esp", "pirate"]; // same order as the text indexes
 
-$(document).ready(function () { /*Call translate() on menu (flags) selection*/
+function setLanguage(index) {
+    translate(index); // page-specific texts
+    document.documentElement.lang = ["en", "sv", "it", "es", "en"][index]; // Pirate is English
+    $(".undo_label").text(undo_label[index]);
+    $(".redo_label").text(redo_label[index]);
+    $("#remove_word").text(remove_word[index]);
+    $(".languages_menu a").removeAttr("aria-current");
+    $("#" + flags[index]).attr("aria-current", "true");
+}
 
-    $("#eng").click(function(){
-        translate(0) /*Call translate() method with selected index 0*/
-        localStorage.setItem("index",0); /*Save selected index for the next loaded pages*/
-    })
+setLanguage(localStorage.getItem("index") || 0); /* Call with each page load (retrieved save index)*/
 
-    $("#sve").click(function(){
-        translate(1)
-        localStorage.setItem("index",1);      
-    })
-
-    $("#ita").click(function(){
-        translate(2)
-        localStorage.setItem("index",2);
-    })
-
-    $("#esp").click(function(){
-        translate(3)
-        localStorage.setItem("index",3);
-    })
-
-    $("#pirate").click(function(){
-        translate(4)
-        localStorage.setItem("index",4);
-    })
+$(document).ready(function () { /*Call setLanguage() on menu (flags) selection*/
+    $.each(flags, function (index, flag) {
+        $("#" + flag).click(function () {
+            setLanguage(index);
+            localStorage.setItem("index", index); /*Save selected index for the next loaded pages*/
+            return false; // stop href="#" jumping to the top
+        });
+    });
 })

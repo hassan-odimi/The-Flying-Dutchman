@@ -17,6 +17,7 @@ function openLogin(elem, show, user) {
     localStorage.setItem('usertype', user);
     $("#overlay").removeClass("hidden");
     $('#loginBox').show();
+    $('#user_name_input').focus(); // move keyboard users into the dialog
 }
 
 function closeLogin(){
@@ -46,13 +47,6 @@ function picToGif(ev) {
 function allowDrop(ev) { ev.preventDefault(); }
 
 function drag(ev) { ev.dataTransfer.setData("text", ev.target.id);}
-
-function drop(ev) {
-    ev.preventDefault();
-    var data = ev.target.id;
-    alert(data);
-    document.getElementById(ev).style.display = "none";
-}
 
 $(document).on('click','#about',function() {
     $("#passwords_window").addClass("hidden");
@@ -93,4 +87,6 @@ function translate (index) {
     $("#user_name").text(user_name[index]);
     $("#password").text(password[index]);
     $("#login").text(login[index]);
+    $("#close, .close_window").attr("aria-label", close_label[index]);
+    $("#piratePic").attr("alt", logo_alt[index]);
 }

@@ -34,12 +34,9 @@
 
   <header>
     <div class ="welcome">
-      <div style="display:inline;">
-       <h1 id="hello">Hello </h1><h1 id="usr">usr</h1><h1>!</h1>
-      </div>
-      <div id="creditDisplay" style="display:inline;">
-        <h2 id="your_credit">Your credit is </h2><h2 id="cre">cre</h2>
-      </div>
+      <!-- one heading and one line, so screen readers do not hear five heading fragments -->
+      <h1><span id="hello">Hello </span><span id="usr">usr</span>!</h1>
+      <p id="creditDisplay" class="credit"><span id="your_credit">Your credit is </span><span id="cre">cre</span></p>
     </div>
 
 
@@ -48,38 +45,38 @@
     <div class="menu">
 
         <ul class="menu_tabs">
-            <a><li class="all"      id="all">All</li></a>
-            <a><li class="beers"    id="beers">Beers</li></a>
-            <a><li class="wines"    id="wines">Wines</li></a>
-            <a><li class="spirits"  id="spirits">Spirits</li></a>
-            <a><li class="kosher"   id="kosher">Kosher</li></a>
-            <a><li class="ecologic" id="ecologic">Ecologic</li></a>
-            <a><li class="specials" id="specials">Specials</li></a>
+            <li><button type="button" class="all" id="all" aria-pressed="false">All</button></li>
+            <li><button type="button" class="beers" id="beers" aria-pressed="false">Beers</button></li>
+            <li><button type="button" class="wines" id="wines" aria-pressed="false">Wines</button></li>
+            <li><button type="button" class="spirits" id="spirits" aria-pressed="false">Spirits</button></li>
+            <li><button type="button" class="kosher" id="kosher" aria-pressed="false">Kosher</button></li>
+            <li><button type="button" class="ecologic" id="ecologic" aria-pressed="false">Ecologic</button></li>
+            <li><button type="button" class="specials" id="specials" aria-pressed="false">Specials</button></li>
         </ul>
 
     </div>
 
-    <div class="dropdown"><i class="fa fa-bars fa-2x"></i>
+    <div class="dropdown"><button type="button" class="menu_toggle" id="menu_toggle" aria-label="Drink categories"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></button>
         <ul class="dropdown-content">
-            <a><li class="all"      id="all">All</li></a>
-            <a><li class="beers"    id="beers">Beers</li></a>
-            <a><li class="wines"    id="wines">Wines</li></a>
-            <a><li class="spirits"  id="spirits">Spirits</li></a>
-            <a><li class="kosher"   id="kosher">Kosher</li></a>
-            <a><li class="ecologic" id="ecologic">Ecologic</li></a>
-            <a><li class="specials" id="specials">Specials</li></a>
+            <li><button type="button" class="all" id="all" aria-pressed="false">All</button></li>
+            <li><button type="button" class="beers" id="beers" aria-pressed="false">Beers</button></li>
+            <li><button type="button" class="wines" id="wines" aria-pressed="false">Wines</button></li>
+            <li><button type="button" class="spirits" id="spirits" aria-pressed="false">Spirits</button></li>
+            <li><button type="button" class="kosher" id="kosher" aria-pressed="false">Kosher</button></li>
+            <li><button type="button" class="ecologic" id="ecologic" aria-pressed="false">Ecologic</button></li>
+            <li><button type="button" class="specials" id="specials" aria-pressed="false">Specials</button></li>
         </ul>
 
       <!--   <img src="img/basket.png" id="basket" class="shopping_basket" onClick="$('.selection').toggle();"> -->
     </div>
     
     <!-- logout button for small screen -->
-    <a onClick="logOut()"><div class="log_button red logout" id="logout">Log Out</div></a>
+    <button type="button" onclick="logOut()" class="log_button red logout" id="logout">Log Out</button>
 
     
 <div class="main_section">
   
-    <div class="drink_list" id="drink_database">
+    <div class="drink_list" id="drink_database" tabindex="0" role="region" aria-label="Drinks">
       <!-- Drinks Database loads here -->
     </div>
 
@@ -99,33 +96,36 @@
 
 
     <!-- pay button for small screen -->
-    <a><div class="pay_button blue" id="pay">Place Order</div></a>
+    <button type="button" class="pay_button blue" id="pay">Place Order</button>
 
     <footer>
       <!-- LOG OUT BUTTON -->
-      <a onClick="logOut()"><div class="small_button red logout" id="logout">Log Out</div></a>
+      <button type="button" onclick="logOut()" class="small_button red logout" id="logout">Log Out</button>
 
       <!-- LANGUAGE MENU -->
       <div class="languages_menu">
-        <a href="#" id="eng"><div class="languages"> <img src="img/eng.png"></div></a>
-        <a href="#" id="sve"><div class="languages"> <img src="img/sve.png"></div></a>
-        <a href="#" id="ita"><div class="languages"> <img src="img/ita.png"></div></a>
-        <a href="#" id="esp"><div class="languages"> <img src="img/esp.png"></div></a>
-        <a href="#" id="pirate"><div class="languages"> <img src="img/pirate.jpg"></div></a>
+        <a href="#" id="eng" lang="en"><div class="languages"> <img src="img/eng.png" alt="English"></div></a>
+        <a href="#" id="sve" lang="sv"><div class="languages"> <img src="img/sve.png" alt="Svenska"></div></a>
+        <a href="#" id="ita" lang="it"><div class="languages"> <img src="img/ita.png" alt="Italiano"></div></a>
+        <a href="#" id="esp" lang="es"><div class="languages"> <img src="img/esp.png" alt="Español"></div></a>
+        <a href="#" id="pirate" lang="en"><div class="languages"> <img src="img/pirate.jpg" alt="Pirate"></div></a>
       </div>
 
       <!-- UNDO-REDO MENU -->
       <div class="undo_redo_menu">
-        <a href="#" id="undo" class="fade"><i class="fa fa-arrow-left fa-2x"></i></a>
-        <a href="#" id="redo" class="fade"><i class="fa fa-arrow-right fa-2x"></i></a>
+        <button type="button" id="undo" class="fade"><i class="fa fa-undo fa-2x" aria-hidden="true"></i> <span class="undo_label">Undo</span></button>
+        <button type="button" id="redo" class="fade"><i class="fa fa-repeat fa-2x" aria-hidden="true"></i> <span class="redo_label">Redo</span></button>
       </div>
 
       <!-- PAY BUTTON -->
-      <a><div class="small_button blue" id="pay">Place Order</div></a>
+      <button type="button" class="small_button blue" id="pay">Place Order</button>
 
     </footer>
 
     <!-- Your code ends here -->
+
+    <!-- Shared first half of every remove button's name -->
+    <span id="remove_word" hidden>Remove</span>
 
     <!-- External Scripts -->
 

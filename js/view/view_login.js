@@ -19,7 +19,7 @@
 */
 
 var page_title = ["Welcome to The Flying Dutchman!",
-             "Välkommen til Flygande Holländaren!",
+             "Välkommen till Flygande Holländaren!",
              "Benvenuti al'Olandese Volante!",
              "Bienvenidos al Holandés Volador!",
              "Ahoy t' th' Flyin' Dutchman!"]
