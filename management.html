@@ -41,17 +41,17 @@
     </header>
     <div class="menu">
       <ul class="type_menu">
-        <a><li id="drinks_list">Full Drinks List</li></a>
-        <a><li id="check_stock">Check Bar Stock</li></a>
-        <a><li id="specials_db">Specials</li></a>
-        <a><li id="shortage_alert">Shortage Alert (!)</li></a>
+        <li><button type="button" id="drinks_list" aria-pressed="false">Full Drinks List</button></li>
+        <li><button type="button" id="check_stock" aria-pressed="false">Check Bar Stock</button></li>
+        <li><button type="button" id="specials_db" aria-pressed="false">Specials</button></li>
+        <li><button type="button" id="shortage_alert" aria-pressed="false">Shortage Alert (!)</button></li>
       </ul>
     </div>
 
 
     <div class="main_section">
 
-        <div class="drink_list" id="drink_database">
+        <div class="drink_list" id="drink_database" tabindex="0" role="region" aria-label="Drinks">
             <!-- Drinks Database loads here -->
         </div>
 
@@ -71,28 +71,31 @@
     <footer>
 
       <!-- LOG OUT BUTTON -->
-      <a onClick="logOut()"><div class="small_button red logout" id="logout">Log Out</div></a>
+      <button type="button" onclick="logOut()" class="small_button red logout" id="logout">Log Out</button>
 
       <!-- LANGUAGE MENU -->
       <div class="languages_menu">
-        <a href="#" id="eng"><div class="languages"> <img src="img/eng.png"></div></a>
-        <a href="#" id="sve"><div class="languages"> <img src="img/sve.png"></div></a>
-        <a href="#" id="ita"><div class="languages"> <img src="img/ita.png"></div></a>
-        <a href="#" id="esp"><div class="languages"> <img src="img/esp.png"></div></a>
-        <a href="#" id="pirate"><div class="languages"> <img src="img/pirate.jpg"></div></a>
+        <a href="#" id="eng" lang="en"><div class="languages"> <img src="img/eng.png" alt="English"></div></a>
+        <a href="#" id="sve" lang="sv"><div class="languages"> <img src="img/sve.png" alt="Svenska"></div></a>
+        <a href="#" id="ita" lang="it"><div class="languages"> <img src="img/ita.png" alt="Italiano"></div></a>
+        <a href="#" id="esp" lang="es"><div class="languages"> <img src="img/esp.png" alt="Español"></div></a>
+        <a href="#" id="pirate" lang="en"><div class="languages"> <img src="img/pirate.jpg" alt="Pirate"></div></a>
       </div>
 
       <!-- UNDO-REDO MENU -->
       <div class="undo_redo_menu">
-        <a href="#" id="undo" class="fade"><i class="fa fa-arrow-left fa-2x"></i></a>
-        <a href="#" id="redo" class="fade"><i class="fa fa-arrow-right fa-2x"></i></a>
+        <button type="button" id="undo" class="fade"><i class="fa fa-undo fa-2x" aria-hidden="true"></i> <span class="undo_label">Undo</span></button>
+        <button type="button" id="redo" class="fade"><i class="fa fa-repeat fa-2x" aria-hidden="true"></i> <span class="redo_label">Redo</span></button>
       </div>
 
       <!-- PAY BUTTON -->
-      <a href=""><div class="small_button blue" id="pay">Place Stock Order</div></a>
+      <button type="button" class="small_button blue" id="pay">Place Stock Order</button>
     </footer>
 
     <!-- Your code ends here -->
+
+    <!-- Shared first half of every remove button's name -->
+    <span id="remove_word" hidden>Remove</span>
 
     <!-- External Scripts -->
 

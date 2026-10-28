@@ -28,7 +28,7 @@ $(document).ready(function() {
     t1 = window.setInterval(function() {checkOnOrders()}, 2000);
     function checkOnOrders() {
         if (localStorage.getItem("NEWORDER") != 0) {
-            $("#retrieve_orders").css("background-color","red");                  
+            $("#retrieve_orders").css("background-color","#c8102e"); // white text 5.88:1                  
             localStorage.setItem("NEWORDER", 0);
         }          
     }
@@ -76,20 +76,15 @@ $(document).ready(function() {
     });
 
     /* Accordion Script*/
-    $(document).on('click','body',function(){
-        var acc = $(".accordion");
-        var i;
-        for (i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function() {
-                this.classList.toggle("active");
-                this.classList.toggle("zoom_out")
-                var panel = this.nextElementSibling;
-                if (panel.style.maxHeight){
-                    panel.style.maxHeight = null;
-                } else {
-                    panel.style.maxHeight = panel.scrollHeight + "px";
-                }
-            });
+    $(document).on('click','.accordion',function(){
+        this.classList.toggle("active");
+        this.classList.toggle("zoom_out")
+        this.setAttribute("aria-expanded", this.classList.contains("active"));
+        var panel = this.nextElementSibling;
+        if (panel.style.maxHeight){
+            panel.style.maxHeight = null;
+        } else {
+            panel.style.maxHeight = panel.scrollHeight + "px";
         }
     });
 
@@ -129,7 +124,7 @@ $(document).ready(function() {
 
 
         /* Remove from DOM */
-        $(this).parent().parent().parent().remove();
+        $(this).closest('.panel').remove();
         $('#' + find_transaction_id).remove();
         
         /* Undo-Redo */
@@ -137,7 +132,7 @@ $(document).ready(function() {
         clearUndone();      // clear undone stack after a 'proper' action
 
         /* Alert user*/
-        alert(message_delete_order(find_transaction_id,parseInt(localStorage.getItem('index'))))
+        showToast(message_delete_order(find_transaction_id, lang()));
     });
 
     $(document).on('click','.pay',function() {
@@ -167,17 +162,17 @@ $(document).ready(function() {
         clearUndone();      // clear undone stack after a 'proper' action
 
         /* Alert user*/
-        alert(message_mark_paid(find_transaction_id,parseInt(localStorage.getItem('index'))))
+        showToast(message_mark_paid(find_transaction_id, lang()));
     });
     
     $(document).on('click','#undo',function() {
-        var article_id = $(this).find('span').html();
         undo();
+        announce(undo_label[lang()]);
     });
     
     $(document).on('click','#redo',function() {
-        var article_id = $(this).find('span').html();
         redo();
+        announce(redo_label[lang()]);
     });
     
 });
@@ -185,8 +180,8 @@ $(document).ready(function() {
 function printToDOM (element) {
     var i = $.inArray(element,SESSIONS_TRANSACTIONS);
 
-    var content = '<button class="accordion" id="'+ element.transaction_id +'"><b>ORDER #'+ element.transaction_id.slice(1) + '|    Customer:</b> '+
-        getCustomerName(element.customer_id) +' ('+ element.customer_id +')' + '| <b>Date: </b>'+ element.timestamp + ' | <b>Total:</b> SEK '+ element.amount +':-  '
+    var content = '<button type="button" class="accordion" aria-expanded="false" id="'+ element.transaction_id +'"><b>ORDER #'+ element.transaction_id.slice(1) + '<span aria-hidden="true">|</span>    Customer:</b> '+
+        getCustomerName(element.customer_id) +' ('+ element.customer_id +')' + '<span aria-hidden="true">|</span> <b>Date: </b>'+ element.timestamp + ' <span aria-hidden="true">|</span> <b>Total:</b> SEK '+ element.amount +':-  '
         + paidStamp(element.paid, element) + '</button>' +
         '<div class="panel">' +
         '<div class="order">' +
@@ -197,9 +192,9 @@ function printToDOM (element) {
 
     if (element.paid == false){ // this part is only printed to unpaid transactions
         content += '<div class="checkout">' +
-            '<a><div class="small_button red delete cancel_order" id="' + element.transaction_id + '" >Cancel Order</div></a>' +
-            '<a><div class="small_button light_green pay mark_paid" id="' + element.transaction_id + '" >Mark as Paid</div></a>' +
-            '<a><div class="small_button total" id="total"><b>TOTAL:</b> SEK '+ element.amount +':-</div></a>' +
+            '<button type="button" class="small_button red delete cancel_order" id="' + element.transaction_id + '" >Cancel Order</button>' +
+            '<button type="button" class="small_button light_green pay mark_paid" id="' + element.transaction_id + '" >Mark as Paid</button>' +
+            '<div class="small_button total" id="total"><b>TOTAL:</b> SEK '+ element.amount +':-</div>' +
             '</div>';
     } else {
         content += '<div class="paidfor">' +
@@ -261,7 +256,7 @@ function getBrevagePrice(brevage_id){
 function paidStamp (boolean, element){
     var message ="";
     if(boolean){
-        message = "<b class='textRed'>::: ORDER PAID ::: </b>  |    <b>Bartender:</b> " + getBartenderName(element.bartender_id) + " (" + element.bartender_id + ")";
+        message = "<b class='textRed'><span aria-hidden='true'>:::</span> ORDER PAID <span aria-hidden='true'>:::</span> </b>  <span aria-hidden='true'>|</span>    <b>Bartender:</b> " + getBartenderName(element.bartender_id) + " (" + element.bartender_id + ")";
     }
     return message;
 }
@@ -273,7 +268,7 @@ function printOrder(order_array,quantities_array){
     $.each(order_array, function (index,value){
         content += '<div class="order_details">' +
             '<h4>'+ getBrevageName(value) +' <span class="textRed">(x'+ quantities_array[index] +')</span></h4>' +
-            '<img src="img/drinks/'+ value +'.png">' +
+            '<img src="img/drinks/'+ value +'.png" alt="">' +
             '<h4 class="price">SEK '+ (getBrevagePrice(value) * quantities_array[index]) +':-</h4>' +
             '</div>';
     });
@@ -287,6 +282,7 @@ function addBackground (){
 /*ALL UNDO/REDO FUNCTIONS*/
 
 function undo() {
+    if (done.length <= 1) return; // keyboard can reach a faded button
     currentState = done.pop();
     previousState = done.pop();
 
@@ -304,6 +300,7 @@ function undo() {
 }
 
 function redo() {
+    if (undone.length < 1) return;
     undoneState = undone.pop();
 
     // change current state and update undo/redo stacks
@@ -370,6 +367,8 @@ function highlightTab(new_tab) {
     // highlight current tab
     $(new_tab).css("background", "#567973");
     $(new_tab).css("border-color", "#567973");
+    $(".menu_tabs button").not("#retrieve_orders").attr("aria-pressed", "false");
+    $(new_tab).attr("aria-pressed", "true");
 }
 
 function updateTransactions() { // update the current transactions, local storage

@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-28T15:30:00Z",
+  "title": "Design System: The Flying Dutchman",
+  "extensions": {
+    "colorMeta": {
+      "brass-doubloon": { "role": "primary", "displayName": "Brass Doubloon" },
+      "rum-red": { "role": "secondary", "displayName": "Rum Red" },
+      "sea-glass": { "role": "neutral", "displayName": "Sea Glass" },
+      "pale-sea-glass": { "role": "neutral", "displayName": "Pale Sea Glass" },
+      "seafoam": { "role": "neutral", "displayName": "Seafoam" },
+      "weathered-copper": { "role": "neutral", "displayName": "Weathered Copper" },
+      "deep-kelp": { "role": "neutral", "displayName": "Deep Kelp" },
+      "abyss": { "role": "neutral", "displayName": "Abyss" },
+      "alarm-red": { "role": "feedback", "displayName": "Alarm Red" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "One greeting or title per view, Berkshire Swash." },
+      "headline": { "displayName": "Headline", "purpose": "Panel titles in Seafoam." },
+      "body": { "displayName": "Body", "purpose": "Drink names, prices, list rows." },
+      "label": { "displayName": "Label", "purpose": "Button text." }
+    },
+    "shadows": [
+      { "name": "tab-lift", "value": "2px -2px 10px black, 2px 0 10px black", "purpose": "Category tabs casting upward onto the wood." },
+      { "name": "plank", "value": "5px 5px 30px black", "purpose": "Large panels such as the order area." },
+      { "name": "button-float", "value": "0 8px 16px 0 rgba(0,0,0,0.2)", "purpose": "Primary and danger buttons." },
+      { "name": "halo", "value": "2px 2px 10px black, -2px -2px 10px black", "purpose": "Landing-page buttons." }
+    ],
+    "motion": [
+      { "name": "appear", "value": "500ms cubic-bezier(.83,.67,.83,.67)", "purpose": "Landing-page windows fading in (legacy)." },
+      { "name": "accordion", "value": "max-height 0.2s ease-out", "purpose": "Bartender order rows expanding (legacy)." }
+    ],
+    "breakpoints": [
+      { "name": "phone", "value": "414px" },
+      { "name": "tablet", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Brass Doubloon main action, such as Place Order.",
+      "html": "<button class=\"ds-btn-primary\">Place Order</button>",
+      "css": ".ds-btn-primary { background: linear-gradient(#926e30, #84642b); color: #fff; font-family: 'Oswald', sans-serif; font-size: 1.25rem; padding: 10px 24px; border: 0; border-radius: 5px; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); cursor: pointer; } .ds-btn-primary:hover { filter: brightness(1.08); } .ds-btn-primary:focus-visible { outline: 3px solid #fff; box-shadow: 0 0 0 6px #000; }"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Rum Red exit or destructive action, such as Log Out.",
+      "html": "<button class=\"ds-btn-danger\">Log Out</button>",
+      "css": ".ds-btn-danger { background: linear-gradient(#ad2535, #8e1f2c); color: #fff; font-family: 'Oswald', sans-serif; font-size: 1.25rem; padding: 10px 24px; border: 0; border-radius: 5px; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); cursor: pointer; } .ds-btn-danger:hover { filter: brightness(1.08); } .ds-btn-danger:focus-visible { outline: 3px solid #fff; box-shadow: 0 0 0 6px #000; }"
+    },
+    {
+      "name": "Landing Button",
+      "kind": "button",
+      "refersTo": "button-landing",
+      "description": "Dark green landing-page call to action.",
+      "html": "<button class=\"ds-btn-landing\">Order your Drinks!</button>",
+      "css": ".ds-btn-landing { background: linear-gradient(#254540, #0c2924); color: #fff; font-family: 'Oswald', sans-serif; padding: 10px 32px; border: thin solid #000; border-radius: 7px; box-shadow: 2px 2px 10px black, -2px -2px 10px black; cursor: pointer; } .ds-btn-landing:focus-visible { outline: 3px solid #fff; box-shadow: 0 0 0 6px #000; }"
+    },
+    {
+      "name": "Category Tabs",
+      "kind": "nav",
+      "refersTo": "tab-active",
+      "description": "Drink category tabs; active joins the panel below.",
+      "html": "<div class=\"ds-tabs\"><button class=\"ds-tab ds-tab-active\">All</button><button class=\"ds-tab\">Beers</button><button class=\"ds-tab\">Wines</button></div>",
+      "css": ".ds-tabs { display: flex; gap: 4px; } .ds-tab { background: #5e817b; color: #000; font-family: 'Oswald', sans-serif; padding: 3px 16px; border: 0; border-radius: 10px 10px 0 0; box-shadow: 2px -2px 10px black, 2px 0 10px black; cursor: pointer; } .ds-tab-active { background: #a4b9b6; } .ds-tab:focus-visible { outline: 3px solid #fff; box-shadow: 0 0 0 6px #000; }"
+    },
+    {
+      "name": "Drink Card",
+      "kind": "card",
+      "refersTo": "card-drink",
+      "description": "Pale sea-glass card with bottle, name and price.",
+      "html": "<div class=\"ds-drink\"><strong>Heineken</strong><span>SEK 50:-</span></div>",
+      "css": ".ds-drink { background: #c0cfcc; color: #000; font-family: 'Oswald', sans-serif; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; border-radius: 6px; width: 160px; }"
+    },
+    {
+      "name": "Order Panel",
+      "kind": "card",
+      "refersTo": "panel-order",
+      "description": "Deep Kelp checkout panel with Seafoam heading and total.",
+      "html": "<div class=\"ds-order\"><h2>Your Order</h2><p>Total: SEK 0 :-</p></div>",
+      "css": ".ds-order { background: #254540; color: #96b9a5; font-family: 'Oswald', sans-serif; padding: 16px; width: 220px; box-shadow: 5px 5px 30px black; } .ds-order h2 { margin: 0 0 8px; font-size: 1.5rem; text-align: center; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Captain's Tavern",
+    "overview": "A warm wooden bar on a pirate ship. Dark wood planks cover the background of the working views. Sea-glass green panels sit on top like frosted portholes, with brass and rum-red fittings for the actions that matter. The storm and the white ship logo belong to the landing page only: the storm stays outside, and inside the tavern it is cosy and hospitable. The working views are tools first; the theme lives in materials, in the swash display font, and in the Pirate language option.",
+    "keyCharacteristics": [
+      "Dark wood texture under every working view; storm photo on the landing page.",
+      "Cool sea-glass greens for surfaces, warm brass and rum red for actions.",
+      "Berkshire Swash for greetings and titles, Oswald for everything else.",
+      "Heavy black shadows that make panels look carved and raised."
+    ],
+    "rules": [
+      { "name": "The Two Metals Rule", "body": "Warm colour means action. Brass is for the primary action and Rum Red for leaving or destroying. Surfaces never use either metal.", "section": "colors" },
+      { "name": "The One Swash Rule", "body": "Berkshire Swash appears once per view, for the greeting or title. Everything a user must read quickly is Oswald.", "section": "typography" },
+      { "name": "The Carved Wood Rule", "body": "Every surface on the wood background has a shadow. A panel without one looks pasted on.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep the wood texture under working views and the storm on the landing page only.",
+      "Do use Brass Doubloon for the single primary action in a view and Rum Red for exit or destructive actions.",
+      "Do set panel headings in Seafoam on Deep Kelp, and body text in Ink on sea-glass surfaces.",
+      "Do give every raised surface on the wood a black shadow from the vocabulary above."
+    ],
+    "donts": [
+      "Don't use brass or red for surfaces or decoration; they mean action.",
+      "Don't use Berkshire Swash for prices, lists, labels or buttons.",
+      "Don't put Ink text directly on the wood or storm backgrounds; use Sail White there.",
+      "Don't add new one-off greens. Pick from the six sea-glass neutrals."
+    ]
+  }
+}

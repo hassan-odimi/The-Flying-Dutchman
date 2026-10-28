@@ -69,30 +69,33 @@ $(document).ready(function() {
 
 
     $(document).on('click','#add1',function(){
-        var article_id = $(this).parent().find('span').html();
+        var article_id = $(this).parent().find('span[hidden]').html();
         addOrder(article_id, 1);
 
         //Undo-Redo
         pushOrderTo(done); // update done stack
         clearUndone();     // clear undone stack after a 'proper' action
+        announceOrder(article_id, msg_added[lang()]);
     });
 
     $(document).on('click','#add10',function(){
-        var article_id = $(this).parent().find('span').html();
+        var article_id = $(this).parent().find('span[hidden]').html();
         addOrder(article_id, 10);
 
         //Undo-Redo
         pushOrderTo(done); // update done stack
         clearUndone();     // clear undone stack after a 'proper' action
+        announceOrder(article_id, msg_added[lang()]);
     });
 
     $(document).on('click','#add100',function(){
-        var article_id = $(this).parent().find('span').html();
+        var article_id = $(this).parent().find('span[hidden]').html();
         addOrder(article_id, 100);
 
         //Undo-Redo
         pushOrderTo(done); // update done stack
         clearUndone();     // clear undone stack after a 'proper' action
+        announceOrder(article_id, msg_added[lang()]);
     });
 
     $("#pay").click(function(){
@@ -179,11 +182,11 @@ $(document).ready(function() {
             sessionStorage.setItem("orders_counter", orders_counter);
             sessionStorage.setItem("SESSION_STOCK_INFO",JSON.stringify(SESSION_STOCK_INFO));
 
-            //resetPage();
-            alert(message_placed_order[localStorage.getItem("index")]);
+            resetPage();
+            showToast(message_placed_order[lang()]);
 //            alert("Order is placed message goes here!");
 
-        } else { alert(message_empty_order[localStorage.getItem("index")]); }
+        } else { showToast(message_empty_order[lang()], true); }
 
     });
 
@@ -198,7 +201,13 @@ $(document).ready(function() {
         big_orders.splice(i, 1); // remove both order and quantity (same index)
         big_quantity.splice(i, 1);
 
-        $(this).closest('.order').remove(); // remove from DOM
+        announceOrder(article_id, msg_removed[lang()]);
+        var row = $(this).closest('.order');
+        var next = row.next('.order').find('.delete');
+        if (!next.length) next = row.prev('.order').find('.delete');
+        if (!next.length) next = $('[id=pay]:visible');
+        row.remove(); // remove from DOM
+        next.focus(); // keep keyboard users in the order list
 
         //Undo-Redo
         pushOrderTo(done); // update done stack
@@ -207,13 +216,13 @@ $(document).ready(function() {
 
     //UNDO REDO BUTTONS
     $(document).on('click','#undo',function() {
-        var article_id = $(this).find('span').html();
         undo();
+        announce(undo_label[lang()] + ". " + $("#total").text());
     });
 
     $(document).on('click','#redo',function() {
-        var article_id = $(this).find('span').html();
         redo();
+        announce(redo_label[lang()] + ". " + $("#total").text());
     });
 });
 
@@ -252,20 +261,20 @@ function printToDOM (element) {
         '<div class="drink">'+
 
         '<div class="c1">' +
-        '<img src="img/drinks/' + element.artikelid + '.png">' +
+        '<img src="img/drinks/' + element.artikelid + '.png" alt="">' +
         '</div>' +
 
         '<div class="c2">'+
-        '<b class="drink_name">Name:</b> ' + element.namn + ' ' + element.namn2 + '<br>' +
+        '<b class="drink_name">Name:</b> <span id="dn' + element.artikelid + '">' + element.namn + ' ' + element.namn2 + '</span><br>' +
         '<b class="type">Type:</b> ' + element.varugrupp + '<br>' +
         '<b class="price">Price:</b> SEK ' + parseInt(element.prisinklmoms) + ':-<br>' +
         '<b class="country">Country:</b> ' + element.ursprunglandnamn + '<br>' +
-        '<b class="volume">Volume:</b> ' + element.volymiml + '<br>' +
+        (element.volymiml != null ? '<b class="volume">Volume:</b> ' + element.volymiml + '<br>' : '') +
         '<b class="alcohol">Alcohol:</b> ' + element.alkoholhalt + '<br>' +
         '<b class="drink_id">ID:</b> '+ element.artikelid +'<br>' +
         '<b class="producer">Producer:</b> '+ element.producent +'<br>' +
         '<b class="delivery">Delivery:</b> '+ element.leverantor +'<br>' +
-        '<b class="cost">Cost per Liter:</b> SEK '+ element.prisperliter + '<br>' +
+        (element.prisperliter != null ? '<b class="cost">Cost per Liter:</b> SEK '+ element.prisperliter + '<br>' : '') +
         '</div>' +
 
         '<div class="c3">' +
@@ -274,9 +283,9 @@ function printToDOM (element) {
         '</div>' +
 
         '<div class="c4">' +
-        '<a class="add_button" id="add1"><h4 class="add_one">Add +1</h4></a>' +
-        '<a class="add_button" id="add10"><h4 class="add_ten">Add +10</h4></a>' +
-        '<a class="add_button" id="add100"><h4 class="add_hundred">Add +100</h4></a>' +
+        '<button type="button" class="add_button" id="add1" aria-labelledby="a1_' + element.artikelid + ' dn' + element.artikelid + '"><span class="h4 add_one" id="a1_' + element.artikelid + '">Add +1</span></button>' +
+        '<button type="button" class="add_button" id="add10" aria-labelledby="a10_' + element.artikelid + ' dn' + element.artikelid + '"><span class="h4 add_ten" id="a10_' + element.artikelid + '">Add +10</span></button>' +
+        '<button type="button" class="add_button" id="add100" aria-labelledby="a100_' + element.artikelid + ' dn' + element.artikelid + '"><span class="h4 add_hundred" id="a100_' + element.artikelid + '">Add +100</span></button>' +
         '<span hidden>' + element.artikelid + '</span>'+
         '<span hidden>' + element.prisinklmoms +'</span>'+
         '</div>'+
@@ -294,11 +303,11 @@ function addOrder (article_id, number) {
             if (this.artikelid == article_id){ // retrieve article from the database
                 $("#drink_selection").prepend(
                     '<div class="order" id="'+ this.artikelid +'">' +
-                    '<a class="delete">X</a>' +
+                    '<button type="button" class="delete" aria-labelledby="remove_word name' + this.artikelid + '">X</button>' +
                     '<h4 class="price">SEK <span class="hiden_price_sum">' + (this.prisinklmoms * number) + '</span>:-</h4>' +
                     '<span class="sum" hidden>' + parseInt(this.prisinklmoms) + '</span>' +
-                    '<img src="img/drinks/' + this.artikelid + '.png">' +
-                    '<h4>' + this.namn + ' ' + this.namn2 + '<span class="quantity textRed"> ( x ' + number + ')</span></h4>' +
+                    '<img src="img/drinks/' + this.artikelid + '.png" alt="">' +
+                    '<h4 id="name' + this.artikelid + '">' + this.namn + ' ' + this.namn2 + '<span class="quantity textRed"> ( x ' + number + ')</span></h4>' +
                     '</div>'
                 )
                 big_total += parseInt(this.prisinklmoms * number);
@@ -310,11 +319,11 @@ function addOrder (article_id, number) {
             if (this.artikelid == article_id){ // retrieve article from the database
                 $("#drink_selection").prepend(
                     '<div class="order" id="'+ this.artikelid +'">' +
-                    '<a class="delete">X</a>' +
+                    '<button type="button" class="delete" aria-labelledby="remove_word name' + this.artikelid + '">X</button>' +
                     '<h4 class="price">SEK <span class="hiden_price_sum">' + (this.prisinklmoms * number) + '</span>:-</h4>' +
                     '<span class="sum" hidden>' + parseInt(this.prisinklmoms) + '</span>' +
-                    '<img src="img/drinks/' + this.artikelid + '.png">' +
-                    '<h4>' + this.namn + ' ' + this.namn2 + '<span class="quantity textRed"> ( x ' + number + ')</span></h4>' +
+                    '<img src="img/drinks/' + this.artikelid + '.png" alt="">' +
+                    '<h4 id="name' + this.artikelid + '">' + this.namn + ' ' + this.namn2 + '<span class="quantity textRed"> ( x ' + number + ')</span></h4>' +
                     '</div>'
                 )
                 big_total += parseInt(this.prisinklmoms * number);
@@ -354,6 +363,7 @@ function formatDate (date) {
 /*ALL UNDO/REDO FUNCTIONS*/
 
 function undo() {
+    if (done.length <= 1) return; // keyboard can reach a faded button
     currentOrder = done.pop();
     previousOrder = done.pop();
 
@@ -368,6 +378,7 @@ function undo() {
 }
 
 function redo() {
+    if (undone.length < 1) return;
     undoneOrder = undone.pop();
 
     // change current order and update undo/redo stacks
@@ -426,19 +437,16 @@ function addBackground () {
 function resetPage() {
     big_orders = [];
     big_quantity = [];
-    total = 0;
+    big_total = 0;
+    $("#drink_selection").empty();
+    updateTotal();
 
-    $(drink_selection).empty();
-
-    done = new Array([[], [], copyStock()]);
+    done = new Array([]);
     undone = new Array();
     $("#undo").addClass("fade");
     $("#redo").addClass("fade");
 
-    $("#drink_selection").empty();
-    $("#drink_database").empty();
-    //addBackground();
-    retrieveSystembolaget();
+    $("#" + current_tab).click(); // reprint the open tab so the new stock counts show
 }
 
 // highlight the currently displayed tab 
@@ -446,16 +454,19 @@ function highlightTab(new_tab) {
     // reset previous tab display
     previous_tab = '#' + current_tab;
     $(previous_tab).css("background", "");
-    $(previous_tab).css("border-color", "#567973");
+    $(previous_tab).css("border-color", "#5e817b");
     // highlight current tab
     $('#' + new_tab).css("background", "#A4B9B6");
     $('#' + new_tab).css("border-color", "#A4B9B6");
+    $(".type_menu button").attr("aria-pressed", "false");
+    $('#' + new_tab).attr("aria-pressed", "true");
     current_tab = new_tab;
 }
 
 function translate (index) {
     $("#page_title").text(page_title[index]);
     $("#title").text(title[index]);
+    $("#drink_database").attr("aria-label", drinks_region[index]);
     $("#logout").text(logout[index]);
     $("#stock_order").text(stock_order[index]);
     $("#login_as").text(login_as[index]);
@@ -484,4 +495,4 @@ function translate (index) {
 
     $("#big_total").text(big_total[index]);
     $("#pay").text(pay[index]);
-}
+}

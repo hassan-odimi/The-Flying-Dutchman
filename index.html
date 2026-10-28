@@ -22,6 +22,9 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/index.css">
 
+    <!-- CSS Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash|Oswald" rel="stylesheet">
 
@@ -30,8 +33,8 @@
 
     <!-- Your code starts here -->
     <div id="barManLog">
-      <a onclick="openLogin('loginBox', 'block', 'bartender')"><div class="margin_button flipper" id="bartender">Bartender login</div></a>
-      <a onclick="openLogin('loginBox', 'block', 'management')"><div class="margin_button flipper" id="management">Management login</div></a>
+      <button type="button" onclick="openLogin('loginBox', 'block', 'bartender')" class="margin_button flipper" id="bartender">Bartender login</button>
+      <button type="button" onclick="openLogin('loginBox', 'block', 'management')" class="margin_button flipper" id="management">Management login</button>
     </div>
 
     <div id="overlay" class="hidden"></div>
@@ -39,16 +42,18 @@
     <!-- login box -->
       <div id="loginBox" class="login">
 
-        <button id = "close" class="close" onclick="closeLogin()">X</button>
-        <form name = "loginForm" action="javascript: void(0);">
+        <button type="button" id="close" class="close" onclick="closeLogin()" aria-label="Close">X</button>
+        <form name = "loginForm" class="t-input-wrap" action="javascript: void(0);">
 
           <h1>Log into The Flying Dutchman</h1>
 
-          <a id="user_name"><h2>User name</h2></a>
-          <input type="text" name="user_name" placeholder="Enter your user name">
+          <label for="user_name_input" id="user_name">User name</label>
+          <input type="text" name="user_name" id="user_name_input" class="t-input" aria-describedby="login_error" autocomplete="username" placeholder="Enter your user name">
 
-          <a id="password"><h2>Password</h2></a>
-          <input type="password" name="password" placeholder="Enter your password">
+          <label for="password_input" id="password">Password</label>
+          <input type="password" name="password" id="password_input" class="t-input" aria-describedby="login_error" autocomplete="current-password" placeholder="Enter your password">
+
+          <p id="login_error" class="login_error t-error-msg"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><span id="login_error_text"></span></p>
 
           <div align="center">
             <input type="submit" id="login" name="login" value="Log In!" onClick="loginDB(loginForm)">
@@ -57,11 +62,11 @@
         </form>
       </div>
 
-    <div id="about"> < About this project</div>
+    <button type="button" id="about"><span aria-hidden="true">&lt;</span> About this project</button>
 
     <div id="about_window" class="hidden">
 
-      <div class="close_window">X</div>
+      <button type="button" class="close_window" aria-label="Close">X</button>
 
       <h2>The Flying Dutchman</h2>
 
@@ -88,11 +93,11 @@
 
     </div>
 
-    <div id="passwords"> < Get the passwords</div>
+    <button type="button" id="passwords"><span aria-hidden="true">&lt;</span> Get the passwords</button>
 
     <div id="passwords_window" class="hidden">
 
-      <div class="close_window">X</div>
+      <button type="button" class="close_window" aria-label="Close">X</button>
 
       <h2>Login Passwords</h2>
 
@@ -153,23 +158,23 @@
     <!-- DnD pics/gifs -->
     <div align="center" ondrop="picToGif(event)"  ondragover="allowDrop(event)">
 
-      <img id="piratePic" class="gif" src="img/logo/white3.png">
+      <img id="piratePic" class="gif" src="img/logo/white3.png" alt="The Flying Dutchman">
       <video id="great" class="gif" id="gifPirate" preload="auto" poster="https://img-9gag-fun.9cache.com/photo/ajEXymq_460s.jpg" loop="loop" style="display:none; height: 40%; width: 40%; margin-right: 28%; margin-left: 32%;">
         <source src="https://img-9gag-fun.9cache.com/photo/ajEXymq_460sv.mp4" type="video/mp4">
           <source src="https://img-9gag-fun.9cache.com/photo/ajEXymq_460svwm.webm" type="video/webm">
       </video>
     </div>
 
-    <a display="block" onclick="openLogin('loginBox', 'block', 'customer')"><div class="login_button flipper" id="customer">Order your Drinks!</div></a>
+    <button type="button" onclick="openLogin('loginBox', 'block', 'customer')" class="login_button flipper" id="customer">Order your Drinks!</button>
 
 
     <!-- LANGUAGE MENU -->
     <div class="languages_menu">
-      <a href="#" id="eng"><div class="languages"> <img src="img/eng.png"></div></a>
-      <a href="#" id="sve"><div class="languages"> <img src="img/sve.png"></div></a>
-      <a href="#" id="ita"><div class="languages"> <img src="img/ita.png"></div></a>
-      <a href="#" id="esp"><div class="languages"> <img src="img/esp.png"></div></a>
-      <a href="#" id="pirate"><div class="languages"> <img src="img/pirate.jpg" id="pirateFlag" draggable="true" ondragstart="drag(event)"></div></a>
+      <a href="#" id="eng" lang="en"><div class="languages"> <img src="img/eng.png" alt="English"></div></a>
+      <a href="#" id="sve" lang="sv"><div class="languages"> <img src="img/sve.png" alt="Svenska"></div></a>
+      <a href="#" id="ita" lang="it"><div class="languages"> <img src="img/ita.png" alt="Italiano"></div></a>
+      <a href="#" id="esp" lang="es"><div class="languages"> <img src="img/esp.png" alt="Español"></div></a>
+      <a href="#" id="pirate" lang="en"><div class="languages"> <img src="img/pirate.jpg" alt="Pirate" id="pirateFlag" draggable="true" ondragstart="drag(event)"></div></a>
     </div>
 
     <!-- Your code ends here -->

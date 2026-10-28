@@ -51,10 +51,10 @@ function loginDB(form) {
                    localStorage.setItem('id', this); return false;                    
                 });
                 goToUserPage(localStorage.getItem('usertype')); // redirect to appropriate page 
-            } else { alert("Wrong password"); return false; }
+            } else { loginError(form.password, msg_wrong_password[lang()]); return false; }
             return false;
         }
-        if (index + 1 == db.length) {alert("Wrong username");}
+        if (index + 1 == db.length) { loginError(form.user_name, msg_wrong_username[lang()]); }
     });   
 }
 
@@ -62,12 +62,67 @@ function loginDB(form) {
 function checkAccess() {    
     var ut = localStorage.getItem('usertype');
     var page = window.location.pathname.split("/").pop().split(".")[0];
-    var id = (localStorage.getItem("id")).slice(1, localStorage.getItem("id").length);  // used to check if the user has unquestionale access
+    var id = (localStorage.getItem("id") || "").slice(1);  // used to check if the user has unquestionale access
     if ((ut == page) || (ut == null && page == 'index') || page == 'index' || id == "€$#=@") {return;}
     else { // redirect to appropriate page if a user tries to access a page they are not allowed to
-        alert("Acces Denied");
+        toastAfterLoad(msg_access_denied[lang()], true);
         goToUserPage(ut);
     }
+}
+
+// show the error under the login form, mark and shake the wrong field (transitions-dev error shake)
+function loginError(field, message) {
+    $(field.form).addClass("is-error").find(".t-input").removeClass("is-error").removeAttr("aria-invalid");
+    $(field).addClass("is-error").attr("aria-invalid", "true");
+    $("#login_error_text").text(message);
+
+    field.classList.remove("is-shaking");
+    void field.offsetWidth; // reflow so the shake replays
+    field.classList.add("is-shaking");
+    setTimeout(function () { field.classList.remove("is-shaking"); }, 300);
+
+    showToast(message, true);
+}
+
+// typing clears the error
+$(document).on("input", ".t-input", function () {
+    $(this.form).removeClass("is-error").find(".t-input").removeClass("is-error").removeAttr("aria-invalid");
+});
+
+/* FEEDBACK
+* One polite live region carries every message to screen readers. The toast repeats it visually
+* and is aria-hidden, so nothing is read twice.
+*/
+function lang() { return parseInt(localStorage.getItem("index")) || 0; }
+
+function announce(message) {
+    var live = $("#live");
+    live.text(""); // clear first so a repeated message is read again
+    setTimeout(function () { live.text(message); }, 50);
+}
+
+var toastTimer;
+function showToast(message, isError) {
+    announce(message);
+    var toast = $("#toast");
+    toast.toggleClass("is-error", !!isError).find(".toast_icon")
+        .toggleClass("fa-check-circle", !isError).toggleClass("fa-exclamation-circle", !!isError);
+    toast.find(".toast_text").text(message);
+    toast.addClass("is-open");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 4000 + message.length * 60); // longer messages stay longer
+}
+
+function hideToast() { $("#toast").removeClass("is-open"); }
+
+// for messages followed by a reload or redirect: shown on the next page
+function toastAfterLoad(message, isError) {
+    sessionStorage.setItem("toast", JSON.stringify([message, !!isError]));
+}
+
+// "Heineken added. Total: SEK 100:-" (customer and management order rows)
+function announceOrder(article_id, word) {
+    announce($.trim($("#name" + article_id).contents().first().text()) + " " + word + ". " + $("#total").text());
 }
 
 function logOut() { 
@@ -77,8 +132,29 @@ function logOut() {
 
 // onload, check the users access and load the users name etc for display
 $(function () {
+    $("body").append('<div id="live" class="sr-only" aria-live="polite"></div>' +
+        '<div class="toast_wrap"><div id="toast" class="toast t-toast" aria-hidden="true">' +
+        '<i class="toast_icon fa fa-check-circle"></i><span class="toast_text"></span></div></div>');
+    $("#toast").hover(function () { clearTimeout(toastTimer); }, function () { toastTimer = setTimeout(hideToast, 4000); });
+
+    var pending = sessionStorage.getItem("toast");
+    if (pending) {
+        sessionStorage.removeItem("toast");
+        pending = JSON.parse(pending);
+        setTimeout(function () { showToast(pending[0], pending[1]); }, 300); // let the live region settle first
+    }
+
+    // mirror the visual .fade state of undo/redo into aria-disabled
+    $("#undo, #redo").each(function () {
+        var button = this;
+        var sync = function () { button.setAttribute("aria-disabled", button.classList.contains("fade")); };
+        new MutationObserver(sync).observe(button, {attributes: true, attributeFilter: ["class"]});
+        sync();
+    });
+
     checkAccess();
     user = findByID(localStorage.getItem("id"), typeToDB(localStorage.getItem("usertype")));
+    if (!user) { return; } // index page: nobody logged in yet
     
     if (!(user.vip)) {
         $('#specials').hide();

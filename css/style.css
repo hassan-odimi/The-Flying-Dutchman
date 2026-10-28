@@ -5,6 +5,23 @@
 
 /*Style Sheet common to all pages*/
 
+/* transitions-dev motion values for the toast and the login error shake */
+:root {
+  --toast-open: 350ms;
+  --toast-close: 250ms;
+  --toast-distance: 16px;
+  --toast-blur: 2px;
+  --toast-scale: 0.97;
+  --toast-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --shake-distance: 6px;
+  --shake-overshoot: 4px;
+  --shake-dur-a: 80ms;
+  --shake-dur-b: 60ms;
+  --shake-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --revert-dur: 280ms;
+}
+
 h1, h2 {
     text-align: center;
 }
@@ -22,7 +39,7 @@ header{
 }
 
 .info {
-    background-color: #797979;
+    background-color: #767676; /* white text 4.54:1 */
     position: absolute;
     top: 0px;
     right: 50px;
@@ -30,6 +47,29 @@ header{
 
 
 /* BUTTONS */
+
+/* Native buttons replace the old clickable divs; strip browser chrome so classes keep the look */
+button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    box-sizing: content-box; /* match the divs they replaced */
+    cursor: pointer;
+}
+
+/* Two-tone ring: one of white or black is at least 4.58:1 on any surface */
+:focus-visible {
+    outline: 3px solid #fff;
+    box-shadow: 0 0 0 6px #000;
+}
+
+.h4 {
+    display: block;
+    font-weight: bold;
+    margin: 1.33em 0;
+}
 
 .small_button {
     margin: 0.8%;
@@ -91,14 +131,28 @@ a:active {
 }
 
 #undo, #redo {
-    color: #A4B9B6;
+    color: #fff; /* Sail White on wood, like every other text on the wood */
+    text-shadow: 0 0 2px #000, 0 1px 2px #000; /* dark halo keeps the white readable on light planks */
     float: none;
-    width: 10%;
     height: 100%;
+    margin-right: 8px;
+    white-space: nowrap;
 }
 #undo:hover, #redo:hover {
-                 color: white;
+                 color: #C0CFCC;
              }
+
+/* Word beside the icon on wide screens; icon only below 1250px (the footer row runs out of room in Spanish), word kept for screen readers */
+@media (max-width: 1249px) {
+    .undo_label, .redo_label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+}
 
 
 .fade {
@@ -128,12 +182,15 @@ a:active {
 } */
 
 /* COLORS */
+/* Brass and Rum Red buttons carry white labels (brass top darkened from #AA8139 to pass 4.5:1) */
 .light_green {
-    background-color: #AA8139;
+    background-color: #926e30;
+    color: #fff;
 }
 
 .blue {
-    background: linear-gradient(#AA8139, #84642b);
+    background: linear-gradient(#926e30, #84642b);
+    color: #fff;
 }
 
 .orange {
@@ -142,6 +199,7 @@ a:active {
 
 .red {
     background: linear-gradient(#AD2535,#8e1f2c);
+    color: #fff;
 }
 .headergreen {
     background-color: #0C2924;
@@ -187,14 +245,14 @@ a:active {
 }
 
 .textRed{
-    color: red;
+    color: #8b0000; /* 4.86:1 or better on every sea-glass surface */
 }
 
 .alert{
     padding:2px;
     border: dashed;
     border-width: 2px;
-    border-color: red;
+    border-color: #8b0000;
 }
 
 .textDarkGreen{
@@ -203,4 +261,80 @@ a:active {
 
 .textLightGreen{
     color: #96b9a5;
+}
+
+/* FEEDBACK */
+
+/* Visually hidden; the one aria-live region lives here */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* Toast: bottom centre above the footer, full width on small screens */
+.toast_wrap {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: 180px; /* clears the footer row */
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.toast {
+    max-width: 480px;
+    padding: 12px 16px;
+    border-radius: 5px;
+    background-color: #254540;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
+}
+
+.toast.is-open { pointer-events: auto; } /* a closed toast is invisible, so it must not catch clicks */
+
+.toast_icon {
+    margin-right: 8px;
+    color: #96b9a5;
+}
+
+.toast.is-error .toast_icon {
+    color: #ffb4a8;
+}
+
+@media (max-width: 768px) {
+    .toast_wrap { bottom: 16px; }
+    .toast { max-width: none; flex: 1; }
+}
+
+/* transitions-dev: Toast open / close */
+.t-toast {
+  opacity: 0;
+  transform: translateY(var(--toast-distance)) scale(var(--toast-scale));
+  filter: blur(var(--toast-blur));
+  will-change: transform, opacity, filter;
+  transition:
+    opacity var(--toast-close) var(--toast-ease),
+    transform var(--toast-close) var(--toast-ease),
+    filter var(--toast-close) var(--toast-ease);
+}
+.t-toast.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+  transition:
+    opacity var(--toast-open) var(--toast-ease),
+    transform var(--toast-open) var(--toast-ease),
+    filter var(--toast-open) var(--toast-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-toast { transition: none !important; }
 }

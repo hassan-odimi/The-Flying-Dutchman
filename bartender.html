@@ -44,10 +44,10 @@
       <h1 id="orders_q">Orders Queue</h1>
 
       <ul class="menu_tabs">
-        <a><li id="all">All Orders</li></a>
-        <a><li id="unpaid">Unpaid Orders</li></a>
-        <a><li id="paid">Paid Orders</li></a>
-        <a><li id="retrieve_orders">Update Orders</li></a>
+        <li><button type="button" id="all" aria-pressed="false">All Orders</button></li>
+        <li><button type="button" id="unpaid" aria-pressed="false">Unpaid Orders</button></li>
+        <li><button type="button" id="paid" aria-pressed="false">Paid Orders</button></li>
+        <li><button type="button" id="retrieve_orders">Update Orders</button></li>
       </ul>
     </div>
 
@@ -57,21 +57,21 @@
 
     <footer>
       <!-- LOG OUT BUTTON -->
-      <a onClick="logOut()"><div class="small_button red logout" id="logout">Log Out</div></a>
+      <button type="button" onclick="logOut()" class="small_button red logout" id="logout">Log Out</button>
 
       <!-- LANGUAGE MENU -->
       <div class="languages_menu">
-        <a href="#" id="eng"><div class="languages"> <img src="img/eng.png"></div></a>
-        <a href="#" id="sve"><div class="languages"> <img src="img/sve.png"></div></a>
-        <a href="#" id="ita"><div class="languages"> <img src="img/ita.png"></div></a>
-        <a href="#" id="esp"><div class="languages"> <img src="img/esp.png"></div></a>
-        <a href="#" id="pirate"><div class="languages"> <img src="img/pirate.jpg"></div></a>
+        <a href="#" id="eng" lang="en"><div class="languages"> <img src="img/eng.png" alt="English"></div></a>
+        <a href="#" id="sve" lang="sv"><div class="languages"> <img src="img/sve.png" alt="Svenska"></div></a>
+        <a href="#" id="ita" lang="it"><div class="languages"> <img src="img/ita.png" alt="Italiano"></div></a>
+        <a href="#" id="esp" lang="es"><div class="languages"> <img src="img/esp.png" alt="Español"></div></a>
+        <a href="#" id="pirate" lang="en"><div class="languages"> <img src="img/pirate.jpg" alt="Pirate"></div></a>
       </div>
 
       <!-- UNDO-REDO MENU -->
       <div class="undo_redo_menu">
-        <a href="#" id="undo" class="fade"><i class="fa fa-arrow-left fa-2x"></i></a>
-        <a href="#" id="redo" class="fade"><i class="fa fa-arrow-right fa-2x"></i></a>
+        <button type="button" id="undo" class="fade"><i class="fa fa-undo fa-2x" aria-hidden="true"></i> <span class="undo_label">Undo</span></button>
+        <button type="button" id="redo" class="fade"><i class="fa fa-repeat fa-2x" aria-hidden="true"></i> <span class="redo_label">Redo</span></button>
       </div>
 
     </footer>
