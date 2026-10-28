@@ -202,7 +202,12 @@ $(document).ready(function() {
         big_quantity.splice(i, 1);
 
         announceOrder(article_id, msg_removed[lang()]);
-        $(this).closest('.order').remove(); // remove from DOM
+        var row = $(this).closest('.order');
+        var next = row.next('.order').find('.delete');
+        if (!next.length) next = row.prev('.order').find('.delete');
+        if (!next.length) next = $('[id=pay]:visible');
+        row.remove(); // remove from DOM
+        next.focus(); // keep keyboard users in the order list
 
         //Undo-Redo
         pushOrderTo(done); // update done stack
@@ -260,7 +265,7 @@ function printToDOM (element) {
         '</div>' +
 
         '<div class="c2">'+
-        '<b class="drink_name">Name:</b> ' + element.namn + ' ' + element.namn2 + '<br>' +
+        '<b class="drink_name">Name:</b> <span id="dn' + element.artikelid + '">' + element.namn + ' ' + element.namn2 + '</span><br>' +
         '<b class="type">Type:</b> ' + element.varugrupp + '<br>' +
         '<b class="price">Price:</b> SEK ' + parseInt(element.prisinklmoms) + ':-<br>' +
         '<b class="country">Country:</b> ' + element.ursprunglandnamn + '<br>' +
@@ -278,9 +283,9 @@ function printToDOM (element) {
         '</div>' +
 
         '<div class="c4">' +
-        '<button type="button" class="add_button" id="add1"><span class="h4 add_one">Add +1</span></button>' +
-        '<button type="button" class="add_button" id="add10"><span class="h4 add_ten">Add +10</span></button>' +
-        '<button type="button" class="add_button" id="add100"><span class="h4 add_hundred">Add +100</span></button>' +
+        '<button type="button" class="add_button" id="add1" aria-labelledby="a1_' + element.artikelid + ' dn' + element.artikelid + '"><span class="h4 add_one" id="a1_' + element.artikelid + '">Add +1</span></button>' +
+        '<button type="button" class="add_button" id="add10" aria-labelledby="a10_' + element.artikelid + ' dn' + element.artikelid + '"><span class="h4 add_ten" id="a10_' + element.artikelid + '">Add +10</span></button>' +
+        '<button type="button" class="add_button" id="add100" aria-labelledby="a100_' + element.artikelid + ' dn' + element.artikelid + '"><span class="h4 add_hundred" id="a100_' + element.artikelid + '">Add +100</span></button>' +
         '<span hidden>' + element.artikelid + '</span>'+
         '<span hidden>' + element.prisinklmoms +'</span>'+
         '</div>'+

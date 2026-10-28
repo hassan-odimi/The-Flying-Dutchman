@@ -180,8 +180,8 @@ $(document).ready(function() {
 function printToDOM (element) {
     var i = $.inArray(element,SESSIONS_TRANSACTIONS);
 
-    var content = '<button type="button" class="accordion" aria-expanded="false" id="'+ element.transaction_id +'"><b>ORDER #'+ element.transaction_id.slice(1) + '|    Customer:</b> '+
-        getCustomerName(element.customer_id) +' ('+ element.customer_id +')' + '| <b>Date: </b>'+ element.timestamp + ' | <b>Total:</b> SEK '+ element.amount +':-  '
+    var content = '<button type="button" class="accordion" aria-expanded="false" id="'+ element.transaction_id +'"><b>ORDER #'+ element.transaction_id.slice(1) + '<span aria-hidden="true">|</span>    Customer:</b> '+
+        getCustomerName(element.customer_id) +' ('+ element.customer_id +')' + '<span aria-hidden="true">|</span> <b>Date: </b>'+ element.timestamp + ' <span aria-hidden="true">|</span> <b>Total:</b> SEK '+ element.amount +':-  '
         + paidStamp(element.paid, element) + '</button>' +
         '<div class="panel">' +
         '<div class="order">' +
@@ -256,7 +256,7 @@ function getBrevagePrice(brevage_id){
 function paidStamp (boolean, element){
     var message ="";
     if(boolean){
-        message = "<b class='textRed'>::: ORDER PAID ::: </b>  |    <b>Bartender:</b> " + getBartenderName(element.bartender_id) + " (" + element.bartender_id + ")";
+        message = "<b class='textRed'><span aria-hidden='true'>:::</span> ORDER PAID <span aria-hidden='true'>:::</span> </b>  <span aria-hidden='true'>|</span>    <b>Bartender:</b> " + getBartenderName(element.bartender_id) + " (" + element.bartender_id + ")";
     }
     return message;
 }

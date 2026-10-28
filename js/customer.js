@@ -187,7 +187,12 @@ $(document).ready(function() {
         quantity.splice(i, 1);
 
         announceOrder(article_id, msg_removed[lang()]);
-        $(this).closest('.order').remove(); // remove from DOM       
+        var row = $(this).closest('.order');
+        var next = row.next('.order').find('.delete');
+        if (!next.length) next = row.prev('.order').find('.delete');
+        if (!next.length) next = $('[id=pay]:visible');
+        row.remove(); // remove from DOM
+        next.focus(); // keep keyboard users in the order list
         
         //Undo-Redo
         pushOrderTo(done);  // update done stack

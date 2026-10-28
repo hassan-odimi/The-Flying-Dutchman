@@ -149,13 +149,16 @@ h1 {
     background-color: #C0CFCC;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.2s ease-out;
+    visibility: hidden; /* keeps Cancel and Mark as Paid out of Tab order while closed */
+    transition: max-height 0.2s ease-out, visibility 0.2s;
     width: 88%;
 
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
+
+.accordion.active + .panel { visibility: visible; transition: max-height 0.2s ease-out; } /* visible at once on open */
 
 .accordion:after {
     content: 'Open Order'; /* '\02795' Unicode character for "plus" sign (+) */

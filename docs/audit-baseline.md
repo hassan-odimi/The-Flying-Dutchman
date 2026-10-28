@@ -132,3 +132,35 @@ axe cannot compute contrast for text over a background image or a gradient, so i
 ### Still open
 - A real screen-reader pass (NVDA or VoiceOver). The tree check does not cover speech order or how verbose each item is.
 - A physical mouse drag of the pirate flag, and any test in Firefox or Safari.
+
+## Automated screen-reader tests (2026-10-28)
+
+The manual Orca pass is on hold: Orca crashed the whole desktop under Wayland. It is replaced by automated tests that follow `docs/orca-checklist.md`.
+
+Setup: Playwright 1.64.1 drives the keyboard in Chromium and Firefox at 1280x800. The Guidepup Virtual Screen Reader 0.33.0 records what a screen reader would say. axe-core 4.10.2 runs in the same suite with the same tags as above. Run it with `npm test`; the dev-only packages live in `package.json`, and the tests are in `tests/`.
+
+Result: 27 tests per browser. 20 pass in both browsers, including every axe scan (0 violations), tab states, live-region messages read once, out-of-stock drinks disabled, undo/redo states, Pirate announcements, and the login labels and error. 7 fail in both browsers. These are new findings, none of which axe can see:
+
+| # | View | Finding |
+|---|------|---------|
+| 18 | index | The closed toast still catches clicks. At 1280x720 it covers the middle of "Order your Drinks!", so a mouse click there does nothing. |
+| 19 | index | "About this project" and "Get the passwords" are read with a leading "<" ("less than"). |
+| 20 | customer | The greeting is read as "HelloJohn!", with no space. |
+| 21 | customer | After Remove, focus falls back to the page body, so keyboard users lose their place. |
+| 22 | bartender | Cancel Order and Mark as Paid inside a collapsed order are still reachable with Tab and are read aloud. |
+| 23 | bartender | Order rows are read with their separators: "ORDER #00020| Customer: … \| Date: …", and "::: ORDER PAID :::". |
+| 24 | management | Every stock button is named only "Add +1", "Add +10" or "Add +100", so a listener cannot tell which drink it is for. |
+
+Limits of the virtual screen reader: it follows the specifications, not a real screen reader's speech. It gives password fields no role and does not voice `aria-invalid`, so the tests check those attributes directly. A real screen-reader pass is still open (Orca under an X11 session, NVDA or VoiceOver).
+
+### Findings 18 to 24, fixed (2026-10-28)
+
+All 54 tests (27 per browser) now pass in Chromium and Firefox, axe included.
+
+18. **Toast clicks:** the toast catches clicks only while it is open (`.toast.is-open`). Hover-to-pause still works.
+19. **Stray "<":** the arrow sits in an `aria-hidden` span; the buttons look the same.
+20. **Greeting:** the space now sits between the spans, so the heading is read as "Hello John!".
+21. **Focus after Remove:** focus moves to the next Remove button, then the previous one, then Place Order when the order is empty. Management uses the same rule.
+22. **Collapsed orders:** a closed panel is `visibility: hidden`, so its buttons leave the Tab order. The panel becomes visible at once when it opens, and stays visible until the 0.2 s close slide ends.
+23. **Separators:** the `|` and `:::` marks are `aria-hidden`; nothing changes on screen.
+24. **Stock buttons:** each Add button is named by `aria-labelledby`, its own word plus the drink name ("Add +1 Braastad XO"), so the word stays translated in all 5 languages.
