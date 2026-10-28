@@ -100,3 +100,32 @@
 
 
 
+
+<hr>
+
+<h2>Polish Project (2026): AI Tooling</h2>
+
+<p>The 2026 polish pass (branch <code>polish</code>) uses Claude Code with the agent skills below. The skill folders live in <code>.claude/skills/</code>, which is git-ignored, so each one must be reinstalled from its source after cloning. Targets: WCAG 2.2 AA, pirate theme kept.</p>
+
+<h3>Project skills (<code>.claude/skills/</code>)</h3>
+<ul>
+    <li><b>impeccable</b> (v4.8.0, <a href="https://github.com/pbakaus/impeccable">pbakaus/impeccable</a> @ 5adaee7, Apache 2.0): design direction and review. <code>init</code> and <code>document</code> write PRODUCT.md and DESIGN.md from the current code; <code>critique</code>, <code>audit</code> and <code>polish</code> review the views. Decides <i>where</i> motion helps. Detector hooks are off.</li>
+    <li><b>ui-ux-pro-max</b> (<a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill">nextlevelbuilder/ui-ux-pro-max-skill</a> @ 28b3b8d): searchable reference data for palettes, font pairings and UX guidelines. Used to check colour, type and interaction choices.</li>
+    <li><b>transitions-dev</b> (<a href="https://github.com/jakubantalik/transitions.dev">jakubantalik/transitions.dev</a> @ 6a7d682): copy-ready CSS micro-interactions (toast, modal, success check, error shake, accordion) and the motion tokens on <code>:root</code>. Owns <i>how</i> things move. Every snippet has a <code>prefers-reduced-motion</code> guard.</li>
+    <li><b>transitions-polish</b> (same repo): audits existing CSS motion against the transitions.dev tokens.</li>
+</ul>
+
+<p>Reinstall: copy each skill folder from its repo (<code>.claude/skills/impeccable</code>, <code>.claude/skills/ui-ux-pro-max</code>, <code>skills/transitions-dev</code>, <code>skills/transitions-polish</code>) into <code>.claude/skills/</code>.</p>
+
+<h3>Accessibility testing</h3>
+<ul>
+    <li><b><a href="https://github.com/dequelabs/axe-core">axe-core</a></b> 4.10.2 (open source, MPL 2.0), loaded from cdnjs into each page in the browser and run with <code>axe.run()</code> against the WCAG 2.2 AA tags. No install, no account.</li>
+    <li>Manual keyboard and screen-reader walkthroughs, because automated scans find only part of the WCAG issues.</li>
+</ul>
+
+<h3>General-purpose skills (user level)</h3>
+<ul>
+    <li><b>investigate-first</b>, <b>surgical-patch</b>, <b>safe-refactor</b>: bug diagnosis, small fixes and behaviour-preserving cleanup.</li>
+    <li><b>playwright-cli</b>, <b>verify-and-stop</b>: checks each change in a real browser.</li>
+    <li><b>code-review</b>: reviews each phase before commit.</li>
+</ul>
