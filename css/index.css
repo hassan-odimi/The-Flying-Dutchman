@@ -66,6 +66,7 @@ body {
     display: inline-block;
     font-size: 80%;
     width: 40%;
+    min-height: 44px; /* touch target, also at 200% zoom */
     clear: both;
     margin: 2%;
     text-align: center;
@@ -378,6 +379,12 @@ input[type=submit]:hover {
     background-color: darkgreen;
 }
 
+/* 415-767px (tablets, 200% text zoom): staff buttons hug their label instead of 40% of a 30% box */
+@media (max-width: 767px) {
+    #barManLog { width: auto; }
+    .margin_button { width: auto; padding: 0 16px; }
+}
+
 @media only screen and (max-width: 414px)
 {
     /*change the size of the login box to suit the phones*/
@@ -523,4 +530,72 @@ input[type=submit]:hover {
         animation: none;
         width: 180px;
     }
+}
+
+/* Phones and tablets: About and Passwords become labelled bottom buttons (no slide-out),
+   windows become near full-width sheets, login box and inputs fit a finger.
+   Fills are opaque: white on #8e1f2c is 8.81:1, white on #1e6b2b is 6.58:1 */
+@media (max-width: 768px) {
+    #about, #passwords {
+        top: auto;
+        right: auto;
+        bottom: 12px;
+        width: calc(50% - 20px);
+        height: 44px;
+        box-sizing: border-box;
+        padding: 0 8px;
+        border-right-style: solid;
+        font-family: 'Oswald', sans-serif;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    #about:hover, #about:focus-visible, #passwords:hover, #passwords:focus-visible {
+        animation: none;
+        width: calc(50% - 20px);
+    }
+
+    #passwords.full_length, #about.full_length {
+        width: calc(50% - 20px);
+    }
+
+    #about { left: 12px; background-color: #8e1f2c; }
+    #passwords { left: calc(50% + 8px); background-color: #1e6b2b; }
+    #about span, #passwords span { display: none; } /* the "<" arrow belonged to the slide-out */
+
+    #about_window, #passwords_window {
+        width: auto;
+        height: auto;
+        max-height: 80vh;
+        margin: 5% 4% 0;
+        left: 0;
+        right: 0;
+        overflow: auto;
+        padding: 16px;
+        box-sizing: border-box;
+        background-color: #8e1f2c; /* opaque: the 2018 50% fill let the logo and flags show through the text */
+    }
+
+    #passwords_window { background-color: #1e6b2b; }
+
+    .scrollable { height: auto; max-height: 55vh; }
+
+    .close_window, .close {
+        min-width: 44px;
+        min-height: 44px;
+        font-size: 20px;
+    }
+
+    .login {
+        width: auto;
+        height: auto;
+        margin: 5% 4%;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    .login input[type=text], .login input[type=password] { font-size: 16px; } /* under 16px iOS zooms in on focus */
 }

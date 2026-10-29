@@ -199,6 +199,22 @@ $(document).ready(function() {
         clearUndone();      // clear undone stack after a 'proper' action
     });
     
+    // category list on phones: real toggle; a pick, Escape or a tap elsewhere closes it
+    function setCategories(open) {
+        $('.dropdown').toggleClass('is-open', open);
+        $('#menu_toggle').attr('aria-expanded', open);
+    }
+    $('#menu_toggle').click(function() { setCategories(!$('.dropdown').hasClass('is-open')); });
+    $('.dropdown-content button').click(function() { setCategories(false); $('#menu_toggle').focus(); });
+    $(document).on('keydown', function(e) { if (e.key === 'Escape' && $('.dropdown').hasClass('is-open')) { setCategories(false); $('#menu_toggle').focus(); } });
+    $(document).on('click', function(e) { if (!$(e.target).closest('.dropdown').length) setCategories(false); });
+
+    // order list on phones: the bar under the drinks toggles it
+    $('#order_toggle').click(function() {
+        $('.selection').toggle();
+        $(this).attr('aria-expanded', $('.selection').is(':visible'));
+    });
+
     // hover function for small screen
     $('.pay_button').hover(function() { $('.selection').css("display", "block")},
                            function() { $('.selection').css("display", "none") }
@@ -468,4 +484,5 @@ function translate (index) {
     $("#your_credit").text(your_credit[index]);		
     $("#drink_database").attr("aria-label", drinks_region[index]);
     $("#menu_toggle").attr("aria-label", drink_categories[index]);
+    $("#order_toggle").attr("aria-label", your_order[index]);
 }

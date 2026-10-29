@@ -260,7 +260,8 @@ header{
     background-color: #AF370B;
     color: white;
     float: right;
-    width: 20px;
+    width: 24px;
+    min-height: 24px; /* WCAG 2.5.8 */
     text-align: center;
 }
 
@@ -312,5 +313,159 @@ footer .small_button{
 
     footer {
         clear: both;
+    }
+}
+
+/* Phones: stack the 2018 floated columns. Tabs 2x2, card = image + details, then stock, then Add buttons (44px high) */
+@media (max-width: 767px) {
+    .menu {
+        width: 100%;
+    }
+
+    .menu ul {
+        padding-left: 0;
+        margin: 0;
+    }
+
+    .menu li {
+        width: calc(50% - 4px);
+        margin: 0 2px 2px 0;
+    }
+
+    .menu li button {
+        height: auto;
+        min-height: 44px;
+    }
+
+    .drink_list {
+        width: 96%;
+        height: auto;
+        max-height: 70vh;
+        margin-left: 2%;
+    }
+
+    .drink {
+        display: grid;
+        grid-template-columns: 70px 1fr;
+        gap: 8px;
+        width: auto;
+        height: auto;
+        float: none;
+        margin: 8px;
+        padding: 8px;
+    }
+
+    .drink .c1, .drink .c2, .drink .c3, .drink .c4 {
+        width: auto;
+        float: none;
+    }
+
+    .drink .c1 img {
+        height: 120px;
+    }
+
+    .drink .c3, .drink .c4 {
+        grid-column: 1 / -1;
+    }
+
+    .drink .c3 {
+        text-align: center;
+    }
+
+    .drink .c3 br {
+        display: none;
+    }
+
+    .drink .c4 {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+    }
+
+    .add_button .h4 {
+        width: auto;
+        min-width: 70px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+    }
+
+    .selection_header, .checkout, .selection {
+        width: 96%;
+        margin-left: 2%;
+    }
+}
+
+/* Below 1024px the order stacks under the list: keep it short so Place Stock Order is near,
+   and lay the footer out in wrapping rows (as in bartender) with 44px targets */
+@media (max-width: 1023px) {
+    .selection_header, .checkout, .selection {
+        width: 96%;
+        margin-left: 2%;
+    }
+
+    .selection {
+        height: auto;
+        min-height: 96px;
+        max-height: 28vh;
+    }
+
+    .drink_list {
+        width: 96%;
+        max-height: 46vh;
+    }
+
+    footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 2%;
+        clear: both;
+    }
+
+    footer .logout, footer #pay {
+        float: none;
+        width: auto;
+        height: auto;
+        min-height: 44px;
+        margin: 0;
+        padding: 0 16px;
+    }
+
+    footer #pay {
+        margin-left: auto;
+    }
+
+    footer .undo_redo_menu {
+        display: flex;
+        gap: 8px;
+    }
+
+    footer .undo_redo_menu button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    footer .languages_menu {
+        order: 5;
+        display: flex;
+        justify-content: space-between;
+        float: none;
+        width: 100%;
+        padding: 0;
+    }
+
+    footer .languages {
+        margin: 0;
+    }
+
+    footer .languages img {
+        float: none;
+        width: 56px;
+        height: 34px;
+        padding: 0;
     }
 }

@@ -164,3 +164,82 @@ All 54 tests (27 per browser) now pass in Chromium and Firefox, axe included.
 22. **Collapsed orders:** a closed panel is `visibility: hidden`, so its buttons leave the Tab order. The panel becomes visible at once when it opens, and stays visible until the 0.2 s close slide ends.
 23. **Separators:** the `|` and `:::` marks are `aria-hidden`; nothing changes on screen.
 24. **Stock buttons:** each Add button is named by `aria-labelledby`, its own word plus the drink name ("Add +1 Braastad XO"), so the word stays translated in all 5 languages.
+
+## Mobile baseline (before, 2026-10-28)
+
+Tools: Playwright 1.64.1 with Chromium, logged in as `test`, plus axe-core 4.10.2 with the same tags as above. Touch emulation (`isMobile`, `hasTouch`, 2x) at 375x812 and 320x640. "200% zoom" is 1280x800 browser zoom, which is a 640x400 CSS-px viewport at 2x. Target size is every visible link, button, input and `.drink` below 24x24 CSS px (WCAG 2.5.8). Screenshots at 375 px are in `docs/mobile-before/` (`<view>-375.png`, `-full.png`, and `flow-*.png` for the touch walk-through).
+
+### Scan results
+
+| Viewport | View | axe violations | Horizontal scroll | Clipped content | Targets under 24 px |
+|----------|------|----------------|-------------------|-----------------|---------------------|
+| 375 | index | 0 | none | About and Passwords tabs: label cut off, only "<" shows | login close "X" 14x18 (when the login box is open) |
+| 375 | customer | 0 | none | none | remove "X" 20x24 (when the order panel is open) |
+| 375 | bartender | 0 | none | tab row 399 px wide in a 359 px box; order text cut in 20 of 20 rows | none |
+| 375 | management | 0 | page is 980 px wide, shown at 0.38x | text is 6 px on screen | see "Management at 375" below |
+| 320 | index, customer | 0 | none | as 375 | as 375 |
+| 320 | bartender | 0 | none | tab row 344 px in a 304 px box; order text cut | none |
+| 320 | management | 0 | page is 980 px wide | as 375 | as 375 |
+| 640 (200% zoom) | index | 0 | none | About and Passwords tabs cut | "Bartender login" 76.9x21 |
+| 640 | customer | 0 | none | none | none |
+| 640 | bartender | 0 | none | tab row 664 px in a 624 px box; order text cut in 20 of 20 rows | none |
+| 640 | management | 0 | none | four drink cards: 428 px of content in a 407 px box | remove "X" 20x24 |
+
+Management at 375 (measured as seen on screen, layout scaled by 375/980 = 0.383): tabs 49x14, Add +1/+10/+100 42x29, flags 33x21, undo and redo 10x12. In CSS px they pass, but a finger gets the scaled size.
+
+axe finds nothing at any size (its `target-size` rule is in the `wcag22aa` tag and did not fire). The problems below are layout and touch problems that axe cannot judge.
+
+### Touch walk-through at 375 (customer, then staff)
+
+- Category menu: the 7 tabs are hidden below 769 px and a hamburger shows. A tap on it opens the list (it opens on `:hover` or `:focus-within`, and a touch tap triggers both). It does not close after picking a category, and a second tap on the hamburger does not close it. It closes only when you tap outside, such as on the thin strip of wood at the edge. Open, it covers about 70% of the drink list (257x524 px). Not tested on iOS Safari, which does not focus buttons on tap and may not open it at all.
+- Adding a drink works by tap. The order list is hidden: only "Total" shows. You open it by tapping the Total bar, which is a `div` with an `onclick` (not a button, no name, not reachable by keyboard). It opens as a 341x220 px box over the top of the drink list and shows 3 items.
+- Undo and redo are `display: none` below 769 px, so a phone user cannot undo.
+- Place Order and the success toast work by tap.
+- Staff: Bartender login and Management login are `display: none` at 414 px and below. A phone visitor cannot start two of the three roles. (The test script clicked them through JavaScript to measure the views.)
+- Bartender: each order row has a fixed 70 px height, which cuts the text in all 20 rows (customer, total, "ORDER PAID" are lost). Opening a row by tap works. Cancel Order and Mark as Paid are 56x48.
+- Management: tapping Add +1 works, but see the scale problem below.
+- Login box (index): inputs use 13.3 px text, which makes iOS zoom in on focus. The close "X" is 14x18 with 9 px text.
+
+### Findings, grouped
+
+M1. **Management has no `<meta name="viewport">`.** Phones lay it out at 980 px and shrink it to 0.383x, so text is about 6 px and buttons are 42x29 or smaller on screen. WCAG 1.4.4, 1.4.10, 2.5.8 (effective size). Only management.html is missing it.
+M2. **Staff logins are hidden on phones.** `button.margin_button { display: none }` at 414 px and below (css/index.css:407). A reviewer on a phone cannot try the bartender or manager role, which breaks product principle 4. The bartender view also fails M4, so the question is whether to show the logins and fix both views, or keep staff for larger screens and say so.
+M3. **Customer order flow by touch.** (a) The category menu stays open after a choice and cannot be closed by its own button. (b) The order list opens only from a non-button `div`, with no name or state, no keyboard use, and a short panel that overlays the drink list. (c) Undo and redo are missing on phones. (d) Remove "X" is 20x24 (fails width by 4 px; the 70 px gap between items means it likely passes the 2.5.8 spacing exemption, but the fix is cheap).
+M4. **Bartender at phone width.** Fixed 70 px order rows cut the text. The tab row is wider than its box and gets clipped. Footer: flags stack in a column, "Log Out" wraps to two lines.
+M5. **Landing page at phone width.** About and Passwords show only "<" with the label cut off. The login close "X" is 14x18 and its text is 9 px. Input text is 13.3 px. "Bartender login" is 21 px tall at 640 px. The login box is sized in percent and "xx-small" text.
+M6. **Management layout once it has a viewport.** Drink cards overflow by 21 px at 640 px, the order panel is a half-width empty box at 375, and "Your Order" sits under the full list. This group becomes visible only after M1 is fixed, so it is measured again after that fix.
+
+Not yet tested: a real phone, iOS Safari, and the pirate-flag drag on touch.
+
+## After mobile (2026-10-29)
+
+Same tools and viewports as the baseline (Chromium, touch emulation, axe-core 4.10.2 with the same tags; 640 px is 200% text zoom at 1280). At-rest screenshots at 375 px are in `docs/mobile-after/`, with per-fix shots in `docs/mobile-after-*.png`.
+
+| Check | Before | After |
+|-------|--------|-------|
+| axe violations, 4 views x 3 viewports | 0 | 0 |
+| Horizontal scroll | management: 980 px page at 0.38x on phones | none at 320, 375 and 640 px |
+| Clipped content | bartender rows 20/20, tab row 399 px in 359 px, About/Passwords labels, management cards at 640 px | none |
+| Targets under 24 px at rest | login X 14x18, remove X 20x24, "Bartender login" 76.9x21 | none |
+| Touch controls | 44 px or more on the new phone controls (category rows, order toggle, undo/redo, remove, Add, footer, About/Passwords, login X) | |
+| Mobile tests | none | 5 in project `mobile` (375x812, touch); fail on the old code, pass now |
+| `npm test` | 54 | 59 passed |
+
+### Fixes by group
+
+- **M1, management viewport.** `<meta name="viewport">` added. Below 768 px the 2018 floats stack: tabs 2x2, card = image and details, stock, three 80x54 Add buttons.
+- **M2, staff logins.** Decision: stay hidden at 414 px and below, no hint text. Where they show (415 to 767 px, 200% zoom) they hug their label and are 46 px high (was 21).
+- **M3, customer touch flow.** The category menu is a real toggle (`aria-expanded`, closes on pick, Escape or an outside tap, rows 44 px). The order list opens from a real `<button id="order_toggle">` named by the existing "Your Order" text (all 5 languages already there). Undo and redo show on phones as 44 px icons in the top row. Remove X is 44x44 on phones and 24 px minimum everywhere.
+- **M4, bartender.** Rows wrap (no fixed height), tabs 2x2, footer in two rows (Log Out and undo/redo, then the flags). Tab row no longer overflows.
+- **M5, landing page.** About and Passwords are labelled 44 px buttons at the bottom (white on `#8e1f2c` 8.81:1, white on `#1e6b2b` 6.58:1; the 50% red and green fills measured 4.29:1 and 1.61:1). The windows are opaque, near full-width sheets with 44 px close buttons. The login box fits the screen, inputs use 16 px text, and its close X is 54x48.
+- **M6, management below 1024 px.** Order panel capped at 28vh and the list at 46vh. Place Stock Order moved from y=1785 to y=1065 at 375 px. Footer wraps in rows with 44 px buttons and one row of flags.
+
+New labels: none. Every accessible name reuses existing text, so no new translation was needed.
+
+### Still open
+
+- A real phone and iOS Safari. Playwright emulates touch but does not reproduce Safari's focus-on-tap behaviour.
+- The pirate-flag drag on touch.
+- About window text in the other 4 languages at 375 px (layout is width-based, not checked per language).
+- Bartender tab row at 1280 px is 40 px wider than its box (default `ul` padding, predates this work, clips nothing visible).
+- Desktop remove X and the desktop About/Passwords slide-out tabs keep their 2018 sizes at 1280 px.

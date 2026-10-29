@@ -260,7 +260,8 @@ header h2 {
     background-color: #AF370B;
     color: white;
     float: right;
-    width: 20px;
+    width: 24px;
+    min-height: 24px; /* WCAG 2.5.8 */
     text-align: center;
 }
 
@@ -287,7 +288,8 @@ header h2 {
     background-color: #AF370B;
     color: white;
     float: right;
-    width: 20px;
+    width: 24px;
+    min-height: 24px; /* WCAG 2.5.8 */
     text-align: center;
 }
 
@@ -386,8 +388,7 @@ body {
     background-color: lightgrey;
 }
 
-.dropdown:hover .dropdown-content,
-.dropdown:focus-within .dropdown-content {
+.dropdown.is-open .dropdown-content {
      display: block;
  }
 
@@ -585,5 +586,58 @@ body {
         margin-right: 2%;
         margin-top: 100%;
         z-index: 2;    
+    }
+}
+
+/* Order bar is a real toggle button on phones (it replaces the old div onclick) */
+.order_toggle {
+    display: none;
+}
+
+/* Phones: 44px touch targets for the category list, order toggle, remove and undo/redo */
+@media (max-width: 768px) {
+    .dropdown-content {
+        font-size: 130%;
+        width: 220px;
+        min-width: 220px;
+    }
+
+    .dropdown-content button {
+        min-height: 44px;
+        padding: 8px 16px;
+        font-size: 100%;
+    }
+
+    .checkout {
+        position: relative;
+    }
+
+    .order_toggle {
+        display: block;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        background: transparent;
+        border: 0;
+    }
+
+    .delete {
+        width: 44px;
+        min-height: 44px;
+    }
+
+    /* top row, in the gap between the menu button and Log Out */
+    footer .undo_redo_menu {
+        display: flex;
+        position: absolute;
+        top: 8px;
+        left: 90px;
+        gap: 8px;
+        z-index: 2;
+    }
+
+    footer .undo_redo_menu button {
+        min-width: 44px;
+        min-height: 44px;
     }
 }

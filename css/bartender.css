@@ -280,6 +280,101 @@ footer {
     position: absolute; 
 }
 
+/* Phones and 200% zoom: wrap the 2018 fixed-height rows, tabs 2x2, footer in two rows */
+@media (max-width: 768px) {
+    .menu {
+        height: auto;
+        float: none;
+        overflow: visible;
+    }
+
+    .menu_tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        width: auto;
+        height: auto;
+        float: none;
+        margin: 0;
+        padding: 0 2%;
+    }
+
+    .menu li {
+        float: none;
+        width: calc(50% - 2px);
+        margin: 0;
+    }
+
+    .menu li button {
+        height: auto;
+        min-height: 44px;
+    }
+
+    .order_list {
+        height: auto;
+        max-height: 58vh;
+    }
+
+    .accordion {
+        height: auto;
+        min-height: 44px;
+        overflow: visible;
+    }
+
+    .accordion:after {
+        display: block;
+        float: none;
+        text-align: right;
+        margin: 4px 0 0;
+    }
+
+    footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 2%;
+    }
+
+    footer .logout {
+        float: none;
+        width: auto;
+        min-height: 44px;
+        margin: 0;
+        padding: 0 16px;
+        white-space: nowrap;
+    }
+
+    footer .undo_redo_menu {
+        display: flex;
+        gap: 8px;
+    }
+
+    footer .undo_redo_menu button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    footer .languages_menu {
+        order: 2;
+        display: flex;
+        justify-content: space-between;
+        float: none;
+        width: 100%;
+    }
+
+    footer .languages {
+        margin: 0;
+    }
+
+    footer .languages img {
+        float: none;
+        width: 56px;
+        height: 34px;
+        padding: 0;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .accordion, .panel { transition: none; }
 }
