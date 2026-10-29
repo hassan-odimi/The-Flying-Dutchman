@@ -450,15 +450,6 @@ function resetPage() {
 
 // highlight the currently displayed tab 
 function highlightTab(new_tab) {
-    // reset previous tab display
-    previous_tab = '*#' + current_tab;
-    $(previous_tab).css("background", "");
-    $(previous_tab).css("border-color", "#5e817b");
-    $(previous_tab + 's').css("background", "");   // ugly solution...
-    $(previous_tab + 's').css("border-color", "#5e817b"); 
-    // highlight current tab
-    $(new_tab).css("background", "#A4B9B6");   
-    $(new_tab).css("border-color", "#A4B9B6");
     $(".menu_tabs button, .dropdown-content button").attr("aria-pressed", "false");
     $(new_tab).attr("aria-pressed", "true");
 }

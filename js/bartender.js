@@ -28,7 +28,7 @@ $(document).ready(function() {
     t1 = window.setInterval(function() {checkOnOrders()}, 2000);
     function checkOnOrders() {
         if (localStorage.getItem("NEWORDER") != 0) {
-            $("#retrieve_orders").css("background-color","#c8102e"); // white text 5.88:1                  
+            $("#retrieve_orders").addClass("has-new");
             localStorage.setItem("NEWORDER", 0);
         }          
     }
@@ -36,7 +36,7 @@ $(document).ready(function() {
     // display new orders on click 
     $("#retrieve_orders").click(function() {
         if (localStorage.getItem("NEWORDER") == 1) {
-            $("#retrieve_orders").css("background","");
+            $("#retrieve_orders").removeClass("has-new");
             updateTransactions();
             clearUndone();
             clearDone();      }
@@ -358,15 +358,6 @@ function rePrintTab() {   // reprint the currently displayed tab
 
 // highlight the currently displayed tab 
 function highlightTab(new_tab) {
-    // reset previous tab display
-    previous_tab = '*#' + current_tab;
-    $(previous_tab).css("background", "");
-    $(previous_tab).css("border-color", "#0C2924");
-    $(previous_tab + 's').css("background", "");   // ugly solution...
-    $(previous_tab + 's').css("border-color", "#0C2924"); 
-    // highlight current tab
-    $(new_tab).css("background", "#567973");
-    $(new_tab).css("border-color", "#567973");
     $(".menu_tabs button").not("#retrieve_orders").attr("aria-pressed", "false");
     $(new_tab).attr("aria-pressed", "true");
 }

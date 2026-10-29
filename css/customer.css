@@ -11,7 +11,7 @@
 h1 {
     display: inline-block;
     float: none;
-    color: white;
+    color: var(--ink-on-dark);
     margin-left: 1%;
     font-family: 'Berkshire Swash', cursive;
 
@@ -19,7 +19,7 @@ h1 {
 
 h2 {
     float: none;
-    color: #96b9a5;
+    color: var(--ink-soft-on-dark);
     margin-left: 3%;
 
 }
@@ -50,7 +50,7 @@ header h2 {
     margin: 0.83em 0 0.83em 3%;
     font-size: 1.5em;
     font-weight: bold;
-    color: #96b9a5;
+    color: var(--ink-soft-on-dark);
 }
 
 .title {
@@ -60,7 +60,7 @@ header h2 {
 }
 
 .info {
-    background-color: #767676;
+    background-color: var(--disabled);
     position: absolute;
     top: 0px;
     right: 50px;
@@ -94,38 +94,45 @@ header h2 {
     display: block;
     width: 100%;
     box-sizing: border-box;
-    background-color: #5e817b; /* black text 4.90:1 */
+    background-color: var(--control); /* black text 4.90:1 */
 
     text-align: center;
 
     padding:3px;
     height: 30%;
     border: solid;
-    border-color: #5e817b;
+    border-color: var(--control);
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    box-shadow: 2px -2px 10px black, 2px 0 10px black;
+    box-shadow: 2px -2px 10px var(--ink), 2px 0 10px var(--ink);
 
 }
 
 .menu li button:hover {
-    background-color: #D6DDDC;
+    background-color: var(--surface-faint);
     border: solid;
-    border-color: #D6DDDC;
+    border-color: var(--surface-faint);
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
+/* Active tab: styled from aria-pressed, which the JS already sets */
+.menu li button[aria-pressed="true"],
+.dropdown .dropdown-content button[aria-pressed="true"] {
+    background-color: var(--surface);
+    border-color: var(--surface);
+}
+
 .menu a.current li {
-    background-color: #A4B9B6;
+    background-color: var(--surface);
     border: solid;
-    border-color: #A4B9B6;
+    border-color: var(--surface);
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
 
 
 .selected {
-    background-color: #2dff12;
+    background-color: var(--accent-lime);
 }
 
 .drink_list {
@@ -137,7 +144,7 @@ header h2 {
     overflow-y: scroll;
     top: 0px;
     margin-left: 2%;
-    background-color: #A4B9B6;
+    background-color: var(--surface);
     float: left;
 /*    overflow: auto; */
     border-bottom-left-radius: 1%;
@@ -148,14 +155,14 @@ header h2 {
     height: 70%;}
 
 .drink {
-    background-color: #C0CFCC;
+    background-color: var(--surface-soft);
 
     padding-left: 1.5%;
     padding-right: 1.5%;
     margin: 2%;
 
     border-style: solid;
-    border-color: #C0CFCC;
+    border-color: var(--surface-soft);
     border-width: medium;
     border-radius: 3%;
 
@@ -190,7 +197,7 @@ header h2 {
 
     overflow: hidden;
     border-top-right-radius: 1%;
-    background-color: #254540;
+    background-color: var(--bar);
 }
 
 
@@ -199,7 +206,7 @@ header h2 {
     width: 28%;
     /*    height: 350px; *//* 500px*/
     height: 350px;
-    background-color: #567973;
+    background-color: var(--control-strong);
 
     margin-right: 2%;
     float: left;
@@ -216,7 +223,7 @@ header h2 {
 }
 
 .order {
-    background-color: #A4B9B6;
+    background-color: var(--surface);
 
     padding-left: 1.5%;
     padding-right: 1.5%;
@@ -224,7 +231,7 @@ header h2 {
     margin-bottom: 10%;
 
     border-style: solid;
-    border-color: #A4B9B6;
+    border-color: var(--surface);
     border-width: thin;
 
     width: 92%;
@@ -243,7 +250,7 @@ header h2 {
     width: 28%;
     /*    height: 75px;*/
     height: 75px;
-    background-color: #254540;
+    background-color: var(--bar);
     float: left;
     margin-right: 2%;
     overflow: hidden;
@@ -252,13 +259,13 @@ header h2 {
 
 .checkout h2 {
     float: left;
-    color: #96b9a5;
+    color: var(--ink-soft-on-dark);
     margin-left: 4%;
 }
 
 .delete {
-    background-color: #AF370B;
-    color: white;
+    background-color: var(--danger-fill);
+    color: var(--ink-on-dark);
     float: right;
     width: 24px;
     min-height: 24px; /* WCAG 2.5.8 */
@@ -271,7 +278,7 @@ header h2 {
     width: 28%;
     /*    height: 75px;*/
     height: 75px;
-    background-color: #254540;
+    background-color: var(--bar);
     float: left;
     margin-right: 2%;
     overflow: hidden;
@@ -280,13 +287,13 @@ header h2 {
 
 .checkout h2 {
     float: left;
-    color: #96b9a5;
+    color: var(--ink-soft-on-dark);
     margin-left: 4%;
 }
 
 .delete {
-    background-color: #AF370B;
-    color: white;
+    background-color: var(--danger-fill);
+    color: var(--ink-on-dark);
     float: right;
     width: 24px;
     min-height: 24px; /* WCAG 2.5.8 */
@@ -328,8 +335,8 @@ body {
 } */
 
 .highlight {
-    background-color: #3240ff;
-    border-color: #A4B9B6;
+    background-color: var(--accent-blue);
+    border-color: var(--surface);
 }
 
 
@@ -346,7 +353,7 @@ body {
     position: relative;
     margin: 2%;
     width: 70%;
-    color: white;
+    color: var(--ink-on-dark);
     z-index: 1;
 }
 
@@ -357,27 +364,27 @@ body {
 
 .dropdown li{
     text-align: center;
-    border-bottom: medium black;
+    border-bottom: medium var(--ink);
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
     margin-top: 0%;
-    background-color: whitesmoke;
+    background-color: var(--paper-soft);
     min-width: 100%;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px var(--shadow-soft);
     z-index: 2;
     font-size: 200%;
     border-radius: 1%;
     border: medium;
     border: solid;
-    border-color: #3240ff;
+    border-color: var(--accent-blue);
 }
 
 .dropdown-content button {
     width: 100%;
-    color: black;
+    color: var(--ink);
     padding: 12px 16px;
     text-decoration: none;
     display: block;
@@ -385,7 +392,7 @@ body {
 }
 
 .dropdown ul button:hover{
-    background-color: lightgrey;
+    background-color: var(--hover-grey);
 }
 
 .dropdown.is-open .dropdown-content {
@@ -405,10 +412,10 @@ body {
     height: 30px;
     text-align: center;
     border: thin;
-    border-color: black;
+    border-color: var(--ink);
     border-style: solid;
     border-radius: 2px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px var(--shadow-soft);
 
 }
 
@@ -424,10 +431,10 @@ body {
     height: 30px;
     text-align: center;
     border: thin;
-    border-color: black;
+    border-color: var(--ink);
     border-style: solid;
     border-radius: 2px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px var(--shadow-soft);
 
 }
 
@@ -470,9 +477,9 @@ body {
         border-radius: 0px;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
-        box-shadow: 2px 0px 10px black;
+        box-shadow: 2px 0px 10px var(--ink);
         border: medium;
-        border-color: black;
+        border-color: var(--ink);
 
     }
     button.drink{
@@ -552,7 +559,7 @@ body {
         border-bottom-right-radius: 5px;
         margin-left: 2%;
 
-        box-shadow: 2px 2px 10px black, 2px 0 10px black;
+        box-shadow: 2px 2px 10px var(--ink), 2px 0 10px var(--ink);
 
         /* z-index: 3; */
     }    

@@ -243,3 +243,43 @@ New labels: none. Every accessible name reuses existing text, so no new translat
 - About window text in the other 4 languages at 375 px (layout is width-based, not checked per language).
 - Bartender tab row at 1280 px is 40 px wider than its box (default `ul` padding, predates this work, clips nothing visible).
 - Desktop remove X and the desktop About/Passwords slide-out tabs keep their 2018 sizes at 1280 px.
+
+## Theming baseline (before, 2026-10-29)
+
+Colour literals (hex, rgb, rgba) per file. Only `:root` use today is motion tokens in style.css.
+
+| File | Colour literals | `var(--)` colour uses |
+|---|---|---|
+| css/style.css | 40 | 0 |
+| css/customer.css | 32 | 0 |
+| css/index.css | 28 | 0 |
+| css/management.css | 24 | 0 |
+| css/bartender.css | 19 | 0 |
+| js/*.js hex in `.css(...)` calls | 14 lines | 0 |
+| inline `style=` in html | 3 (white text, bold) | 0 |
+
+Total 143 CSS literals, 45 distinct (plus 14 JS lines). Top: `#a4b9b6` x14 (sea glass), `#254540` x13 (kelp), `#fff` x9, `#c0cfcc` x9, `#96b9a5` x8, `#567973` x7, `#0c2924` x7.
+
+## After theming (2026-10-29)
+
+Hassan chose: A semantic tokens, T7 (JS colours) in, merge near-twin `#0a2521` (it had no live use, only comments), delete 6 dead classes, style active tab from `aria-pressed`.
+
+| Measure | Before | After |
+|---|---|---|
+| Colour literals in CSS outside `:root` | 143 | 0 |
+| Colour `var(--)` uses in CSS | 0 | 184 |
+| Colour tokens (in `:root` of css/style.css) | 0 | 42 (45 distinct colours before, dead ones dropped) |
+| Hex colours in `.css()` calls in JS | 14 lines | 0 (tab highlight lines deleted, `has-new` class for new orders, `var()` for the index gag background) |
+| Inline `color:white` in HTML | 2 | 0 (`var(--ink-on-dark)`) |
+| Dead classes removed (style.css) | 6 (`.fade2 .orange .grey .yellow .beek .light_orange`) | 0 |
+| Named colours (`white`, `black`, `red`, `green`, `grey`, `whitesmoke`, `lightgrey`, `darkgray`) | not counted in baseline above | 0 |
+
+The baseline count above missed named colours; they are now tokens too.
+
+Verification: computed colour, background, border, outline and shadow of every element, old commit vs new, in 4 views, 25 states (tab clicks, About and Passwords panels, new-order alert), at 1280 and 375 px. Identical except one intended change below.
+
+Intended change: customer category list (hamburger) separators. Old code coloured a dropdown item's border green-grey only after it had been the active tab, so separators vanished item by item. Now all items keep the same black separator.
+
+Tests: `tests/theme.spec.js` fails if a colour literal appears outside `:root` or in a JS `.css()` call, and proves the active tab follows `--surface`. `npm test` = 63 tests. One full parallel run: 62 passed, plus the management axe test failed (suspected 60 s timeout under load, it takes 20-50 s); it passes alone and passed in an earlier full run (59 passed + 4 new theme tests).
+
+Still open: a dark or high-contrast theme (only one place to edit now, but each colour pairing needs a contrast check); `.dropdown-content` and a few 2018 shadow colours keep their original values.

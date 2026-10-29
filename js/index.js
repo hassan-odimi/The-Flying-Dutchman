@@ -33,13 +33,13 @@ function picToGif(ev) {
         $('#great').show();
    
         document.getElementById('great').play();
-        $('body').css('background-color', "#62CB62");
+        $('body').css('background-color', "var(--gag-green)");
         $('body').css('background-image', 'none');
     } else { // if the gif is currently displayed
         $('#piratePic').show();
         $('#great').hide();
         document.getElementById('great').pause();
-        $('body').css('background-color', "white");
+        $('body').css('background-color', "var(--paper)");
         $('body').css('background-image', 'url(img/storm.jpg)');
     }
 }

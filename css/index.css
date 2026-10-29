@@ -11,7 +11,7 @@
     font-size: 1.5em;
     font-weight: bold;
     text-align: center;
-    color: white;
+    color: var(--ink-on-dark);
     cursor: default;
 }
 #piratePic {
@@ -59,7 +59,7 @@ body {
     background-repeat: repeat-y;
 
     font-family: 'Oswald', sans-serif;
-    color: white;
+    color: var(--ink-on-dark);
 }
 
 .margin_button{
@@ -71,7 +71,7 @@ body {
     margin: 2%;
     text-align: center;
     position: relative;
-    color: white;
+    color: var(--ink-on-dark);
 
 }
 
@@ -79,15 +79,15 @@ body {
     float:right;
     display:inline-block;
     padding:2px 5px;
-    background:#ccc;
+    background:var(--close-bg);
 }
 
 .close:hover {
     float:right;
     display:inline-block;
     padding:2px 5px;
-    background:#ccc;
-    color:red;
+    background:var(--close-bg);
+    color:var(--bright-red);
 }
 
 .test {
@@ -108,25 +108,25 @@ body {
     margin-right: auto;
     text-align: center;
     font-size: 30px;
-    color: white;
+    color: var(--ink-on-dark);
 
 }
 #barManLog{
     display: inline;
     float: left;
     width: 30%;
-    color: white;
+    color: var(--ink-on-dark);
 }
 
 #about{
-    background-color: rgba(251, 0, 27,0.6);
-    color: rgb(255, 255, 255);
+    background-color: var(--about-tab-fill);
+    color: var(--ink-on-dark);
 
     border-style: solid;
     border-right-style: none;
     position: fixed;
     border-width: 0.5px;
-    border-color: rgb(255, 255, 255);
+    border-color: var(--paper);
     height: 14px;
     width: 10px;
     right: 0px;
@@ -154,15 +154,15 @@ body {
     100% {width: 180px;}
 }
 @keyframes whiteLetters {
-    from {color: black;}
-    to {color: white;}
+    from {color: var(--ink);}
+    to {color: var(--ink-on-dark);}
 }
 
 #about_window, #passwords_window {
     position: fixed;
     border-radius: 5px;
 
-    background-color: rgba(255, 0, 0, 0.5);
+    background-color: var(--about-window-fill);
     background-size:cover;
     padding: 20px;
 
@@ -173,25 +173,25 @@ body {
     margin-left: 30%;
     margin-right: 30%;
 
-    box-shadow: 5px 5px 30px black;
+    box-shadow: 5px 5px 30px var(--ink);
 
     clear: both;
     z-index: 999;
 }
 
 #passwords_window {
-    background-color: rgba(51, 201, 45, 0.5);
+    background-color: var(--passwords-window-fill);
 }
 
 #passwords{
-    background-color: rgba(0, 255, 0,0.6);
-    color: rgb(255, 255, 255);
+    background-color: var(--passwords-tab-fill);
+    color: var(--ink-on-dark);
 
     border-style: solid;
     border-right-style: none;
     position: fixed;
     border-width: 0.5px;
-    border-color: rgb(255, 255, 255);
+    border-color: var(--paper);
     height: 14px;
     width: 10px;
     right: 0px;
@@ -232,15 +232,15 @@ body {
     float:right;
     display:inline-block;
     padding:2px 5px;
-    background:#ccc;
+    background:var(--close-bg);
 }
 
 .close:hover {
     float:right;
     display:inline-block;
     padding:2px 5px;
-    background:#ccc;
-    color:#fff;
+    background:var(--close-bg);
+    color:var(--ink-on-dark);
 }
 
 .gif {
@@ -282,7 +282,7 @@ body {
 }
 
 #overlay {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: var(--scrim);
     position: fixed;
     height: 100%;
     width: 100%;
@@ -314,7 +314,7 @@ body {
     border-width: 1px;
     border-style: solid;
     border-radius: 10px;*/
-    box-shadow: 5px 5px 30px black;
+    box-shadow: 5px 5px 30px var(--ink);
     z-index: 10;
     clear: both;
 }
@@ -323,8 +323,8 @@ body {
 
 input[type=submit] {
     width: 60%;
-    background-color: green;
-    color: white;
+    background-color: var(--bright-green);
+    color: var(--ink-on-dark);
     padding: 14px 20px;
     margin: 8px 0;
     border-radius: 4px;
@@ -364,14 +364,14 @@ input[type=password], select {
 
 input[type=submit] {
     width: 60%;
-    background: linear-gradient(darkgray,grey);
-    color: black;
+    background: linear-gradient(var(--dark-grey),var(--bright-grey));
+    color: var(--ink);
     padding: 14px 20px;
     margin: 8px 0;
     border-radius: 4px;
     cursor: pointer;
-    border-color: black;
-    box-shadow: 1px 1px 20px #061614, -1px -1px 20px #061614;
+    border-color: var(--ink);
+    box-shadow: 1px 1px 20px var(--glow), -1px -1px 20px var(--glow);
 
 }
 
@@ -395,7 +395,7 @@ input[type=submit]:hover {
         border-width: 1px;
         border-style: solid;
         border-radius: 10px;
-        box-shadow: 5px 5px 30px black;
+        box-shadow: 5px 5px 30px var(--ink);
         font-size: xx-small;
         height: 46%;
         margin-top: 0px;
@@ -465,12 +465,12 @@ input[type=submit]:hover {
 }
 
 .t-input.is-error {
-    border-color: #ffb4a8;
+    border-color: var(--danger-text-on-dark);
 }
 
 .login_error {
     margin: 8px 0 0;
-    color: #fff; /* 7.74:1 on the lightest wood in the login box */
+    color: var(--ink-on-dark); /* 7.74:1 on the lightest wood in the login box */
     font-weight: bold;
     font-size: 1.15em;
     text-align: center;
@@ -480,7 +480,7 @@ input[type=submit]:hover {
     margin-right: 6px;
     font-size: 1.3em;
     vertical-align: -2px;
-    color: #ffb4a8;
+    color: var(--danger-text-on-dark);
 }
 
 /* transitions-dev: Error state shake (no auto-revert; typing clears the error) */
@@ -562,8 +562,8 @@ input[type=submit]:hover {
         width: calc(50% - 20px);
     }
 
-    #about { left: 12px; background-color: #8e1f2c; }
-    #passwords { left: calc(50% + 8px); background-color: #1e6b2b; }
+    #about { left: 12px; background-color: var(--flag-red); }
+    #passwords { left: calc(50% + 8px); background-color: var(--flag-green); }
     #about span, #passwords span { display: none; } /* the "<" arrow belonged to the slide-out */
 
     #about_window, #passwords_window {
@@ -576,10 +576,10 @@ input[type=submit]:hover {
         overflow: auto;
         padding: 16px;
         box-sizing: border-box;
-        background-color: #8e1f2c; /* opaque: the 2018 50% fill let the logo and flags show through the text */
+        background-color: var(--flag-red); /* opaque: the 2018 50% fill let the logo and flags show through the text */
     }
 
-    #passwords_window { background-color: #1e6b2b; }
+    #passwords_window { background-color: var(--flag-green); }
 
     .scrollable { height: auto; max-height: 55vh; }
 

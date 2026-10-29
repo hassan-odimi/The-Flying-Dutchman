@@ -15,14 +15,14 @@ body {
 }
 
 h2{
-    color: #96b9a5;
+    color: var(--ink-soft-on-dark);
 
 }
 
 header{
     overflow:hidden;
     position: relative;
-    color: white;
+    color: var(--ink-on-dark);
 }
 
 .title {
@@ -64,31 +64,37 @@ header{
     display: block;
     width: 100%;
     box-sizing: border-box;
-    background-color: #5e817b; /* black text 4.90:1 */
+    background-color: var(--control); /* black text 4.90:1 */
 
     text-align: center;
 
     padding:3px;
     height: 20%;
     border: solid;
-    border-color: #5e817b;
+    border-color: var(--control);
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 
-    box-shadow: 2px -2px 10px black, 2px 0 10px black;
+    box-shadow: 2px -2px 10px var(--ink), 2px 0 10px var(--ink);
 }
 
 .menu li button:hover {
-    background-color: #D6DDDC;
+    background-color: var(--surface-faint);
     border: solid;
-    border-color: #D6DDDC;
+    border-color: var(--surface-faint);
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
+/* Active tab: styled from aria-pressed, which the JS already sets */
+.menu li button[aria-pressed="true"] {
+    background-color: var(--surface);
+    border-color: var(--surface);
+}
+
 .menu a.current li {
-    background-color: #A4B9B6;
+    background-color: var(--surface);
     border: solid;
-    border-color: #A4B9B6;
+    border-color: var(--surface);
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
@@ -103,17 +109,17 @@ header{
     overflow: auto;
     border-bottom-left-radius: 1%;
 
-    background-color: #A4B9B6;
+    background-color: var(--surface);
 
 }
 
 .drink {
     padding: 3%;
     margin: 2%;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: var(--paper-veil);
 
     border-style: solid;
-    border-color: #C0CFCC;
+    border-color: var(--surface-soft);
     border-width: thin;
     border-radius: 4%;
 
@@ -122,7 +128,7 @@ header{
 
     float: left;
 
-    color: black;
+    color: var(--ink);
 
     overflow:hidden;
 }
@@ -158,8 +164,8 @@ header{
 }
 
 .add_button .h4 {
-    background-color: #926e30;
-    color: #fff;
+    background-color: var(--gold);
+    color: var(--ink-on-dark);
     width: 100px;
     padding: 5px;
     text-align: center;
@@ -167,11 +173,11 @@ header{
 }
 
 .add_button:hover .h4 {
-    background-color: #84642b;
+    background-color: var(--gold-deep);
 }
 
 .alert {
-    color: #8b0000;
+    color: var(--danger-text);
 }
 
 /*ORDER COLUMN*/
@@ -187,14 +193,14 @@ header{
 
     overflow: hidden;
     border-top-right-radius: 1%;
-    background-color: #254540;
+    background-color: var(--bar);
 }
 
 .selection {
     width: 28%;
     /*    height: 350px; *//* 500px*/
     height: 70vh;
-    background-color: #567973;
+    background-color: var(--control-strong);
 
     margin-right: 2%;
     float: left;
@@ -209,12 +215,12 @@ header{
     margin-right: 2%;
     float: right;
     overflow: auto;
-    background-color: #567973;
+    background-color: var(--control-strong);
 
 }
 
 .order {
-    background-color: #A4B9B6;
+    background-color: var(--surface);
 
     padding-left: 1.5%;
     padding-right: 1.5%;
@@ -222,7 +228,7 @@ header{
     margin-bottom: 10%;
 
     border-style: solid;
-    border-color: #A4B9B6;
+    border-color: var(--surface);
     border-width: thin;
 
     width: 92%;
@@ -243,7 +249,7 @@ header{
     /*    height: 75px;*/
     clear: both;
     height: 75px;
-    background-color: #254540;
+    background-color: var(--bar);
     float: left;
     margin-right: 2%;
     overflow: hidden;
@@ -252,13 +258,13 @@ header{
 
 .checkout h2 {
     float: left;
-    color: #96b9a5;
+    color: var(--ink-soft-on-dark);
     margin-left: 4%;
 }
 
 .delete {
-    background-color: #AF370B;
-    color: white;
+    background-color: var(--danger-fill);
+    color: var(--ink-on-dark);
     float: right;
     width: 24px;
     min-height: 24px; /* WCAG 2.5.8 */
@@ -295,7 +301,7 @@ footer .small_button{
 
 /* Zero stock: muted copper, still 5.56:1 on the drink card */
 .drink .textLightGreen {
-    color: #4a6a65;
+    color: var(--ink-muted);
 }
 
 /* Order column beside the drink list (same pattern as customer), so the order and

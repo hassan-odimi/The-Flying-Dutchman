@@ -5,6 +5,65 @@
 
 /*Style Sheet common to all pages*/
 
+/* Colour tokens, named by role. Change the theme here. */
+:root {
+  /* sea glass: light surfaces */
+  --surface: #A4B9B6;
+  --surface-soft: #C0CFCC;
+  --surface-faint: #D6DDDC;
+  --control: #5e817b;           /* black text 4.90:1 */
+  --control-strong: #567973;
+  --disabled: #767676;          /* white text 4.54:1 */
+  --close-bg: #ccc;
+  --paper: #fff;
+  --paper-veil: rgba(255, 255, 255, 0.9);
+
+  /* kelp: dark bars */
+  --bar: #254540;               /* white text 10.48:1 */
+  --bar-deep: #0C2924;
+  --glow: #061614;
+
+  /* text */
+  --ink: #000;
+  --ink-on-dark: #fff;
+  --ink-soft-on-dark: #96b9a5;
+  --ink-muted: #4a6a65;
+  --ink-deep: #15443d;
+
+  /* danger */
+  --danger-text: #8b0000;       /* 4.86:1 or better on every sea-glass surface */
+  --danger-text-on-dark: #ffb4a8;
+  --danger-fill: #AF370B;       /* white text */
+  --alert-fill: #c8102e;        /* new order, white text 5.88:1 */
+
+  /* flags, brass */
+  --flag-red: #8e1f2c;
+  --flag-red-light: #AD2535;
+  --flag-green: #1e6b2b;
+  --gold: #926e30;
+  --gold-deep: #84642b;
+  --about-tab-fill: rgba(251, 0, 27, 0.6);
+  --about-window-fill: rgba(255, 0, 0, 0.5);
+  --passwords-tab-fill: rgba(0, 255, 0, 0.6);
+  --passwords-window-fill: rgba(51, 201, 45, 0.5);
+
+  /* 2018 originals */
+  --accent-blue: #3240ff;
+  --accent-lime: #2dff12;
+  --gag-green: #62CB62;
+  --bright-red: red;
+  --bright-green: green;
+  --bright-grey: grey;
+  --paper-soft: whitesmoke;
+  --hover-grey: lightgrey;
+  --dark-grey: darkgray;
+
+  /* shadows */
+  --shadow-soft: rgba(0, 0, 0, 0.2);
+  --shadow-pop: rgba(0, 0, 0, 0.35);
+  --scrim: rgba(0, 0, 0, 0.6);
+}
+
 /* transitions-dev motion values for the toast and the login error shake */
 :root {
   --toast-open: 350ms;
@@ -39,7 +98,7 @@ header{
 }
 
 .info {
-    background-color: #767676; /* white text 4.54:1 */
+    background-color: var(--disabled); /* white text 4.54:1 */
     position: absolute;
     top: 0px;
     right: 50px;
@@ -61,8 +120,8 @@ button {
 
 /* Two-tone ring: one of white or black is at least 4.58:1 on any surface */
 :focus-visible {
-    outline: 3px solid #fff;
-    box-shadow: 0 0 0 6px #000;
+    outline: 3px solid var(--paper);
+    box-shadow: 0 0 0 6px var(--ink);
 }
 
 .h4 {
@@ -84,16 +143,16 @@ button {
 
 a{
     text-decoration: none;
-    color: black;
+    color: var(--ink);
     cursor:pointer;
 }
 
 a:hover {
-    color: white;
+    color: var(--ink-on-dark);
 }
 
 a:active {
-    color: red;
+    color: var(--bright-red);
 }
 
 
@@ -131,15 +190,15 @@ a:active {
 }
 
 #undo, #redo {
-    color: #fff; /* Sail White on wood, like every other text on the wood */
-    text-shadow: 0 0 2px #000, 0 1px 2px #000; /* dark halo keeps the white readable on light planks */
+    color: var(--ink-on-dark); /* Sail White on wood, like every other text on the wood */
+    text-shadow: 0 0 2px var(--ink), 0 1px 2px var(--ink); /* dark halo keeps the white readable on light planks */
     float: none;
     height: 100%;
     margin-right: 8px;
     white-space: nowrap;
 }
 #undo:hover, #redo:hover {
-                 color: #C0CFCC;
+                 color: var(--surface-soft);
              }
 
 /* Word beside the icon on wide screens; icon only below 1250px (the footer row runs out of room in Spanish), word kept for screen readers */
@@ -162,16 +221,9 @@ a:active {
 
 
 .highlight {
-    background: grey; /*#3240ff;*/
+    background: var(--bright-grey); /*#3240ff;*/
 }
 
-.fade2 {
-    background-color: grey;
-    opacity: 0.5;
-    filter: alpha(opacity=40);
-    zoom: 1;
-    pointer-events:none;
-}
 
 /*
 .undo {
@@ -184,83 +236,68 @@ a:active {
 /* COLORS */
 /* Brass and Rum Red buttons carry white labels (brass top darkened from #AA8139 to pass 4.5:1) */
 .light_green {
-    background-color: #926e30;
-    color: #fff;
+    background-color: var(--gold);
+    color: var(--ink-on-dark);
 }
 
 .blue {
-    background: linear-gradient(#926e30, #84642b);
-    color: #fff;
+    background: linear-gradient(var(--gold), var(--gold-deep));
+    color: var(--ink-on-dark);
 }
 
-.orange {
-    background-color: #ff4500;
-}
 
 .red {
-    background: linear-gradient(#AD2535,#8e1f2c);
-    color: #fff;
+    background: linear-gradient(var(--flag-red-light),var(--flag-red));
+    color: var(--ink-on-dark);
 }
 .headergreen {
-    background-color: #0C2924;
+    background-color: var(--bar-deep);
 }
 
 .darkgreen {
-    background-color: #254540;
+    background-color: var(--bar);
 }
 .green {
-    background-color: #567973;
+    background-color: var(--control-strong);
 }
 .backgroundgreen {
-    background-color: #A4B9B6;
+    background-color: var(--surface);
 }
 .highlightgreen{
-    background-color: #C0CFCC;
+    background-color: var(--surface-soft);
 }
 
 
-.grey {
-    background-color: #676b6d;
-}
 
-.yellow {
-    background-color: #f3ff19;
-}
 
-.beek {
-    background-color: #B9CB00;
-}
 
 .flipper {
   /*  background-color: #FB6601;*/
-    background: linear-gradient(#254540,#0C2924);
+    background: linear-gradient(var(--bar),var(--bar-deep));
     border-width: thin;
     border-style: solid;
     border-radius: 7px;
-    box-shadow: 2px 2px 10px black, -2px -2px 10px black;
+    box-shadow: 2px 2px 10px var(--ink), -2px -2px 10px var(--ink);
 }
 
-.light_orange {
-    background-color: #fbe104;
-}
 
 .textRed{
-    color: #8b0000; /* 4.86:1 or better on every sea-glass surface */
+    color: var(--danger-text); /* 4.86:1 or better on every sea-glass surface */
 }
 
 .alert{
     padding:2px;
     border: dashed;
     border-width: 2px;
-    border-color: #8b0000;
+    border-color: var(--danger-text);
 }
 
 .textDarkGreen{
-    color: #15443d;
+    color: var(--ink-deep);
 }
 
 .textLightGreen{
-    color: #96b9a5;
+    color: var(--ink-soft-on-dark);
 }
 
 /* FEEDBACK */
@@ -291,22 +328,22 @@ a:active {
     max-width: 480px;
     padding: 12px 16px;
     border-radius: 5px;
-    background-color: #254540;
-    color: #fff;
+    background-color: var(--bar);
+    color: var(--ink-on-dark);
     font-family: 'Oswald', sans-serif;
     font-size: 1rem;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 8px 16px var(--shadow-pop);
 }
 
 .toast.is-open { pointer-events: auto; } /* a closed toast is invisible, so it must not catch clicks */
 
 .toast_icon {
     margin-right: 8px;
-    color: #96b9a5;
+    color: var(--ink-soft-on-dark);
 }
 
 .toast.is-error .toast_icon {
-    color: #ffb4a8;
+    color: var(--danger-text-on-dark);
 }
 
 @media (max-width: 768px) {
