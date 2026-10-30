@@ -110,7 +110,7 @@ $(document).ready(function() {
         announce(redo_label[lang()] + ". " + $("#total").text());
     });
 
-    $(document).on('click','#pay',function() {
+    $(document).on('click','#pay, #pay_phone',function() {
         
         if (order.length > 0) {
             transactions_counter ++;
@@ -190,7 +190,7 @@ $(document).ready(function() {
         var row = $(this).closest('.order');
         var next = row.next('.order').find('.delete');
         if (!next.length) next = row.prev('.order').find('.delete');
-        if (!next.length) next = $('[id=pay]:visible');
+        if (!next.length) next = $('#pay:visible, #pay_phone:visible');
         row.remove(); // remove from DOM
         next.focus(); // keep keyboard users in the order list
         
@@ -247,11 +247,11 @@ function printToDOM (element) {
     var disabled = "";
 
     if (checkStock(element.article_id) < 10) {  // low items
-        stock_message = "<br> <b class='textRed'>LOW STOCK!</b>";
+        stock_message = "<b class='stock low_stock'>" + low_stock[lang()] + "</b>";
     }
 
     if (checkStock(element.article_id) < 1) {  // out of stock
-        stock_message = "<br><b class='textRed alert'>OUT OF STOCK</b>";
+        stock_message = "<b class='stock out_stock'>" + out_stock[lang()] + "</b>";
         classes = " fade";
         disabled = " disabled";
     }
@@ -259,8 +259,8 @@ function printToDOM (element) {
     $("#drink_database").append(
         '<button type="button" class="drink' + classes + '"' + disabled + '>' +
         '<span class="h4">' + element.name + '</span>' +
-        '<img  src="img/drinks/' + element.article_id + '.png" alt="">' +
-        '<span class="h4">SEK ' + parseInt(element.sale_price) + ':- ' +  stock_message +'</span>' +
+        '<img src="img/drinks/' + element.article_id + '.webp" alt="" loading="lazy">' +
+        '<span class="h4 price">SEK ' + parseInt(element.sale_price) + ':- ' +  stock_message +'</span>' +
         '<span hidden>' + element.article_id + '</span>' +
         '</button>');
 }
@@ -274,11 +274,12 @@ function addOrder (article_id) {
             if (this.article_id == article_id){ // retrieve article from the database
                 $("#drink_selection").prepend(
                     '<div class="order " id="'+ this.article_id +'">' +
-                    '<button type="button" class="delete" aria-labelledby="remove_word name' + this.article_id + '">X</button>' +
+                    '<b class="qty">1\u00d7</b>' +
+                    '<button type="button" class="delete" aria-labelledby="remove_word name' + this.article_id + '"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#cross-brush"/></svg></button>' +
                     '<h4 class="price">SEK <span class="hidden_price">' + parseInt(this.sale_price) + '</span>:-</h4>' +
                     '<span class="sum" hidden>' + this.sale_price + '</span>' +
-                    '<img src="img/drinks/' + this.article_id + '.png" alt="">' +
-                    '<h4 id="name' + this.article_id + '">' + this.name + '<span class="quantity textRed"></span></h4>' +
+                    '<img src="img/drinks/' + this.article_id + '.webp" alt="" loading="lazy">' +
+                    '<h4 id="name' + this.article_id + '">' + this.name + '</h4>' +
                     '</div>'
                 )
                 total += parseInt(this.sale_price);
@@ -291,7 +292,7 @@ function addOrder (article_id) {
         quantity[i]++;
         total += parseInt($("#"+article_id).find('.sum').html());
 
-        $("#"+article_id).find('.quantity').empty().append(" ( x " + quantity[i] + ")");
+        $("#"+article_id).find('.qty').text(quantity[i] + '\u00d7');
 
         update_price = parseInt($("#"+article_id).find('.sum').html()) * quantity[i];
         $("#"+article_id).find('.hidden_price').empty().append(update_price);
@@ -301,8 +302,8 @@ function addOrder (article_id) {
     //alert (order +' X '+quantity)
 }
 
-function updateTotal () {
-    $('#total').empty().append('Total: SEK ' + Math.max(total,0) + ':-')
+function updateTotal (index) {
+    $('#total').html('<small>' + total_label[index === undefined ? lang() : index] + '</small> <span>SEK ' + Math.max(total,0) + ':-</span>');
 }
 
 
@@ -457,7 +458,7 @@ function highlightTab(new_tab) {
 function translate (index) {
     $("#page_title").text(page_title[index]);
     $("#title").text(title[index]);
-    $("*#logout").text(logout[index]);
+    $("#logout, #logout_phone").text(logout[index]);
     $("#customer").text(customer[index]);
     $("#credit").text(credit[index]);
     $("#drink_list").text(drink_list[index]);
@@ -469,11 +470,14 @@ function translate (index) {
     $("*#ecologic").text(ecologic[index]);
     $("*#specials").text(specials[index]);
     $("#your_order").text(your_order[index]);
-    $("#total").text(total[index]);
-    $("*#pay").text(pl_order[index]);
+    updateTotal(index);
+    $("#pay, #pay_phone").text(pl_order[index]);
     $("#hello").text(hello[index]);		
     $("#your_credit").text(your_credit[index]);		
     $("#drink_database").attr("aria-label", drinks_region[index]);
     $("#menu_toggle").attr("aria-label", drink_categories[index]);
     $("#order_toggle").attr("aria-label", your_order[index]);
+    $("#drink_selection").attr("data-empty", empty_order[index]);
+    $(".low_stock").text(low_stock[index]);
+    $(".out_stock").text(out_stock[index]);
 }

@@ -25,7 +25,7 @@ test('category tabs say pressed and not pressed', async ({ page }) => {
 test('drink list is a named region and out-of-stock drinks are disabled', async ({ page }) => {
   const log = await readAll(page);
   expect(log).toContain('region, Drinks');
-  expect(log).toContain('button, Chang Beer SEK 75:- OUT OF STOCK, disabled');
+  expect(log).toContain('button, Chang Beer SEK 75:- Out of stock, disabled');
 });
 
 test('add, remove, undo and redo are each read once with the total', async ({ page }) => {

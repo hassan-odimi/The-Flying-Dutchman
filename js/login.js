@@ -105,8 +105,7 @@ var toastTimer;
 function showToast(message, isError) {
     announce(message);
     var toast = $("#toast");
-    toast.toggleClass("is-error", !!isError).find(".toast_icon")
-        .toggleClass("fa-check-circle", !isError).toggleClass("fa-exclamation-circle", !!isError);
+    toast.toggleClass("is-error", !!isError).find(".toast_icon use").attr("href", "img/icons.svg#" + (isError ? "alert" : "check"));
     toast.find(".toast_text").text(message);
     toast.addClass("is-open");
     clearTimeout(toastTimer);
@@ -134,7 +133,7 @@ function logOut() {
 $(function () {
     $("body").append('<div id="live" class="sr-only" aria-live="polite"></div>' +
         '<div class="toast_wrap"><div id="toast" class="toast t-toast" aria-hidden="true">' +
-        '<i class="toast_icon fa fa-check-circle"></i><span class="toast_text"></span></div></div>');
+        '<svg class="toast_icon icon" aria-hidden="true"><use href="img/icons.svg#check"/></svg><span class="toast_text"></span></div></div>');
     $("#toast").hover(function () { clearTimeout(toastTimer); }, function () { toastTimer = setTimeout(hideToast, 4000); });
 
     var pending = sessionStorage.getItem("toast");

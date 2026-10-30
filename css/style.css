@@ -11,17 +11,13 @@
   --surface: #A4B9B6;
   --surface-soft: #C0CFCC;
   --surface-faint: #D6DDDC;
-  --control: #5e817b;           /* black text 4.90:1 */
   --control-strong: #567973;
-  --disabled: #767676;          /* white text 4.54:1 */
-  --close-bg: #ccc;
   --paper: #fff;
   --paper-veil: rgba(255, 255, 255, 0.9);
 
   /* kelp: dark bars */
   --bar: #254540;               /* white text 10.48:1 */
   --bar-deep: #0C2924;
-  --glow: #061614;
 
   /* text */
   --ink: #000;
@@ -29,11 +25,17 @@
   --ink-soft-on-dark: #96b9a5;
   --ink-muted: #4a6a65;
   --ink-deep: #15443d;
+  --ink-sepia: #2a1709;         /* on the paper tabs and slips, 5.2:1 or better on their darkest pixel */
+  --rule-sepia: rgba(42, 23, 9, 0.35);  /* ruled lines on the phone category sheet and the order ledger */
+  --paper-fold: #c9b48f;        /* the back of a folded paper corner (T8 paid slips) */
+  --paper-ear: linear-gradient(45deg, var(--paper-fold) 50%, transparent 50%) top right / 26px 26px no-repeat, linear-gradient(225deg, var(--control-strong) 50%, transparent 50%) top right / 26px 26px no-repeat;
+  --hover-sepia: rgba(42, 23, 9, 0.08); /* hover on the sheet: sepia 4.62:1 on the darkest hovered pixel */
 
   /* danger */
   --danger-text: #8b0000;       /* 4.86:1 or better on every sea-glass surface */
   --danger-text-on-dark: #ffb4a8;
   --danger-fill: #AF370B;       /* white text */
+  --hover-danger: rgba(139, 0, 0, 0.12);  /* red ink wash behind the order-row remove cross on hover and focus */
   --alert-fill: #c8102e;        /* new order, white text 5.88:1 */
 
   /* flags, brass */
@@ -42,10 +44,11 @@
   --flag-green: #1e6b2b;
   --gold: #926e30;
   --gold-deep: #84642b;
-  --about-tab-fill: rgba(251, 0, 27, 0.6);
-  --about-window-fill: rgba(255, 0, 0, 0.5);
-  --passwords-tab-fill: rgba(0, 255, 0, 0.6);
-  --passwords-window-fill: rgba(51, 201, 45, 0.5);
+  --brass-light: #e8c77e;       /* bevel highlight and rivet glint, never behind text; gold staff name (T6) */
+  --brass-dark: #4a3412;        /* bottom of the brass plate, white text 11.9:1 */
+  --iron-light: #8c9a96;        /* bevel highlight on the iron Close */
+  --rust-light: #e8917e;        /* bevel highlight on the rust-red plate, never behind text */
+  --rust-dark: #4a0f14;         /* bottom of the rust-red plate */
 
   /* 2018 originals */
   --accent-blue: #3240ff;
@@ -54,17 +57,15 @@
   --bright-red: red;
   --bright-green: green;
   --bright-grey: grey;
-  --paper-soft: whitesmoke;
-  --hover-grey: lightgrey;
-  --dark-grey: darkgray;
 
   /* shadows */
-  --shadow-soft: rgba(0, 0, 0, 0.2);
-  --shadow-pop: rgba(0, 0, 0, 0.35);
+  --shadow-lift: rgba(0, 0, 0, 0.65);
+  --wood-scrim: rgba(0, 0, 0, 0.45);  /* darkens wood2 so Sail White stays 5.48:1 or better on its brightest pixel */
   --scrim: rgba(0, 0, 0, 0.6);
+  --login-scrim: rgba(0, 0, 0, 0.15);  /* extra on the login box: its labels land on wood2's brightest planks */
 }
 
-/* transitions-dev motion values for the toast and the login error shake */
+/* transitions-dev motion values for the toast, the login error shake and the card hover lift */
 :root {
   --toast-open: 350ms;
   --toast-close: 250ms;
@@ -79,7 +80,63 @@
   --shake-dur-b: 60ms;
   --shake-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --revert-dur: 280ms;
+
+  --lift-distance: 2px;  /* card hover: quick in, slower out */
+  --lift-in: 150ms;
+  --lift-out: 250ms;
 }
+
+/* Type and spacing scale (V1): 1.25 ratio in rem, so text zooms; 4 px spacing steps */
+:root {
+  --text-xs: 0.8rem;       /* 12.8 px */
+  --text-base: 1rem;       /* 16 px */
+  --text-md: 1.25rem;      /* 20 px */
+  --text-lg: 1.563rem;     /* 25 px */
+  --text-xl: 1.953rem;     /* 31.25 px */
+  --text-display: clamp(1.953rem, 1.6rem + 1.2vw, 2.441rem); /* 31.25 to 39 px, the one swash greeting */
+
+  --weight-body: 400;
+  --weight-label: 500;
+  --weight-heading: 600;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+}
+
+/* Materials (V2): one scrimmed wood floor, two lifts, two corner sizes */
+:root {
+  --wood: linear-gradient(var(--wood-scrim), var(--wood-scrim)), url("../img/wood2.jpg");
+  --shadow-raised: 0 2px 6px var(--shadow-lift), 0 10px 26px var(--shadow-lift); /* panels and tabs on the wood */
+  --shadow-float: 0 2px 6px var(--shadow-lift), 0 12px 28px var(--shadow-lift);  /* buttons, menus, toasts */
+  --shadow-pressed: 0 1px 2px var(--shadow-lift);                                 /* a button held down */
+  --shadow-inset: inset 0 2px 4px var(--shadow-lift);                             /* a login field cut into the wood */
+  --shadow-brass: inset 0 1px 0 var(--brass-light), inset 0 -2px 0 var(--shadow-lift), var(--shadow-float);
+  --shadow-iron: inset 0 1px 0 var(--iron-light), inset 0 -2px 0 var(--shadow-lift), var(--shadow-float);
+  --shadow-rust: inset 0 1px 0 var(--rust-light), inset 0 -2px 0 var(--shadow-lift), var(--shadow-float);
+  --shadow-plaque: inset 0 1px 0 var(--brass-light), inset 0 -2px 0 var(--shadow-lift), inset 0 0 0 1px var(--brass-dark), inset 0 0 8px var(--shadow-lift);
+  --shadow-none: none;
+  --radius-sm: 4px;      /* buttons, inputs */
+  --radius-md: 8px;      /* cards, panels, tab tops, dialogs */
+  --radius-round: 50%;
+}
+
+/* Only real weights: Oswald loads 400 to 700, Berkshire Swash only 400, so never let the browser fake bold */
+body {
+    font-weight: var(--weight-body);
+    font-synthesis: none;
+}
+
+h1 { font-size: var(--text-xl); }
+h2 { font-size: var(--text-lg); }
+h3 { font-size: var(--text-md); }
+h4 { font-size: var(--text-base); font-weight: var(--weight-label); }
+h1, h2, h3, b, strong, .price { font-weight: var(--weight-heading); }
+@media (min-width: 769px) { #total { font-size: var(--text-md); } } /* order total, one step under "Your Order"; the phone checkout bar keeps 16 px */
 
 h1, h2 {
     text-align: center;
@@ -91,19 +148,74 @@ header{
     position: relative;
 }
 
+/* Staff page titles in the customer greeting's swash (V6) */
+#orders_q, #title {
+    font-family: 'Berkshire Swash', cursive;
+    font-weight: var(--weight-body); /* the swash has no bold */
+    text-shadow: 0 1px 2px var(--ink), 0 0 8px var(--ink);
+}
+
 .title {
     /*background-color: darkgrey;*/
     float: left;
     width: 100%;
 }
 
+/* Staff label (T6): text on the wood, not a plate, so it never reads as a button. Gold role icon
+   (Lucide beer / ship-wheel), white role word, gold swash name, over an edgeless dark glow.
+   Gold name 6.24:1 and role 9.4:1 or better on the worst pixel */
 .info {
-    background-color: var(--disabled); /* white text 4.54:1 */
     position: absolute;
-    top: 0px;
-    right: 50px;
+    top: 4px;
+    right: 8px;
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 10px;
+    align-items: center;
+    padding: 6px 16px;
+    white-space: nowrap;
+    color: var(--ink-on-dark);
+    background: radial-gradient(farthest-side, var(--wood-scrim) 65%, transparent);
+    text-shadow: 0 1px 2px var(--ink), 0 0 6px var(--ink);
+}
+.info .icon {
+    grid-row: 1 / 3;
+    width: 36px;
+    height: 36px;
+    stroke-width: 1.5;
+    color: var(--brass-light);
+    filter: drop-shadow(0 1px 2px var(--ink));
+}
+.info b {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-label);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+}
+.info span {
+    font-family: 'Berkshire Swash', serif;
+    font-size: var(--text-lg);
+    line-height: 1.1;
+    color: var(--brass-light);
+}
+@media (max-width: 1023px) {
+    #orders_q, #title { padding-top: 52px; } /* the heading drops below the label (the management title reaches it at 800px) */
 }
 
+
+/* ICONS (V11): Lucide sprite img/icons.svg, drawn in the text colour */
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.icon-2x { width: 2em; height: 2em; }
 
 /* BUTTONS */
 
@@ -126,9 +238,10 @@ button {
 
 .h4 {
     display: block;
-    font-weight: bold;
+    font-weight: var(--weight-label);
     margin: 1.33em 0;
 }
+.h4.price { font-weight: var(--weight-heading); } /* drink card price */
 
 .small_button {
     margin: 0.8%;
@@ -136,7 +249,7 @@ button {
     width: 15%;
 
     text-align: center;
-    font-size: 20px;
+    font-size: var(--text-md);
 
     cursor:pointer;
 }
@@ -162,12 +275,40 @@ a:active {
 }
 
 .languages img {
-    width: 70px;
-    height: 40px;
+    width: 64px;
+    height: 40px; /* flags are 1.6:1, files 128x80 for 2x screens */
     float: left;
-    padding: 2%;
-   /* border-radius: 30%;*/ /* round the edges*/
+    margin: var(--space-3);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-float);
+    filter: sepia(0.3) saturate(0.85);
+}
 
+/* Weathered enamel plaques (1280 layout): the brass tarnish multiplied over each flag.
+   Each wrapper floats so it can hold the overlay; the first keeps the 20% indent */
+@media (min-width: 769px) {
+    .languages {
+        position: relative;
+        float: left;
+        margin-left: 0;
+    }
+    .languages_menu a:first-child .languages { margin-left: 20%; }
+    .languages::after {
+        content: "";
+        position: absolute;
+        left: var(--space-3);
+        top: var(--space-3);
+        width: 64px;
+        height: 40px;
+        border-radius: var(--radius-sm);
+        background: url("../img/textures/tarnish.webp") -140px -70px / 400px 200px;
+        mix-blend-mode: multiply;
+        box-shadow: var(--shadow-plaque);
+        pointer-events: none;
+    }
+    #sve .languages::after { background-position: -220px -80px; }
+    #ita .languages::after { background-position: -60px -90px; }
+    #esp .languages::after { background-position: -280px -60px; }
 }
 
 .languages_menu{
@@ -176,6 +317,101 @@ a:active {
     margin-left: auto;
     margin-right: auto;
     clear: both;
+}
+
+/* Flag line (V6), app footers only: worn cloth flags sewn onto a hemp cord that sags between two rusty nails.
+   The cord image sags 16px; each flag sits at t = .1 .3 .5 .7 .9 along it at any width, because the first and
+   last margins are set from the container width (cqw), so the drop and the angle per flag follow the cord */
+@media (min-width: 769px) {
+    footer {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        clear: both; /* a flex footer is a new block context and would squeeze in beside the floated panels */
+    }
+    footer > * { float: none; }
+    footer .languages_menu { flex: none; width: 464px; margin: 0 auto; } /* inline-size containment lets a flex item shrink to 0 */
+    footer button { white-space: nowrap; }
+    footer .undo_redo_menu { display: flex; }
+}
+footer .languages_menu {
+    --fw: 64px;
+    container-type: inline-size;
+    position: relative;
+    max-width: 464px;
+    margin-inline: auto;
+    display: flex;
+    justify-content: space-between;
+    height: auto;
+    padding: 14px 0;
+}
+footer .languages_menu a {
+    display: block;
+    flex: none;
+}
+footer .languages_menu a:first-child { margin-left: calc(12px + 0.1 * (100cqw - 24px) - var(--fw) / 2); }
+footer .languages_menu a:last-child { margin-right: calc(12px + 0.1 * (100cqw - 24px) - var(--fw) / 2); }
+footer .languages,
+footer .languages_menu a:first-child .languages {
+    position: relative;
+    float: none;
+    margin: 0;
+    transform-origin: 50% 0;
+}
+footer .languages img {
+    display: block;
+    float: none;
+    width: var(--fw);
+    height: calc(var(--fw) * 0.625);
+    margin: 0;
+    border-radius: 0;
+    box-shadow: var(--shadow-none);
+    filter: drop-shadow(0 2px 2px var(--ink));
+}
+footer .languages::after { content: none; } /* no enamel plaque on cloth */
+footer .languages::before { /* the sleeve's shade under the cord */
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 10px;
+    background: linear-gradient(var(--wood-scrim), transparent);
+    z-index: 1;
+}
+footer .languages_menu::before { /* the cord, ends on the nail centres */
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: 2px;
+    height: 40px;
+    background: url("../img/textures/rope.webp") 0 0 / 100% 100%;
+    filter: drop-shadow(0 2px 1px var(--ink));
+    pointer-events: none;
+    z-index: 2;
+}
+footer .languages_menu::after { /* the nails */
+    content: "";
+    position: absolute;
+    inset: -6px 0 auto;
+    height: 24px;
+    background: url("../img/textures/nail.webp") left top / 24px 24px no-repeat,
+                url("../img/textures/nail.webp") right top / 24px 24px no-repeat;
+    pointer-events: none;
+    z-index: 3;
+}
+footer .languages_menu a:nth-child(1) .languages { translate: 0 -4px; rotate: atan2(51.2px, 100cqw - 24px); }
+footer .languages_menu a:nth-child(2) .languages { translate: 0 3.4px; rotate: atan2(25.6px, 100cqw - 24px); }
+footer .languages_menu a:nth-child(3) .languages { translate: 0 6px; }
+footer .languages_menu a:nth-child(4) .languages { translate: 0 3.4px; rotate: atan2(-25.6px, 100cqw - 24px); }
+footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: atan2(-51.2px, 100cqw - 24px); }
+@media (max-width: 768px) {
+    footer .languages_menu { --fw: 56px; }
+}
+@media (min-width: 769px) and (max-width: 1099px) {
+    footer .languages_menu { --fw: 48px; width: 360px; } /* room for Log Out, undo/redo and Place Order on one row */
+}
+@media (max-width: 359px) {
+    footer .languages_menu { --fw: 46px; }
 }
 
 /*UNDO-REDO MENU*/
@@ -233,22 +469,106 @@ a:active {
     color: green;
 } */
 
+/* TABS (V4): torn sailors' notes on the wood; the active tab is a board joined to the panel below.
+   Textures are cut from Texturelabs Paper 328 and Poly Haven Green Rough Planks, see docs/ASSETS.md */
+.menu li button {
+    height: 36px;
+    margin-top: 4px;
+    padding: 8px var(--space-3) 0;
+    border: 0;
+    border-radius: 0;
+    color: var(--ink-sepia);
+    background: url("../img/textures/tab-note1.webp") 0 0 / 100% 100% no-repeat;
+    filter: drop-shadow(0 2px 3px var(--shadow-lift));
+    transition: height var(--lift-out) var(--toast-ease), margin-top var(--lift-out) var(--toast-ease);
+}
+.menu li:nth-child(3n+2) button { background-image: url("../img/textures/tab-note2.webp"); }
+.menu li:nth-child(3n) button { background-image: url("../img/textures/tab-note3.webp"); }
+.menu li:nth-child(odd) button { transform: rotate(-0.6deg); }
+.menu li:nth-child(4n) button { transform: rotate(0.7deg); }
+
+.menu li button:hover {
+    height: 38px;
+    margin-top: 2px;
+    transition-duration: var(--lift-in);
+}
+
+/* Active tab: styled from aria-pressed, which the JS already sets */
+.menu li button[aria-pressed="true"] {
+    height: 40px;
+    margin-top: 0;
+    padding-top: 0;
+    transform: none;
+    filter: none;
+    color: var(--ink);
+    font-weight: var(--weight-heading);
+    background: url("../img/textures/board-surface.webp") 0 0 / 512px 94px, var(--surface); /* black text 8.89:1 on its lightest grain */
+}
+
+/* BUTTONS (V4): hover darkens, press sinks 1px */
+.red, .blue, .light_green, .add_button .h4, .flipper, #login, #close, .close_window {
+    transition: transform var(--lift-in) var(--toast-ease), filter var(--lift-in) var(--toast-ease), box-shadow var(--lift-in) var(--toast-ease);
+}
+.red:hover, .blue:hover, .light_green:hover, .add_button:hover .h4, .flipper:hover, #login:hover, #close:hover, .close_window:hover {
+    filter: brightness(0.88);
+}
+.red:active, .blue:active, .light_green:active, .add_button:active .h4, .flipper:active, #login:active, #close:active, .close_window:active {
+    transform: translateY(1px);
+    filter: brightness(0.8);
+    box-shadow: var(--shadow-pressed);
+}
+
+/* Brass plate: tarnish scan (Texturelabs Metal 132) multiplied over the gold, four rusted rivets
+   (Texturelabs Details 144). Multiply only darkens, so white text is 6.97:1 or better */
+.blue, #login {
+    background:
+        url("../img/textures/rivet.webp") left 1px top 1px / 12px 12px no-repeat,
+        url("../img/textures/rivet.webp") right 1px top 1px / 12px 12px no-repeat,
+        url("../img/textures/rivet.webp") left 1px bottom 1px / 12px 12px no-repeat,
+        url("../img/textures/rivet.webp") right 1px bottom 1px / 12px 12px no-repeat,
+        url("../img/textures/tarnish.webp") 0 0 / 400px 200px,
+        linear-gradient(var(--gold) 0%, var(--gold-deep) 55%, var(--brass-dark) 100%);
+    background-blend-mode: normal, normal, normal, normal, multiply, normal;
+    color: var(--ink-on-dark);
+    box-shadow: var(--shadow-brass);
+}
+
+/* Log Out is the quiet way out: an outline, not a second red call to action */
+#logout.red, #logout_phone.red {
+    background: none;
+    border: 2px solid var(--ink-on-dark);
+    color: var(--ink-on-dark);
+    text-shadow: 0 0 2px var(--ink), 0 1px 2px var(--ink);
+    box-shadow: var(--shadow-none);
+}
+#logout.red:hover, #logout_phone.red:hover { background: var(--scrim); filter: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    .menu li button, .red, .blue, .light_green, .add_button .h4, .flipper, #login, #close, .close_window { transition: none; }
+    .red:active, .blue:active, .light_green:active, .add_button:active .h4, .flipper:active, #login:active, #close:active, .close_window:active { transform: none; }
+}
+
 /* COLORS */
-/* Brass and Rum Red buttons carry white labels (brass top darkened from #AA8139 to pass 4.5:1) */
-.light_green {
-    background-color: var(--gold);
+/* Small plates (T1): rust specks (Texturelabs Metal 132, 70 %) and tarnish multiplied over brass,
+   rust-red or iron, no rivets. Multiply only darkens: white is 7.37:1 or better on the worst pixel */
+.light_green, .add_button .h4 {
+    background:
+        url("../img/textures/rust.webp") 0 0 / 400px 200px,
+        url("../img/textures/tarnish.webp") 0 0 / 400px 200px,
+        linear-gradient(var(--gold) 0%, var(--gold-deep) 55%, var(--brass-dark) 100%);
+    background-blend-mode: multiply, multiply, normal;
     color: var(--ink-on-dark);
+    box-shadow: var(--shadow-brass);
 }
-
-.blue {
-    background: linear-gradient(var(--gold), var(--gold-deep));
-    color: var(--ink-on-dark);
-}
-
 
 .red {
-    background: linear-gradient(var(--flag-red-light),var(--flag-red));
+    background:
+        url("../img/textures/rust.webp") 0 0 / 400px 200px,
+        url("../img/textures/tarnish.webp") 0 0 / 400px 200px,
+        linear-gradient(var(--flag-red-light) 0%, var(--flag-red) 55%, var(--rust-dark) 100%);
+    background-blend-mode: multiply, multiply, normal;
     color: var(--ink-on-dark);
+    box-shadow: var(--shadow-rust);
 }
 .headergreen {
     background-color: var(--bar-deep);
@@ -271,13 +591,22 @@ a:active {
 
 
 
+/* Landing signs (T5): riveted iron plates on the storm, white 7.36:1 or better on the worst pixel.
+   index.css turns "Order your Drinks!" into brass */
 .flipper {
-  /*  background-color: #FB6601;*/
-    background: linear-gradient(var(--bar),var(--bar-deep));
-    border-width: thin;
-    border-style: solid;
-    border-radius: 7px;
-    box-shadow: 2px 2px 10px var(--ink), -2px -2px 10px var(--ink);
+    background:
+        url("../img/textures/rivet.webp") left 3px top 3px / 12px 12px no-repeat,
+        url("../img/textures/rivet.webp") right 3px top 3px / 12px 12px no-repeat,
+        url("../img/textures/rivet.webp") left 3px bottom 3px / 12px 12px no-repeat,
+        url("../img/textures/rivet.webp") right 3px bottom 3px / 12px 12px no-repeat,
+        url("../img/textures/rust.webp") 0 0 / 400px 200px,
+        url("../img/textures/iron.webp") 0 0 / 400px 200px,
+        var(--bar);
+    background-blend-mode: normal, normal, normal, normal, multiply, multiply, normal;
+    border: 0;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-iron);
+    letter-spacing: 0.04em;
 }
 
 
@@ -324,26 +653,79 @@ a:active {
     z-index: 1000;
 }
 
+/* T9: a burnt paper note pinned with a tack; sepia 6.61:1 or better. Errors add the alert icon and a worn red ribbon */
 .toast {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     max-width: 480px;
-    padding: 12px 16px;
-    border-radius: 5px;
-    background-color: var(--bar);
-    color: var(--ink-on-dark);
+    padding: 16px 12px 2px;
+    border: 16px solid transparent;
+    border-image: url("../img/textures/note.webp") 48 fill / 16px stretch; /* 9-slice: the burnt rim keeps its size */
+    color: var(--ink-sepia);
     font-family: 'Oswald', sans-serif;
-    font-size: 1rem;
-    box-shadow: 0 8px 16px var(--shadow-pop);
+    font-size: var(--text-base);
+    text-shadow: 0 0 1px var(--rule-sepia);
+    box-shadow: var(--shadow-float);
+    rotate: -1deg;
+}
+
+.toast::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    margin-left: -12px;
+    background: url("../img/textures/tack.webp") 0 0 / 100% 100%;
+    filter: drop-shadow(0 2px 1px var(--shadow-lift));
 }
 
 .toast.is-open { pointer-events: auto; } /* a closed toast is invisible, so it must not catch clicks */
 
 .toast_icon {
-    margin-right: 8px;
-    color: var(--ink-soft-on-dark);
+    flex: none;
+    width: 26px;
+    height: 26px;
+    stroke-width: 2.25;
+    mask: url("../img/textures/stamp-wear.webp") 0 0 / 80px 40px; /* worn ink */
 }
 
-.toast.is-error .toast_icon {
-    color: var(--danger-text-on-dark);
+.toast.is-error { rotate: 1deg; }
+.toast.is-error .toast_icon { color: var(--flag-red); }
+
+.toast.is-error::before {
+    content: "";
+    position: absolute;
+    left: -4px;
+    top: -6px;
+    bottom: -6px;
+    width: 8px;
+    background: var(--flag-red);
+    mask: url("../img/textures/stamp-wear.webp") 0 0 / 60px 120px;
+}
+
+/* Sea mist rolls in under the open note; it never catches clicks */
+.toast_wrap::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -110px;
+    width: min(760px, 150vw);
+    height: 240px;
+    background: url("../img/textures/mist.webp") center / 100% 100%;
+    opacity: 0;
+    translate: -50% var(--toast-distance);
+    pointer-events: none;
+    transition: opacity var(--toast-close) var(--toast-ease), translate var(--toast-close) var(--toast-ease);
+}
+
+.toast_wrap:has(.is-open)::before {
+    opacity: 0.95;
+    translate: -50% 0;
+    transition: opacity var(--toast-open) var(--toast-ease), translate var(--toast-open) var(--toast-ease);
 }
 
 @media (max-width: 768px) {
@@ -373,5 +755,5 @@ a:active {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .t-toast { transition: none !important; }
+  .t-toast, .toast_wrap::before { transition: none !important; }
 }

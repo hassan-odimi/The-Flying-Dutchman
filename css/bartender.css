@@ -7,7 +7,7 @@
 
 /*MENU COLUMN*/
 body{
-    background-image: url("../img/wood4.jpg");
+    background-image: var(--wood);
     background-size: cover;
     max-width: 100%;
     background-repeat: repeat-y;
@@ -46,35 +46,22 @@ h1 {
     width: 100%;
     box-sizing: border-box;
     text-align: center;
-
-    padding:3px;
-
-    border: solid;
-    border-color: var(--bar-deep); /*#567973;*/
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    background-color: var(--bar-deep); /*#567973;*/
-    color: var(--ink-on-dark);
-
-    box-shadow: 2px -2px 10px var(--ink), 2px 0 10px var(--ink);
 }
 
-.menu li button:hover {
-    background-color: var(--bar); /* Deep Kelp, white text 10.48:1 */
-    border: solid;
-    border-color: var(--bar);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
-/* Active tab: styled from aria-pressed, which the JS already sets */
+/* Paper and states live in style.css (V4). The bartender's tabs are wide, so they get wide notes,
+   and the active board is the darker kelp the order list sits on (white text 4.5:1 or better) */
+.menu li button { background-image: url("../img/textures/tab-note-wide1.webp"); }
+.menu li:nth-child(3n+2) button { background-image: url("../img/textures/tab-note-wide2.webp"); }
+.menu li:nth-child(3n) button { background-image: url("../img/textures/tab-note-wide3.webp"); }
 .menu li button[aria-pressed="true"] {
-    background-color: var(--control-strong);
-    border-color: var(--control-strong);
+    color: var(--ink-on-dark);
+    background: url("../img/textures/board-kelp.webp") 0 0 / 512px 94px, var(--control-strong);
 }
 
+/* New orders: the alarm stays a solid red plate, white text 5.88:1 */
 #retrieve_orders.has-new {
-    background-color: var(--alert-fill);
+    color: var(--ink-on-dark);
+    background: var(--alert-fill);
 }
 
 .order_list {
@@ -82,10 +69,11 @@ h1 {
     height: 500px;
     margin-left: 2%;
     margin-right: 2%;
-    border-radius: .5%;
+    border-radius: var(--radius-md);
     float: left;
     overflow: auto;
     background-color: var(--control-strong);
+    box-shadow: var(--shadow-raised);
 }
 
 .order_header {
@@ -96,7 +84,7 @@ h1 {
     border-style: solid;
     border-color: var(--surface-soft);
     border-width: medium;
-    border-radius: 3%;
+    border-radius: var(--radius-md);
 
     width: 90%;
     height: 500%;
@@ -108,84 +96,111 @@ h1 {
     overflow: hidden;
 }
 
-/* ACCORDEON */
-/* Style the buttons that are used to open and close the accordion panel */
-.accordion{
-    color: var(--ink);
-    background-color: var(--surface);
-
-    text-align: left;
-
-    cursor: pointer;
-    padding: 7px;
-
-    transition: 0.4s;
-    padding-bottom: 12px;
-
-    padding-left: 1.5%;
-    padding-right: 1.5%;
-    margin-top: 15px;
-
-    border-style: solid;
-    border-color: var(--surface-soft);
-    border-width: medium;
-    border-radius: 3px;
-
+/* ORDER BAR (T8): the accordion button is a paper slip in columns, read left to right:
+   number, customer, date and time, total, state. Not paid = raised, red edge, red stamp;
+   paid = flat, torn right edge, folded corner, kelp stamp. Sepia 5.9:1 or better */
+.accordion {
+    display: grid;
+    grid-template-columns: minmax(96px, auto) minmax(0, 1fr) auto auto minmax(110px, auto) 24px;
+    align-items: center;
+    column-gap: var(--space-5);
+    box-sizing: border-box;
     width: 90%;
-    height: 45px;
-
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-
-    overflow: hidden;
-
-    cursor:zoom-in;
+    min-height: 56px;
+    margin: 15px auto 0;
+    padding: 6px var(--space-4) 6px 18px;
+    border: 0;
+    border-left: 10px solid var(--flag-red);
+    border-radius: var(--radius-sm);
+    background: url("../img/textures/docket.webp") 0 30% / 100% auto, var(--paper);
+    color: var(--ink-sepia);
+    text-align: left;
+    line-height: 1.2;
+    box-shadow: var(--shadow-raised);
+    cursor: zoom-in;
 }
+
+.accordion small {
+    display: block;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.o_no { font-size: var(--text-lg); font-weight: var(--weight-heading); line-height: 1; }
+.o_no small { margin-bottom: 2px; }
+.o_who { font-weight: var(--weight-label); overflow: hidden; text-overflow: ellipsis; }
+.o_who small, .o_when small, .o_state small { text-transform: none; letter-spacing: 0; font-weight: var(--weight-body); }
+.o_when { font-size: var(--text-md); font-weight: var(--weight-heading); text-align: right; }
+.o_sum { font-size: var(--text-md); font-weight: var(--weight-heading); text-align: right; white-space: nowrap; }
+
+/* State stamps, worn by an InkPaint 128 mask (90 % ink or more) */
+.o_state {
+    justify-self: end;
+    padding: 3px 8px;
+    border: 2px solid currentColor;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-heading);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    -webkit-mask: url("../img/textures/stamp-wear.webp") center / 220px auto;
+    mask: url("../img/textures/stamp-wear.webp") center / 220px auto;
+}
+.order_open .o_state { color: var(--ink-on-dark); background: var(--flag-red); border-color: var(--flag-red); transform: rotate(-5deg); }
+.order_paid .o_state { color: var(--bar-deep); border: 3px double var(--bar-deep); transform: rotate(-6deg); }
+
+.o_chev { width: 24px; height: 24px; transition: transform var(--lift-in) var(--toast-ease); }
+.accordion.active .o_chev { transform: rotate(180deg); }
+
+/* Paid: flat, with a folded top-right corner and a torn right edge */
+.accordion.order_paid {
+    border-left-color: var(--bar-deep);
+    box-shadow: var(--shadow-none);
+    background: var(--paper-ear), url("../img/textures/docket.webp") 0 30% / 100% auto, var(--paper);
+    -webkit-mask: linear-gradient(var(--ink), var(--ink)) left / calc(100% - 22px) 100% no-repeat, url("../img/textures/torn-edge.webp") right / 24px 120px repeat-y;
+    mask: linear-gradient(var(--ink), var(--ink)) left / calc(100% - 22px) 100% no-repeat, url("../img/textures/torn-edge.webp") right / 24px 120px repeat-y;
+}
+
+.accordion:hover { filter: brightness(0.96); }
+.accordion.active { cursor: zoom-out; }
 
 .left {
     color: var(--danger-text);
 }
 
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active, .accordion:hover {
-    color: var(--bar);
-    background-color: var(--paper);/*rgba(123,194,211,0.6);*/
-}
-
-/* Style the accordion panel. Note: hidden by default */
+/* DOCKET (T8): the open order is a slip of Paper 320 pinned with a tack (Texturelabs Details 141).
+   Number and time head it, then one line per drink, quantity first. Sepia 6.2:1 or better */
 .panel {
-    padding: 0 0px;
-    background-color: var(--surface-soft);
+    box-sizing: border-box;
+    width: 90%;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 28px;
     max-height: 0;
     overflow: hidden;
     visibility: hidden; /* keeps Cancel and Mark as Paid out of Tab order while closed */
     transition: max-height 0.2s ease-out, visibility 0.2s;
-    width: 88%;
-
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    color: var(--ink-sepia);
+    background: url("../img/textures/tack.webp") center 8px / 30px 30px no-repeat, url("../img/textures/docket.webp") 0 0 / 100% 100%, var(--paper);
+    box-shadow: var(--shadow-float);
 }
+.order_paid + .panel { background: url("../img/textures/tack.webp") center 8px / 30px 30px no-repeat, var(--paper-ear), url("../img/textures/docket.webp") 0 0 / 100% 100%, var(--paper); }
 
-.accordion.active + .panel { visibility: visible; transition: max-height 0.2s ease-out; } /* visible at once on open */
+.accordion.active + .panel { visibility: visible; margin: 12px auto; padding: 44px 28px 20px; transition: max-height 0.2s ease-out; } /* visible at once on open */
 
-.accordion:after {
-    content: 'Open Order'; /* '\02795' Unicode character for "plus" sign (+) */
-    font-size: 13px;
-    color: var(--bar); /* 5.09:1 on sea glass */
-    float: right;
-    margin-left: 5px;
+.docket_head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 0 0 6px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--ink-sepia);
 }
-
-.active:after {
-    content: "Hide Order"; /* \2796 Unicode character for "minus" sign (-) */
-}
-
-.zoom_out{
-    cursor:zoom-out;
-}
-
+.docket_head b { font-size: var(--text-xl); line-height: 1; }
+.docket_head span { font-size: var(--text-md); font-weight: var(--weight-heading); }
 
 /*ORDER COLUMN*/
 
@@ -198,52 +213,66 @@ h1 {
 }
 
 .order_details {
-    background-color: var(--paper);
-
-    padding-left: 1.5%;
-    padding-right: 1.5%;
-    margin: 1%;
-
-    border-style: solid;
-    border-color: var(--paper);
-    border-width: thin;
-
-    text-align: center;
-
-    width: 100px;
-    height: 250px;
-    float: left;
+    display: grid;
+    grid-template-columns: 52px 36px 1fr auto;
+    align-items: center;
+    column-gap: 10px;
+    min-height: 48px;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--rule-sepia);
 }
+.order_details .qty { font-size: var(--text-lg); font-weight: var(--weight-heading); text-align: right; line-height: 1; }
+.order_details img { grid-column: 2; grid-row: 1; height: 44px; justify-self: center; }
+.order_details h4 { grid-column: 3; grid-row: 1; margin: 0; font-size: var(--text-base); font-weight: var(--weight-label); }
+.order_details h4.price { grid-column: 4; font-weight: var(--weight-heading); white-space: nowrap; }
 
-.order_details .price {
-    clear: both;
-
+.panel .checkout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 3px double var(--ink-sepia);
 }
+.panel .checkout .small_button { float: none; width: auto; height: auto; min-height: 48px; font-size: var(--text-base); white-space: nowrap; }
 
-.order_details img {
-    height: 100px;
-
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    clear: both;
-    text-align: center;
-
-}
-
-.checkout {
-    width: 100%;
-    height: 75px;
-    background-color: var(--surface);
-    margin-bottom: 0%;
-    clear: both;
-    text-align: center;
-}
-
+/* TOTAL is text on the docket, not a plate: it can't be clicked */
 .total {
-    pointer-events: none;
-    float: right;
- }
+    grid-column: 1 / -1;
+    order: -1; /* above the buttons, read before acting */
+    margin: 0;
+    padding-bottom: 6px;
+    font-size: var(--text-lg);
+    font-weight: var(--weight-heading);
+    text-align: right;
+}
+.total b, .stamp b { font-size: var(--text-base); font-weight: var(--weight-label); letter-spacing: 0.08em; margin-right: 6px; }
+
+.paidfor {
+    margin-top: 6px;
+    padding: 18px 0 4px;
+    border-top: 3px double var(--ink-sepia);
+    text-align: center;
+}
+.stamp {
+    display: inline-block;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 6px 16px;
+    font-size: var(--text-lg);
+    font-weight: var(--weight-heading);
+    line-height: 1.15;
+    letter-spacing: 0.06em;
+    color: var(--bar-deep);
+    border: 4px double var(--bar-deep);
+    border-radius: var(--radius-sm);
+    text-shadow: 0 0 1px var(--bar-deep); /* the ink bleeds a little */
+    transform: rotate(-5deg);
+    -webkit-mask: url("../img/textures/stamp-wear.webp") center / 260px auto;
+    mask: url("../img/textures/stamp-wear.webp") center / 260px auto;
+}
+.stamp b { font-weight: var(--weight-heading); }
 
 /* FOOTER*/
 footer {
@@ -265,8 +294,9 @@ footer {
 .small_button {
     float: left;
     height: 50%;
-    border: solid;
-    border-radius: 5px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-float);
     text-align: center;
 }
 
@@ -280,12 +310,12 @@ footer {
     margin-left: 20px;
     margin-top: 20px;
     background-color: var(--bright-green);
-    border-radius: 50%;
+    border-radius: var(--radius-round);
     display: inline-block;
     border-style: solid;
     border-color: var(--ink);
     border-width: thin;
-    box-shadow: 2px -2px 10px var(--ink), 2px 0 10px var(--ink);
+    box-shadow: var(--shadow-raised);
     pointer-events: auto;
     position: absolute; 
 }
@@ -325,18 +355,23 @@ footer {
         max-height: 58vh;
     }
 
+    /* the bar folds into two rows: number, customer, chevron / date and time, total, state */
     .accordion {
-        height: auto;
-        min-height: 44px;
-        overflow: visible;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-areas: "no who chev" "when sum state";
+        row-gap: 6px;
+        column-gap: var(--space-3);
+        width: 96%;
+        padding: 8px var(--space-3) 8px 14px;
     }
+    .o_no { grid-area: no; }
+    .o_who { grid-area: who; }
+    .o_when { grid-area: when; text-align: left; font-size: var(--text-base); }
+    .o_sum { grid-area: sum; font-size: var(--text-base); }
+    .o_state { grid-area: state; }
+    .o_chev { grid-area: chev; }
 
-    .accordion:after {
-        display: block;
-        float: none;
-        text-align: right;
-        margin: 4px 0 0;
-    }
+    .accordion.active + .panel { padding: 40px 16px 16px; }
 
     footer {
         display: flex;
@@ -373,18 +408,8 @@ footer {
         width: 100%;
     }
 
-    footer .languages {
-        margin: 0;
-    }
-
-    footer .languages img {
-        float: none;
-        width: 56px;
-        height: 34px;
-        padding: 0;
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .accordion, .panel { transition: none; }
+    .accordion, .panel, .o_chev { transition: none; }
 }

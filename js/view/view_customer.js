@@ -105,11 +105,19 @@ var your_order= ["Your Order",
                 "Th' Booty"
 ];
 
-var total= ["TOTAL:",
-            "TOTALT:",
-            "TOTALE:",
-            "TOTAL:",
-            "WADARTA:"
+// Shown in the order panel while it is empty
+var empty_order= ["Nothing ordered yet. Choose a drink to add it.",
+                "Inget beställt än. Välj en dryck för att lägga till den.",
+                "Nessun ordine ancora. Scegli una bevanda da aggiungere.",
+                "Aún no has pedido nada. Elige una bebida para añadirla.",
+                "Yer tankard be empty! Pick a grog to fill 'er up."
+];
+
+var total_label= ["Total:",
+            "Totalt:",
+            "Totale:",
+            "Total:",
+            "Wadarta:"
 ];
 
 var pl_order= ["Place Order",
@@ -125,11 +133,11 @@ var hello = ["Hello ",
              "Hola ",
              "Ahoy "];
 
-var your_credit = ["Your credit is ",
-                   "Din kredit är ",
-                   "Il tuo credito è ",
-                   "Tu crédito es ",
-                   "In yer duffle there be " ];
+var your_credit = ["Credit:",
+                   "Kredit:",
+                   "Credito:",
+                   "Crédito:",
+                   "Doubloons:" ];
 
 // Alert pop-up messages
 var message_empty_order = ["You must select your drinks before placing an order!",
@@ -160,3 +168,16 @@ var drink_categories = ["Drink categories",
                         "Categorie di bevande",
                         "Categorías de bebidas",
                         "Kinds o' Grog"];
+
+// Stock badges on the drink cards
+var low_stock = ["Low stock",
+                 "Få kvar",
+                 "Scorte basse",
+                 "Pocas existencias",
+                 "Runnin' dry!"];
+
+var out_stock = ["Out of stock",
+                 "Slut i lager",
+                 "Esaurito",
+                 "Agotado",
+                 "Bone dry!"];

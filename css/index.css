@@ -8,8 +8,8 @@
 #user_name,#password{
     display: block;
     margin: 0.83em 0;
-    font-size: 1.5em;
-    font-weight: bold;
+    font-size: var(--text-md);
+    font-weight: var(--weight-heading);
     text-align: center;
     color: var(--ink-on-dark);
     cursor: default;
@@ -28,7 +28,7 @@
     padding: 2%;
     display: block;
     text-align: center;
-    font-size: 40px;
+    font-size: var(--text-xl);
 }
 
 .big_button_small{
@@ -64,7 +64,8 @@ body {
 
 .margin_button{
     display: inline-block;
-    font-size: 80%;
+    font-size: var(--text-base); /* T5: was 12.8 px and faint */
+    font-weight: var(--weight-label);
     width: 40%;
     min-height: 44px; /* touch target, also at 200% zoom */
     clear: both;
@@ -75,20 +76,22 @@ body {
 
 }
 
-.close {
-    float:right;
-    display:inline-block;
-    padding:2px 5px;
-    background:var(--close-bg);
+/* Close (V4; T3 adds the About and Passwords windows): a small weathered iron plate (Texturelabs Metal 155),
+   white X 10.48:1 on the kelp under it */
+#close, .close_window {
+    float: right;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: var(--radius-sm);
+    color: var(--ink-on-dark);
+    background: url("../img/textures/iron.webp") 0 0 / 400px 200px, var(--bar);
+    background-blend-mode: multiply;
+    box-shadow: var(--shadow-iron);
 }
 
-.close:hover {
-    float:right;
-    display:inline-block;
-    padding:2px 5px;
-    background:var(--close-bg);
-    color:var(--bright-red);
-}
 
 .test {
     loop: loop;
@@ -107,7 +110,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    font-size: 30px;
+    font-size: var(--text-lg);
     color: var(--ink-on-dark);
 
 }
@@ -118,53 +121,71 @@ body {
     color: var(--ink-on-dark);
 }
 
-#about{
-    background-color: var(--about-tab-fill);
-    color: var(--ink-on-dark);
+/* T5: the customer sign is riveted rusty brass, like Log In. White 5.2:1 or better on the worst pixel (320 px) */
+#customer {
+    background:
+        url("../img/textures/rivet.webp") left 3px top 3px / 18px 18px no-repeat,
+        url("../img/textures/rivet.webp") right 3px top 3px / 18px 18px no-repeat,
+        url("../img/textures/rivet.webp") left 3px bottom 3px / 18px 18px no-repeat,
+        url("../img/textures/rivet.webp") right 3px bottom 3px / 18px 18px no-repeat,
+        url("../img/textures/rust.webp") 0 0 / 400px 200px,
+        url("../img/textures/tarnish.webp") 0 0 / 400px 200px,
+        linear-gradient(var(--gold) 0%, var(--gold-deep) 55%, var(--brass-dark) 100%);
+    background-blend-mode: normal, normal, normal, normal, multiply, multiply, normal;
+    box-shadow: var(--shadow-brass);
+    font-weight: var(--weight-heading);
+    text-shadow: 0 1px 2px var(--ink);
+    height: auto; /* the fixed 40px let a wrapped "Drinks!" fall off the plate at 415-767px */
+    min-height: 44px;
+}
 
-    border-style: solid;
-    border-right-style: none;
+/* About and Passwords (V4): torn slips of Paper 328 nailed to the top edge with a rusted nail
+   (Texturelabs Details 144). Sepia text 5.22:1 or better; they straighten and drop 4px on hover */
+#about, #passwords {
     position: fixed;
-    border-width: 0.5px;
-    border-color: var(--paper);
-    height: 14px;
-    width: 10px;
-    right: 0px;
-    font-family: "Consolas", "Menlo", "Courier", monospace;
-    font-size: 15px;
-    padding: 7px;
+    top: 0;
+    width: 60px;
+    height: 170px;
+    padding: 30px 0 0;
+    box-sizing: border-box;
+    border: 0;
+    writing-mode: vertical-rl;
+    line-height: 60px;
+    font-family: 'Oswald', sans-serif;
+    font-size: var(--text-base);
+    color: var(--ink-sepia);
+    background: url("../img/textures/slip1.webp") 0 0 / 100% 100% no-repeat;
+    filter: drop-shadow(0 3px 4px var(--shadow-lift));
+    transform-origin: 50% 10px;
+    transition: transform var(--lift-out) var(--toast-ease);
     z-index: 999;
-
-    border-radius: 5px;
-    overflow: hidden;
-
     cursor: pointer;
 }
+#about { right: 84px; transform: rotate(-2deg); }
+#passwords { right: 22px; transform: rotate(1.5deg); background-image: url("../img/textures/slip2.webp"); }
+#about span, #passwords span { display: none; } /* the "<" arrow belonged to the 2018 slide-out */
 
-#about:hover, #about:focus-visible {
-    animation: appear 500ms cubic-bezier(.83,.67,.83,.67)forwards;
+#about:hover, #about:focus-visible, #passwords:hover, #passwords:focus-visible,
+#passwords.full_length, #about.full_length {
+    transform: translateY(4px);
+    transition-duration: var(--lift-in);
 }
+#passwords.full_length, #about.full_length { pointer-events: none; }
 
-@keyframes appear {
-    0% {width: 15px;}
-    20% {width: 20px;}
-    40% {width: 60px;}
-    60% {width: 100px;}
-    80% {width: 140px;}
-    100% {width: 180px;}
-}
-@keyframes whiteLetters {
-    from {color: var(--ink);}
-    to {color: var(--ink-on-dark);}
-}
 
+/* About and Passwords windows (T3): an opaque sheet of Paper 328 held by two rusted nails.
+   Sepia 5.28:1 or better on its darkest pixel; the 2018 50% red and green let the logo show through */
 #about_window, #passwords_window {
     position: fixed;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
 
-    background-color: var(--about-window-fill);
-    background-size:cover;
-    padding: 20px;
+    background:
+        url("../img/textures/rivet.webp") left 8px top 8px / 22px 22px no-repeat,
+        url("../img/textures/rivet.webp") right 8px top 8px / 22px 22px no-repeat,
+        url("../img/textures/paper-list.webp") 0 0 / 100% 100%,
+        var(--paper);
+    color: var(--ink-sepia);
+    padding: 36px 20px 20px; /* the nails sit in the top 30px, above the Close plate */
 
     width: 40%;
     height: 500px;
@@ -173,47 +194,16 @@ body {
     margin-left: 30%;
     margin-right: 30%;
 
-    box-shadow: 5px 5px 30px var(--ink);
+    box-shadow: var(--shadow-raised);
 
     clear: both;
     z-index: 999;
 }
 
-#passwords_window {
-    background-color: var(--passwords-window-fill);
-}
-
-#passwords{
-    background-color: var(--passwords-tab-fill);
-    color: var(--ink-on-dark);
-
-    border-style: solid;
-    border-right-style: none;
-    position: fixed;
-    border-width: 0.5px;
-    border-color: var(--paper);
-    height: 14px;
-    width: 10px;
-    right: 0px;
-    top: 45px;
-    font-family: "Consolas", "Menlo", "Courier", monospace;
-    font-size: 15px;
-    padding: 7px;
-    z-index: 999;
-
-    border-radius: 5px;
-    overflow: hidden;
-
-    cursor: pointer;
-}
-
-#passwords:hover, #passwords:focus-visible {
-    animation: appear 500ms cubic-bezier(.83,.67,.83,.67)forwards;
-}
-
-#passwords.full_length,#about.full_length{
-    width: 180px;
-    pointer-events: none;
+/* links on the sheet stay sepia and underlined; the global white hover and red press fail on paper */
+#about_window a, #about_window a:hover, #about_window a:active {
+    color: var(--ink-sepia);
+    text-decoration: underline;
 }
 
 .scrollable {
@@ -221,27 +211,9 @@ body {
     height: 400px;
 }
 
-.close_window{
-    font-size: 25px;
-    cursor: pointer;
-    float: right;
-}
 
 
-.close {
-    float:right;
-    display:inline-block;
-    padding:2px 5px;
-    background:var(--close-bg);
-}
 
-.close:hover {
-    float:right;
-    display:inline-block;
-    padding:2px 5px;
-    background:var(--close-bg);
-    color:var(--ink-on-dark);
-}
 
 .gif {
     vertical-align: middle;
@@ -266,7 +238,7 @@ body {
     padding: 1%;
     display: block;
     text-align: center;
-    font-size: 150%;
+    font-size: var(--text-lg);
 }
 
 #barManLog{
@@ -276,6 +248,9 @@ body {
 }
 
 /*Log in window*/
+
+/* T4: while the login is open, "Order your Drinks!" hides instead of peeking out under the box */
+#overlay:not(.hidden) ~ #customer { visibility: hidden; }
 
 .hidden {
     visibility: hidden;
@@ -290,7 +265,7 @@ body {
     top:0px ;
     z-index: 5;
     overflow: hidden;
-    font-size: 20px;
+    font-size: var(--text-md);
 }
 
 .login {
@@ -302,34 +277,26 @@ body {
 .login {
     display: none;
     position: absolute;
-    border-radius: 5px;
-    /*background-color: #0C2924;*/
-    background-image: url("../img/wood3.jpg");
-    background-size:cover;
-    padding: 20px;
+    border-radius: var(--radius-sm);
+    /* T4: the scrimmed wood2 of the working views (one wood site-wide) with iron corner brackets */
+    background-image: linear-gradient(var(--login-scrim), var(--login-scrim)), var(--wood);
+    border: 0 solid transparent;
+    border-image: url("../img/textures/iron-frame.webp") 80 / 40px;
+    padding: 32px 32px 12px; /* the brackets are 11 px thick; a smaller bottom keeps the error toast clear of the box */
     width: 40%;
     margin-left: 30%;
     margin-right: 30%;
     /*background: linear-gradient(#254540,#0C2924);
     border-width: 1px;
     border-style: solid;
-    border-radius: 10px;*/
-    box-shadow: 5px 5px 30px var(--ink);
+    border-radius: var(--radius-md);*/
+    box-shadow: var(--shadow-raised);
     z-index: 10;
     clear: both;
 }
 
 /*login stuff below*/
 
-input[type=submit] {
-    width: 60%;
-    background-color: var(--bright-green);
-    color: var(--ink-on-dark);
-    padding: 14px 20px;
-    margin: 8px 0;
-    border-radius: 4px;
-    cursor: pointer;
-}
 
 input[type=text] {
     width: 100%;
@@ -343,7 +310,7 @@ input[type=text], select {
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     box-sizing: border-box;
 }
 
@@ -358,26 +325,22 @@ input[type=password], select {
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     box-sizing: border-box;
 }
 
-input[type=submit] {
-    width: 60%;
-    background: linear-gradient(var(--dark-grey),var(--bright-grey));
-    color: var(--ink);
-    padding: 14px 20px;
+/* Log In (V4): the brass plate from style.css, sized to its label */
+#login {
+    min-width: 60%;
     margin: 8px 0;
-    border-radius: 4px;
+    padding: var(--space-3) var(--space-5);
+    border: 0;
+    border-radius: var(--radius-sm);
+    font-family: 'Oswald', sans-serif;
+    font-size: var(--text-md);
     cursor: pointer;
-    border-color: var(--ink);
-    box-shadow: 1px 1px 20px var(--glow), -1px -1px 20px var(--glow);
-
 }
 
-input[type=submit]:hover {
-    background-color: darkgreen;
-}
 
 /* 415-767px (tablets, 200% text zoom): staff buttons hug their label instead of 40% of a 30% box */
 @media (max-width: 767px) {
@@ -390,13 +353,7 @@ input[type=submit]:hover {
     /*change the size of the login box to suit the phones*/
     /* iPhone 6s was my main focus but it looks fine on other phones sizes */
     .login{
-        background-image: url("../img/wood3.jpg");
-        background-size:cover;
-        border-width: 1px;
-        border-style: solid;
-        border-radius: 10px;
-        box-shadow: 5px 5px 30px var(--ink);
-        font-size: xx-small;
+        font-size: var(--text-xs);
         height: 46%;
         margin-top: 0px;
         margin-left: 14%;
@@ -420,7 +377,7 @@ input[type=submit]:hover {
         height: auto;
         display: block;
         text-align: center;
-        font-size: 150%;
+        font-size: var(--text-lg);
         margin-left: 15%;
         margin-top: 15%;
     }
@@ -444,6 +401,7 @@ input[type=submit]:hover {
         height: 25px;*/
         width: 15%;
         height: 15%;
+        margin: 2%; /* the old padding spacing, so five flags fit one row */
     }
     .languages {
         margin-left: 2%
@@ -462,6 +420,8 @@ input[type=submit]:hover {
 /* Login error: pale-red border on the wrong field, bold message with icon under the form */
 .t-input {
     border: 3px solid transparent;
+    font-family: 'Oswald', sans-serif; /* T4: not the browser default */
+    box-shadow: var(--shadow-inset);
 }
 
 .t-input.is-error {
@@ -471,14 +431,14 @@ input[type=submit]:hover {
 .login_error {
     margin: 8px 0 0;
     color: var(--ink-on-dark); /* 7.74:1 on the lightest wood in the login box */
-    font-weight: bold;
-    font-size: 1.15em;
+    font-weight: var(--weight-label);
+    font-size: var(--text-md);
     text-align: center;
 }
 
-.login_error .fa {
+.login_error .icon {
     margin-right: 6px;
-    font-size: 1.3em;
+    font-size: var(--text-lg);
     vertical-align: -2px;
     color: var(--danger-text-on-dark);
 }
@@ -524,12 +484,8 @@ input[type=submit]:hover {
   .t-input { animation: none !important; transform: none !important; }
 }
 
-/* 2018 tab slide-out: jump straight to the open width when less motion is requested */
 @media (prefers-reduced-motion: reduce) {
-    #about:hover, #about:focus-visible, #passwords:hover, #passwords:focus-visible {
-        animation: none;
-        width: 180px;
-    }
+    #about, #passwords { transition: none; }
 }
 
 /* Phones and tablets: About and Passwords become labelled bottom buttons (no slide-out),
@@ -546,20 +502,22 @@ input[type=submit]:hover {
         padding: 0 8px;
         border-right-style: solid;
         font-family: 'Oswald', sans-serif;
-        font-size: 16px;
+        font-size: var(--text-base);
         display: flex;
         align-items: center;
         justify-content: center;
         text-align: center;
+        writing-mode: horizontal-tb;
+        line-height: normal;
+        color: var(--ink-on-dark);
+        background-image: none;
+        filter: none;
+        transform: none;
     }
 
-    #about:hover, #about:focus-visible, #passwords:hover, #passwords:focus-visible {
-        animation: none;
-        width: calc(50% - 20px);
-    }
-
+    #about:hover, #about:focus-visible, #passwords:hover, #passwords:focus-visible,
     #passwords.full_length, #about.full_length {
-        width: calc(50% - 20px);
+        transform: none;
     }
 
     #about { left: 12px; background-color: var(--flag-red); }
@@ -574,28 +532,25 @@ input[type=submit]:hover {
         left: 0;
         right: 0;
         overflow: auto;
-        padding: 16px;
+        padding: 36px 16px 16px;
         box-sizing: border-box;
-        background-color: var(--flag-red); /* opaque: the 2018 50% fill let the logo and flags show through the text */
     }
-
-    #passwords_window { background-color: var(--flag-green); }
 
     .scrollable { height: auto; max-height: 55vh; }
 
     .close_window, .close {
         min-width: 44px;
         min-height: 44px;
-        font-size: 20px;
+        font-size: var(--text-md);
     }
 
     .login {
         width: auto;
         height: auto;
         margin: 5% 4%;
-        font-size: 16px;
+        font-size: var(--text-base);
         box-sizing: border-box;
     }
 
-    .login input[type=text], .login input[type=password] { font-size: 16px; } /* under 16px iOS zooms in on focus */
+    .login input[type=text], .login input[type=password] { font-size: var(--text-base); } /* under 16px iOS zooms in on focus */
 }

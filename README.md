@@ -78,16 +78,16 @@
 <h4>img:</h4>
 <ul>
     <li><b>favicon.png:</b> Icon for browser</li>
-    <li><b>esp.png:</b> Flag Spain</li>
-    <li><b>eng.png:</b> Flag Union Jack</li>
-    <li><b>sve.png:</b> Flag Sweden</li>
-    <li><b>ita.svg:</b> Flag Italy</li>
-    <li><b>pirate.jpg:</b> Pirates Flag</li>
-    <li><b>background.jpg:</b> Background pic for users views</li>
-    <li><b>wallpaper3.jpg:</b> Background pic for users viewsg</li>
-    <li><b>wood.jpg:</b> Veins for users views</li>
-    <li><b>logo.jpg:</b> Pirate theme logo</li>
+    <li><b>icons.svg:</b> Interface icons (Lucide sprite)</li>
+    <li><b>esp.webp:</b> Flag Spain</li>
+    <li><b>eng.webp:</b> Flag Union Jack</li>
+    <li><b>sve.webp:</b> Flag Sweden</li>
+    <li><b>ita.webp:</b> Flag Italy</li>
+    <li><b>pirate.webp:</b> Pirates Flag</li>
+    <li><b>wood2.jpg:</b> Background for the users views and the login box</li>
+    <li><b>logo/white3.png:</b> Pirate theme logo</li>
     <li><b>storm.jpg:</b> Background pic for index page</li>
+    <li>Sources and licences of every asset: <code>docs/ASSETS.md</code></li>
 
 
 </ul>

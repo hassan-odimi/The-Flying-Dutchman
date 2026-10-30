@@ -23,10 +23,9 @@
     <link rel="stylesheet" href="css/customer.css">
 
     <!-- CSS Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash|Oswald" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Oswald:wght@400..700&display=swap" rel="stylesheet">
 
 </head>
 <body>
@@ -36,7 +35,7 @@
     <div class ="welcome">
       <!-- one heading and one line, so screen readers do not hear five heading fragments -->
       <h1><span id="hello">Hello</span> <span id="usr">usr</span>!</h1>
-      <p id="creditDisplay" class="credit"><span id="your_credit">Your credit is </span><span id="cre">cre</span></p>
+      <p id="creditDisplay" class="credit"><img class="coin" src="img/textures/coin.webp" alt=""><span id="your_credit">Credit:</span> <span class="amount">SEK <span id="cre">cre</span>:-</span></p>
     </div>
 
 
@@ -56,7 +55,7 @@
 
     </div>
 
-    <div class="dropdown"><button type="button" class="menu_toggle" id="menu_toggle" aria-label="Drink categories" aria-expanded="false" aria-controls="category_list"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></button>
+    <div class="dropdown"><button type="button" class="menu_toggle" id="menu_toggle" aria-label="Drink categories" aria-expanded="false" aria-controls="category_list"><svg class="icon icon-2x" aria-hidden="true"><use href="img/icons.svg#menu"/></svg></button>
         <ul class="dropdown-content" id="category_list">
             <li><button type="button" class="all" id="all" aria-pressed="false">All</button></li>
             <li><button type="button" class="beers" id="beers" aria-pressed="false">Beers</button></li>
@@ -66,12 +65,10 @@
             <li><button type="button" class="ecologic" id="ecologic" aria-pressed="false">Ecologic</button></li>
             <li><button type="button" class="specials" id="specials" aria-pressed="false">Specials</button></li>
         </ul>
-
-      <!--   <img src="img/basket.png" id="basket" class="shopping_basket" onClick="$('.selection').toggle();"> -->
     </div>
     
     <!-- logout button for small screen -->
-    <button type="button" onclick="logOut()" class="log_button red logout" id="logout">Log Out</button>
+    <button type="button" onclick="logOut()" class="log_button red logout" id="logout_phone">Log Out</button>
 
     
 <div class="main_section">
@@ -84,12 +81,11 @@
       <h2 id="your_order">Your Order</h2>
     </div>
     
-    <div class="selection" id="drink_selection">
-      <!-- Drink Selection pops up here -->
-    </div>
+    <!-- Drink Selection pops up here; kept free of whitespace so :empty shows the note (T7) -->
+    <div class="selection" id="drink_selection" data-empty="Nothing ordered yet. Choose a drink to add it."></div>
     
     <div class="checkout">
-      <h2 id="total">Total: SEK 0 :-</h2>
+      <h2 id="total"><small>Total:</small> <span>SEK 0:-</span></h2>
       <button type="button" id="order_toggle" class="order_toggle" aria-expanded="false" aria-controls="drink_selection" aria-label="Your Order"></button>
     </div>
 
@@ -97,7 +93,7 @@
 
 
     <!-- pay button for small screen -->
-    <button type="button" class="pay_button blue" id="pay">Place Order</button>
+    <button type="button" class="pay_button blue" id="pay_phone">Place Order</button>
 
     <footer>
       <!-- LOG OUT BUTTON -->
@@ -105,17 +101,17 @@
 
       <!-- LANGUAGE MENU -->
       <div class="languages_menu">
-        <a href="#" id="eng" lang="en"><div class="languages"> <img src="img/eng.png" alt="English"></div></a>
-        <a href="#" id="sve" lang="sv"><div class="languages"> <img src="img/sve.png" alt="Svenska"></div></a>
-        <a href="#" id="ita" lang="it"><div class="languages"> <img src="img/ita.png" alt="Italiano"></div></a>
-        <a href="#" id="esp" lang="es"><div class="languages"> <img src="img/esp.png" alt="Español"></div></a>
-        <a href="#" id="pirate" lang="en"><div class="languages"> <img src="img/pirate.jpg" alt="Pirate"></div></a>
+        <a href="#" id="eng" lang="en"><div class="languages"> <img src="img/textures/flag-eng.webp" alt="English"></div></a>
+        <a href="#" id="sve" lang="sv"><div class="languages"> <img src="img/textures/flag-sve.webp" alt="Svenska"></div></a>
+        <a href="#" id="ita" lang="it"><div class="languages"> <img src="img/textures/flag-ita.webp" alt="Italiano"></div></a>
+        <a href="#" id="esp" lang="es"><div class="languages"> <img src="img/textures/flag-esp.webp" alt="Español"></div></a>
+        <a href="#" id="pirate" lang="en"><div class="languages"> <img src="img/textures/flag-pirate.webp" alt="Pirate"></div></a>
       </div>
 
       <!-- UNDO-REDO MENU -->
       <div class="undo_redo_menu">
-        <button type="button" id="undo" class="fade"><i class="fa fa-undo fa-2x" aria-hidden="true"></i> <span class="undo_label">Undo</span></button>
-        <button type="button" id="redo" class="fade"><i class="fa fa-repeat fa-2x" aria-hidden="true"></i> <span class="redo_label">Redo</span></button>
+        <button type="button" id="undo" class="fade"><svg class="icon icon-2x" aria-hidden="true"><use href="img/icons.svg#undo"/></svg> <span class="undo_label">Undo</span></button>
+        <button type="button" id="redo" class="fade"><svg class="icon icon-2x" aria-hidden="true"><use href="img/icons.svg#redo"/></svg> <span class="redo_label">Redo</span></button>
       </div>
 
       <!-- PAY BUTTON -->

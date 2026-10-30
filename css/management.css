@@ -7,7 +7,7 @@
 
 /*HEADER*/
 body {
-    background-image: url("../img/wood.jpg");
+    background-image: var(--wood);
     background-size: cover;
     max-width: 100%;
     background-repeat: repeat-y;
@@ -64,39 +64,15 @@ header{
     display: block;
     width: 100%;
     box-sizing: border-box;
-    background-color: var(--control); /* black text 4.90:1 */
-
     text-align: center;
-
-    padding:3px;
-    height: 20%;
-    border: solid;
-    border-color: var(--control);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-
-    box-shadow: 2px -2px 10px var(--ink), 2px 0 10px var(--ink);
 }
-
-.menu li button:hover {
-    background-color: var(--surface-faint);
-    border: solid;
-    border-color: var(--surface-faint);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-/* Active tab: styled from aria-pressed, which the JS already sets */
-.menu li button[aria-pressed="true"] {
-    background-color: var(--surface);
-    border-color: var(--surface);
-}
+/* Tab paper and states live in style.css (V4) */
 
 .menu a.current li {
     background-color: var(--surface);
     border: solid;
     border-color: var(--surface);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
 
@@ -107,73 +83,68 @@ header{
 
     float: left;
     overflow: auto;
-    border-bottom-left-radius: 1%;
+    border-bottom-left-radius: var(--radius-md);
 
     background-color: var(--surface);
 
 }
 
+/* Carved Wood Rule: every panel on the wood is lifted */
+.drink_list, .selection_header, .selection, .checkout { box-shadow: var(--shadow-raised); }
+
 .drink {
-    padding: 3%;
-    margin: 2%;
-    background-color: var(--paper-veil);
-
-    border-style: solid;
-    border-color: var(--surface-soft);
-    border-width: thin;
-    border-radius: 4%;
-
-    width: 90%;
-    height: 250px;
-
-    float: left;
-
+    /* one row: bottle | details | stock | Add buttons */
+    display: grid;
+    grid-template-columns: 112px 1fr 128px 112px;
+    gap: var(--space-5);
+    align-items: center;
+    margin: var(--space-3) var(--space-4);
+    padding: var(--space-4);
+    background-color: var(--surface-soft);
+    border-radius: var(--radius-md);
     color: var(--ink);
-
-    overflow:hidden;
-}
-
-.drink .c1 {
-    width: 15%;
-    float: left;
 }
 
 .drink .c1 img {
     display: block;
-    margin-left: auto;
-    margin-right: auto;
+    height: 160px;
+    margin: 0 auto;
 }
 
 .drink .c2 {
-    width: 35%;
-    float: left;
+    line-height: 1.5;
 }
 
-.drink .c3 {
-    width: 30%;
-    float: left;
+.drink .c3 h2 {
+    margin: 0;
+    font-size: var(--text-xl);
+    line-height: 1.1;
+    text-align: center;
+}
+
+.drink .inStock {
+    display: block;
+    margin-bottom: var(--space-1);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);    /* the label stays black whatever the stock colour */
 }
 
 .drink .c4 {
-    width: 20%;
-    float: left;
-}
-
-.drink .c1 img{
-    height: 175px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
 }
 
 .add_button .h4 {
-    background-color: var(--gold);
-    color: var(--ink-on-dark);
-    width: 100px;
-    padding: 5px;
+    display: block;
+    margin: 0;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
     text-align: center;
     cursor: pointer;
-}
-
-.add_button:hover .h4 {
-    background-color: var(--gold-deep);
 }
 
 .alert {
@@ -192,7 +163,7 @@ header{
     clear: both;
 
     overflow: hidden;
-    border-top-right-radius: 1%;
+    border-top-right-radius: var(--radius-md);
     background-color: var(--bar);
 }
 
@@ -253,7 +224,7 @@ header{
     float: left;
     margin-right: 2%;
     overflow: hidden;
-    border-bottom-right-radius: 1%;
+    border-bottom-right-radius: var(--radius-md);
 }
 
 .checkout h2 {
@@ -290,8 +261,9 @@ footer .small_button{
     width: auto; /* hug the label so the undo/redo words fit beside the flags */
     padding: 0.8% 24px;
     height: 50%;
-    border: solid;
-    border-radius: 5px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-float);
     margin-right: 2%;
 }
 
@@ -299,7 +271,7 @@ footer .small_button{
     float: right;
 }
 
-/* Zero stock: muted copper, still 5.56:1 on the drink card */
+/* Zero stock: muted, 3.68:1 on Pale Sea Glass, so only on the 31 px stock number (large text) */
 .drink .textLightGreen {
     color: var(--ink-muted);
 }
@@ -351,19 +323,10 @@ footer .small_button{
     }
 
     .drink {
-        display: grid;
-        grid-template-columns: 70px 1fr;
-        gap: 8px;
-        width: auto;
-        height: auto;
-        float: none;
-        margin: 8px;
-        padding: 8px;
-    }
-
-    .drink .c1, .drink .c2, .drink .c3, .drink .c4 {
-        width: auto;
-        float: none;
+        grid-template-columns: 80px 1fr;
+        gap: var(--space-3) var(--space-4);
+        margin: var(--space-2);
+        padding: var(--space-3);
     }
 
     .drink .c1 img {
@@ -374,28 +337,26 @@ footer .small_button{
         grid-column: 1 / -1;
     }
 
-    .drink .c3 {
-        text-align: center;
-    }
-
-    .drink .c3 br {
-        display: none;
+    .drink .c3 h2 {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-size: var(--text-lg);
     }
 
     .drink .c4 {
-        display: flex;
-        gap: 6px;
-        justify-content: center;
+        flex-direction: row;
+    }
+
+    .add_button {
+        flex: 1;
     }
 
     .add_button .h4 {
-        width: auto;
-        min-width: 70px;
-        min-height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0;
+        min-height: 44px;
     }
 
     .selection_header, .checkout, .selection {
@@ -461,17 +422,6 @@ footer .small_button{
         justify-content: space-between;
         float: none;
         width: 100%;
-        padding: 0;
     }
 
-    footer .languages {
-        margin: 0;
-    }
-
-    footer .languages img {
-        float: none;
-        width: 56px;
-        height: 34px;
-        padding: 0;
-    }
 }

@@ -23,10 +23,9 @@
     <link rel="stylesheet" href="css/index.css">
 
     <!-- CSS Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash|Oswald" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Oswald:wght@400..700&display=swap" rel="stylesheet">
 
   </head>
   <body>
@@ -42,7 +41,7 @@
     <!-- login box -->
       <div id="loginBox" class="login">
 
-        <button type="button" id="close" class="close" onclick="closeLogin()" aria-label="Close">X</button>
+        <button type="button" id="close" class="close" onclick="closeLogin()" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#x"/></svg></button>
         <form name = "loginForm" class="t-input-wrap" action="javascript: void(0);">
 
           <h1>Log into The Flying Dutchman</h1>
@@ -53,7 +52,7 @@
           <label for="password_input" id="password">Password</label>
           <input type="password" name="password" id="password_input" class="t-input" aria-describedby="login_error" autocomplete="current-password" placeholder="Enter your password">
 
-          <p id="login_error" class="login_error t-error-msg"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><span id="login_error_text"></span></p>
+          <p id="login_error" class="login_error t-error-msg"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#alert"/></svg><span id="login_error_text"></span></p>
 
           <div align="center">
             <input type="submit" id="login" name="login" value="Log In!" onClick="loginDB(loginForm)">
@@ -66,7 +65,7 @@
 
     <div id="about_window" class="hidden">
 
-      <button type="button" class="close_window" aria-label="Close">X</button>
+      <button type="button" class="close_window" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#x"/></svg></button>
 
       <h2>The Flying Dutchman</h2>
 
@@ -97,7 +96,7 @@
 
     <div id="passwords_window" class="hidden">
 
-      <button type="button" class="close_window" aria-label="Close">X</button>
+      <button type="button" class="close_window" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#x"/></svg></button>
 
       <h2>Login Passwords</h2>
 
@@ -170,11 +169,11 @@
 
     <!-- LANGUAGE MENU -->
     <div class="languages_menu">
-      <a href="#" id="eng" lang="en"><div class="languages"> <img src="img/eng.png" alt="English"></div></a>
-      <a href="#" id="sve" lang="sv"><div class="languages"> <img src="img/sve.png" alt="Svenska"></div></a>
-      <a href="#" id="ita" lang="it"><div class="languages"> <img src="img/ita.png" alt="Italiano"></div></a>
-      <a href="#" id="esp" lang="es"><div class="languages"> <img src="img/esp.png" alt="Español"></div></a>
-      <a href="#" id="pirate" lang="en"><div class="languages"> <img src="img/pirate.jpg" alt="Pirate" id="pirateFlag" draggable="true" ondragstart="drag(event)"></div></a>
+      <a href="#" id="eng" lang="en"><div class="languages"> <img src="img/eng.webp" alt="English"></div></a>
+      <a href="#" id="sve" lang="sv"><div class="languages"> <img src="img/sve.webp" alt="Svenska"></div></a>
+      <a href="#" id="ita" lang="it"><div class="languages"> <img src="img/ita.webp" alt="Italiano"></div></a>
+      <a href="#" id="esp" lang="es"><div class="languages"> <img src="img/esp.webp" alt="Español"></div></a>
+      <a href="#" id="pirate" lang="en"><div class="languages"> <img src="img/pirate.webp" alt="Pirate" id="pirateFlag" draggable="true" ondragstart="drag(event)"></div></a>
     </div>
 
     <!-- Your code ends here -->

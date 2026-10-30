@@ -78,7 +78,6 @@ $(document).ready(function() {
     /* Accordion Script*/
     $(document).on('click','.accordion',function(){
         this.classList.toggle("active");
-        this.classList.toggle("zoom_out")
         this.setAttribute("aria-expanded", this.classList.contains("active"));
         var panel = this.nextElementSibling;
         if (panel.style.maxHeight){
@@ -180,10 +179,18 @@ $(document).ready(function() {
 function printToDOM (element) {
     var i = $.inArray(element,SESSIONS_TRANSACTIONS);
 
-    var content = '<button type="button" class="accordion" aria-expanded="false" id="'+ element.transaction_id +'"><b>ORDER #'+ element.transaction_id.slice(1) + '<span aria-hidden="true">|</span>    Customer:</b> '+
-        getCustomerName(element.customer_id) +' ('+ element.customer_id +')' + '<span aria-hidden="true">|</span> <b>Date: </b>'+ element.timestamp + ' <span aria-hidden="true">|</span> <b>Total:</b> SEK '+ element.amount +':-  '
-        + paidStamp(element.paid, element) + '</button>' +
+    var number = element.transaction_id.slice(1), date = element.timestamp.split(' '), time = date[1].slice(0, 5);
+
+    // T8: the order bar is a paper slip in columns, read left to right; the labels stay for screen readers
+    var content = '<button type="button" class="accordion ' + (element.paid ? 'order_paid' : 'order_open') + '" aria-expanded="false" id="'+ element.transaction_id +'">' +
+        '<span class="o_no"><small>ORDER</small> #'+ number + '</span>' +
+        '<span class="o_who"><small class="sr-only">Customer: </small>' + getCustomerName(element.customer_id) + ' <small>' + element.customer_id + '</small></span>' +
+        '<span class="o_when"><small class="sr-only">Date: </small><small>' + date[0] + '</small> ' + time + '</span>' +
+        '<span class="o_sum"><small>Total: </small>SEK '+ element.amount +':-</span>' +
+        paidStamp(element.paid, element) +
+        '<svg class="icon o_chev" aria-hidden="true"><use href="img/icons.svg#chevron-down"/></svg></button>' +
         '<div class="panel">' +
+        '<p class="docket_head"><b>#' + number + '</b><span>' + time + '</span></p>' +
         '<div class="order">' +
 
         printOrder(element.order,element.quantities) + // Contents of the order printed here
@@ -194,11 +201,11 @@ function printToDOM (element) {
         content += '<div class="checkout">' +
             '<button type="button" class="small_button red delete cancel_order" id="' + element.transaction_id + '" >Cancel Order</button>' +
             '<button type="button" class="small_button light_green pay mark_paid" id="' + element.transaction_id + '" >Mark as Paid</button>' +
-            '<div class="small_button total" id="total"><b>TOTAL:</b> SEK '+ element.amount +':-</div>' +
+            '<p class="total"><b>TOTAL:</b> SEK '+ element.amount +':-</p>' +
             '</div>';
     } else {
         content += '<div class="paidfor">' +
-            '<h1><b>TOTAL PAID:</b> SEK '+ element.amount + ':-</h1>' +
+            '<p class="stamp"><b>TOTAL PAID:</b> SEK '+ element.amount + ':-</p>' +
             '</div>';
     }
 
@@ -254,11 +261,8 @@ function getBrevagePrice(brevage_id){
 }
 
 function paidStamp (boolean, element){
-    var message ="";
-    if(boolean){
-        message = "<b class='textRed'><span aria-hidden='true'>:::</span> ORDER PAID <span aria-hidden='true'>:::</span> </b>  <span aria-hidden='true'>|</span>    <b>Bartender:</b> " + getBartenderName(element.bartender_id) + " (" + element.bartender_id + ")";
-    }
-    return message;
+    if (boolean) return '<span class="o_state">Paid <small>by ' + getBartenderName(element.bartender_id) + '</small></span>';
+    return '<span class="o_state">Not paid</span>';
 }
 
 function printOrder(order_array,quantities_array){
@@ -267,8 +271,9 @@ function printOrder(order_array,quantities_array){
 
     $.each(order_array, function (index,value){
         content += '<div class="order_details">' +
-            '<h4>'+ getBrevageName(value) +' <span class="textRed">(x'+ quantities_array[index] +')</span></h4>' +
-            '<img src="img/drinks/'+ value +'.png" alt="">' +
+            '<b class="qty">' + quantities_array[index] + '\u00d7</b>' +
+            '<h4>'+ getBrevageName(value) +'</h4>' +
+            '<img src="img/drinks/'+ value +'.webp" alt="" loading="lazy">' +
             '<h4 class="price">SEK '+ (getBrevagePrice(value) * quantities_array[index]) +':-</h4>' +
             '</div>';
     });

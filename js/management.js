@@ -261,31 +261,30 @@ function printToDOM (element) {
         '<div class="drink">'+
 
         '<div class="c1">' +
-        '<img src="img/drinks/' + element.artikelid + '.png" alt="">' +
+        '<img src="img/drinks/' + element.artikelid + '.webp" alt="" loading="lazy">' +
         '</div>' +
 
         '<div class="c2">'+
-        '<b class="drink_name">Name:</b> <span id="dn' + element.artikelid + '">' + element.namn + ' ' + element.namn2 + '</span><br>' +
-        '<b class="type">Type:</b> ' + element.varugrupp + '<br>' +
-        '<b class="price">Price:</b> SEK ' + parseInt(element.prisinklmoms) + ':-<br>' +
-        '<b class="country">Country:</b> ' + element.ursprunglandnamn + '<br>' +
-        (element.volymiml != null ? '<b class="volume">Volume:</b> ' + element.volymiml + '<br>' : '') +
-        '<b class="alcohol">Alcohol:</b> ' + element.alkoholhalt + '<br>' +
-        '<b class="drink_id">ID:</b> '+ element.artikelid +'<br>' +
-        '<b class="producer">Producer:</b> '+ element.producent +'<br>' +
-        '<b class="delivery">Delivery:</b> '+ element.leverantor +'<br>' +
-        (element.prisperliter != null ? '<b class="cost">Cost per Liter:</b> SEK '+ element.prisperliter + '<br>' : '') +
+        '<b class="drink_name">' + drink_name[lang()] + '</b> <span id="dn' + element.artikelid + '">' + element.namn + ' ' + element.namn2 + '</span><br>' +
+        '<b class="type">' + type[lang()] + '</b> ' + element.varugrupp + '<br>' +
+        '<b class="price">' + price[lang()] + '</b> SEK ' + parseInt(element.prisinklmoms) + ':-<br>' +
+        '<b class="country">' + country[lang()] + '</b> ' + element.ursprunglandnamn + '<br>' +
+        (element.volymiml != null ? '<b class="volume">' + volume[lang()] + '</b> ' + element.volymiml + '<br>' : '') +
+        '<b class="alcohol">' + alcohol[lang()] + '</b> ' + element.alkoholhalt + '<br>' +
+        '<b class="drink_id">' + drink_id[lang()] + '</b> '+ element.artikelid +'<br>' +
+        '<b class="producer">' + producer[lang()] + '</b> '+ element.producent +'<br>' +
+        '<b class="delivery">' + delivery[lang()] + '</b> '+ element.leverantor +'<br>' +
+        (element.prisperliter != null ? '<b class="cost">' + cost[lang()] + '</b> SEK '+ element.prisperliter + '<br>' : '') +
         '</div>' +
 
         '<div class="c3">' +
-        '<br><br><br>' +
-        '<h2 '+ classes +'><span class="inStock">Current Stock</span> <br> '+ checkStock(element.artikelid) +'</h2>' +
+        '<h2 '+ classes +'><span class="inStock">' + inStock[lang()] + '</span> '+ checkStock(element.artikelid) +'</h2>' +
         '</div>' +
 
         '<div class="c4">' +
-        '<button type="button" class="add_button" id="add1" aria-labelledby="a1_' + element.artikelid + ' dn' + element.artikelid + '"><span class="h4 add_one" id="a1_' + element.artikelid + '">Add +1</span></button>' +
-        '<button type="button" class="add_button" id="add10" aria-labelledby="a10_' + element.artikelid + ' dn' + element.artikelid + '"><span class="h4 add_ten" id="a10_' + element.artikelid + '">Add +10</span></button>' +
-        '<button type="button" class="add_button" id="add100" aria-labelledby="a100_' + element.artikelid + ' dn' + element.artikelid + '"><span class="h4 add_hundred" id="a100_' + element.artikelid + '">Add +100</span></button>' +
+        '<button type="button" class="add_button" id="add1" aria-labelledby="a1_' + element.artikelid + ' dn' + element.artikelid + '"><span class="h4 add_one" id="a1_' + element.artikelid + '">' + add_one[lang()] + '</span></button>' +
+        '<button type="button" class="add_button" id="add10" aria-labelledby="a10_' + element.artikelid + ' dn' + element.artikelid + '"><span class="h4 add_ten" id="a10_' + element.artikelid + '">' + add_ten[lang()] + '</span></button>' +
+        '<button type="button" class="add_button" id="add100" aria-labelledby="a100_' + element.artikelid + ' dn' + element.artikelid + '"><span class="h4 add_hundred" id="a100_' + element.artikelid + '">' + add_hundred[lang()] + '</span></button>' +
         '<span hidden>' + element.artikelid + '</span>'+
         '<span hidden>' + element.prisinklmoms +'</span>'+
         '</div>'+
@@ -303,10 +302,10 @@ function addOrder (article_id, number) {
             if (this.artikelid == article_id){ // retrieve article from the database
                 $("#drink_selection").prepend(
                     '<div class="order" id="'+ this.artikelid +'">' +
-                    '<button type="button" class="delete" aria-labelledby="remove_word name' + this.artikelid + '">X</button>' +
+                    '<button type="button" class="delete" aria-labelledby="remove_word name' + this.artikelid + '"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#trash"/></svg></button>' +
                     '<h4 class="price">SEK <span class="hiden_price_sum">' + (this.prisinklmoms * number) + '</span>:-</h4>' +
                     '<span class="sum" hidden>' + parseInt(this.prisinklmoms) + '</span>' +
-                    '<img src="img/drinks/' + this.artikelid + '.png" alt="">' +
+                    '<img src="img/drinks/' + this.artikelid + '.webp" alt="" loading="lazy">' +
                     '<h4 id="name' + this.artikelid + '">' + this.namn + ' ' + this.namn2 + '<span class="quantity textRed"> ( x ' + number + ')</span></h4>' +
                     '</div>'
                 )
@@ -319,10 +318,10 @@ function addOrder (article_id, number) {
             if (this.artikelid == article_id){ // retrieve article from the database
                 $("#drink_selection").prepend(
                     '<div class="order" id="'+ this.artikelid +'">' +
-                    '<button type="button" class="delete" aria-labelledby="remove_word name' + this.artikelid + '">X</button>' +
+                    '<button type="button" class="delete" aria-labelledby="remove_word name' + this.artikelid + '"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#trash"/></svg></button>' +
                     '<h4 class="price">SEK <span class="hiden_price_sum">' + (this.prisinklmoms * number) + '</span>:-</h4>' +
                     '<span class="sum" hidden>' + parseInt(this.prisinklmoms) + '</span>' +
-                    '<img src="img/drinks/' + this.artikelid + '.png" alt="">' +
+                    '<img src="img/drinks/' + this.artikelid + '.webp" alt="" loading="lazy">' +
                     '<h4 id="name' + this.artikelid + '">' + this.namn + ' ' + this.namn2 + '<span class="quantity textRed"> ( x ' + number + ')</span></h4>' +
                     '</div>'
                 )
@@ -471,7 +470,7 @@ function translate (index) {
     // Translating the drink's details
     $(".drink_name").text(drink_name[index]);
     $(".type").text(type[index]);
-    $(".price").text(price[index]);
+    $(".drink .price").text(price[index]);
     $(".country").text(country[index]);
     $(".volume").text(volume[index]);
     $(".alcohol").text(alcohol[index]);
