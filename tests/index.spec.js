@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('logo is read by name', async ({ page }) => {
-  expect(await readAll(page)).toContain('image, The Flying Dutchman');
+  expect(await readAll(page)).toContain('button, The Flying Dutchman: summon the ghost ship, not pressed'); // V9: the logo is the easter-egg toggle
 });
 
 test('side panel buttons read without a stray "<"', async ({ page }) => {

@@ -98,83 +98,78 @@
 
       <button type="button" class="close_window" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#x"/></svg></button>
 
-      <h2>Login Passwords</h2>
+      <h2 id="passwords_title">Login Passwords</h2>
 
       <div class= "scrollable">
 
-        <p>You can use these passwords to access the different pages in "The Flying Dutchman" and test all the features! You are welcome!</p>
+        <p id="demo_intro">Demo accounts. Use fills the login form for you.</p>
 
-        <h3>VIP Customers (all rich):</h3>
-        <ul>
-          <li>username: hassan</li>
-          <li>password: hassan123</li>
-        </ul>
+        <div class="account_cols">
+          <div>
+            <section class="account_group">
+              <h3><svg class="icon" aria-hidden="true"><use href="img/icons.svg#crown"/></svg><span id="group_vip">VIP customers</span></h3>
+              <ul class="accounts">
+                <li><span>hassan</span><span>hassan123</span><button type="button" class="use" data-role="customer" data-user="hassan" data-pass="hassan123"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#log-in"/></svg><span class="use_label">Use</span><span class="sr-only"> hassan</span></button></li>
+                <li><span>jenny</span><span>jenny123</span><button type="button" class="use" data-role="customer" data-user="jenny" data-pass="jenny123"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#log-in"/></svg><span class="use_label">Use</span><span class="sr-only"> jenny</span></button></li>
+              </ul>
+            </section>
+            <section class="account_group">
+              <h3><svg class="icon" aria-hidden="true"><use href="img/icons.svg#user"/></svg><span id="group_regular">Customer, no credit</span></h3>
+              <ul class="accounts">
+                <li><span>janhei</span><span>nonvip123</span><button type="button" class="use" data-role="customer" data-user="janhei" data-pass="nonvip123"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#log-in"/></svg><span class="use_label">Use</span><span class="sr-only"> janhei</span></button></li>
+              </ul>
+            </section>
+          </div>
+          <div>
+            <section class="account_group">
+              <h3><svg class="icon" aria-hidden="true"><use href="img/icons.svg#beer"/></svg><span id="group_bartenders">Bartenders</span></h3>
+              <ul class="accounts">
+                <li><span>yawen</span><span>yawen123</span><button type="button" class="use" data-role="bartender" data-user="yawen" data-pass="yawen123"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#log-in"/></svg><span class="use_label">Use</span><span class="sr-only"> yawen</span></button></li>
+                <li><span>elsa</span><span>elsa123</span><button type="button" class="use" data-role="bartender" data-user="elsa" data-pass="elsa123"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#log-in"/></svg><span class="use_label">Use</span><span class="sr-only"> elsa</span></button></li>
+              </ul>
+            </section>
+            <section class="account_group">
+              <h3><svg class="icon" aria-hidden="true"><use href="img/icons.svg#ship-wheel"/></svg><span id="group_manager">Manager</span></h3>
+              <ul class="accounts">
+                <li><span>mauro</span><span>mauro123</span><button type="button" class="use" data-role="management" data-user="mauro" data-pass="mauro123"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#log-in"/></svg><span class="use_label">Use</span><span class="sr-only"> mauro</span></button></li>
+              </ul>
+            </section>
+          </div>
+        </div>
 
-        <ul>
-          <li>username: jenny</li>
-          <li>password: jenny123</li>
-        </ul>
-
-        <h3>Non VIP Customer (with no credit):</h3>
-        <ul>
-          <li>username: janhei</li>
-          <li>password: nonvip123</li>
-        </ul>
-
-        <h3>Bartenders:</h3>
-        <ul>
-          <li>username: yawen</li>
-          <li>password: yawen123</li>
-        </ul>
-
-        <ul>
-          <li>username: elsa</li>
-          <li>password: elsa123</li>
-        </ul>
-
-        <h3>Manager:</h3>
-        <ul>
-          <li>username: mauro</li>
-          <li>password: mauro123</li>
-        </ul>
-
-        <h3>Test Users (work in all three pages):</h3>
-        <ul>
-          <li>username: test</li>
-          <li>password: test</li>
-        </ul>
-        <ul>
-          <li>username: sudo</li>
-          <li>password: sudo</li>
-        </ul>
-
+        <section class="account_group test_accounts">
+          <h3><svg class="icon" aria-hidden="true"><use href="img/icons.svg#flask-conical"/></svg><span id="group_test">Test users, every page</span></h3>
+          <ul class="accounts">
+            <li><span>test</span><span>test</span><span class="uses"><button type="button" class="use" data-role="customer" data-user="test" data-pass="test"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#user"/></svg><span class="role_customer">Customer</span><span class="sr-only"> test</span></button><button type="button" class="use" data-role="bartender" data-user="test" data-pass="test"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#beer"/></svg><span class="role_bartender">Bartender</span><span class="sr-only"> test</span></button><button type="button" class="use" data-role="management" data-user="test" data-pass="test"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#ship-wheel"/></svg><span class="role_manager">Manager</span><span class="sr-only"> test</span></button></span></li>
+            <li><span>sudo</span><span>sudo</span><span class="uses"><button type="button" class="use" data-role="customer" data-user="sudo" data-pass="sudo"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#user"/></svg><span class="role_customer">Customer</span><span class="sr-only"> sudo</span></button><button type="button" class="use" data-role="bartender" data-user="sudo" data-pass="sudo"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#beer"/></svg><span class="role_bartender">Bartender</span><span class="sr-only"> sudo</span></button><button type="button" class="use" data-role="management" data-user="sudo" data-pass="sudo"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#ship-wheel"/></svg><span class="role_manager">Manager</span><span class="sr-only"> sudo</span></button></span></li>
+          </ul>
+        </section>
 
       </div>
 
     </div>
 
 
-    <!-- DnD pics/gifs -->
-    <div align="center" ondrop="picToGif(event)"  ondragover="allowDrop(event)">
-
-      <img id="piratePic" class="gif" src="img/logo/white3.png" alt="The Flying Dutchman">
-      <video id="great" class="gif" id="gifPirate" preload="auto" poster="https://img-9gag-fun.9cache.com/photo/ajEXymq_460s.jpg" loop="loop" style="display:none; height: 40%; width: 40%; margin-right: 28%; margin-left: 32%;">
-        <source src="https://img-9gag-fun.9cache.com/photo/ajEXymq_460sv.mp4" type="video/mp4">
-          <source src="https://img-9gag-fun.9cache.com/photo/ajEXymq_460svwm.webm" type="video/webm">
-      </video>
-    </div>
+    <!-- Easter egg: drop the pirate flag on the logo, or press it, to summon the ghost ship -->
+    <button type="button" id="summon" aria-pressed="false" onclick="toggleGhost(event)" ondrop="toggleGhost(event)" ondragover="allowDrop(event)">
+      <img id="piratePic" src="img/logo/aged.webp" alt="">
+      <img id="ghostShip" src="img/logo/ghost-ship.webp" alt="">
+      <span class="sr-only" id="summon_label">The Flying Dutchman: summon the ghost ship</span>
+    </button>
 
     <button type="button" onclick="openLogin('loginBox', 'block', 'customer')" class="login_button flipper" id="customer">Order your Drinks!</button>
 
 
     <!-- LANGUAGE MENU -->
-    <div class="languages_menu">
-      <a href="#" id="eng" lang="en"><div class="languages"> <img src="img/eng.webp" alt="English"></div></a>
-      <a href="#" id="sve" lang="sv"><div class="languages"> <img src="img/sve.webp" alt="Svenska"></div></a>
-      <a href="#" id="ita" lang="it"><div class="languages"> <img src="img/ita.webp" alt="Italiano"></div></a>
-      <a href="#" id="esp" lang="es"><div class="languages"> <img src="img/esp.webp" alt="Español"></div></a>
-      <a href="#" id="pirate" lang="en"><div class="languages"> <img src="img/pirate.webp" alt="Pirate" id="pirateFlag" draggable="true" ondragstart="drag(event)"></div></a>
-    </div>
+    <footer>
+      <div class="languages_menu">
+        <a href="#" id="eng" lang="en"><div class="languages"> <img src="img/textures/flag-eng.webp" alt="English"></div></a>
+        <a href="#" id="sve" lang="sv"><div class="languages"> <img src="img/textures/flag-sve.webp" alt="Svenska"></div></a>
+        <a href="#" id="ita" lang="it"><div class="languages"> <img src="img/textures/flag-ita.webp" alt="Italiano"></div></a>
+        <a href="#" id="esp" lang="es"><div class="languages"> <img src="img/textures/flag-esp.webp" alt="Español"></div></a>
+        <a href="#" id="pirate" lang="en"><div class="languages"> <img src="img/textures/flag-pirate.webp" alt="Pirate" id="pirateFlag" draggable="true" ondragstart="drag(event)"></div></a>
+      </div>
+    </footer>
 
     <!-- Your code ends here -->
 

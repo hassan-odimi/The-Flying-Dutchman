@@ -6,13 +6,15 @@ Every image, font and library the app uses, with what is known about where it ca
 
 | File | Used on | Source | Licence |
 |---|---|---|---|
-| `logo/white3.png` | landing page ship logo | 2018 team's own logo (Pirates of the Caribbean group) | team's own work |
+| `logo/aged.webp` | landing page ship logo (since V9), the face of the easter-egg button | the 2018 logo below, filled with Texturelabs Paper 328 and lightly worn with InkPaint 128 and 315 (`tools/textures/gentex11.py`) | logo team's own work; textures Texturelabs licence |
+| `logo/ghost-ship.webp` | easter egg: shown when the pirate flag is dropped on the logo, or the logo is pressed | Louis M. Eilshemius, *The Flying Dutchman*, 1908, Whitney Museum; Wikimedia Commons `File:Louis Michel Eilshemius The Flying Dutchman.gif` (391 x 360), converted by `gentex11.py` | public domain |
 | `favicon.png` | browser tab, all pages | 2018 team, same ship logo | team's own work |
 | `storm.jpg` | landing page background | unknown; the photo carries an artist signature, "Ernest T." | unknown, not cleared |
 | `wood2.jpg` | background of customer, bartender and management, and the login box | unknown stock texture | unknown, not cleared |
-| `icons.svg` | interface icons, all pages (menu, undo, redo, trash, x, check, alert; beer and ship-wheel for the staff label, T6; chevron-down on the bartender order bar, T8; cross-brush, the order-row remove mark, V5) | [Lucide](https://lucide.dev) icon paths, copied into one sprite in V11; cross-brush drawn in `tools/textures/brush.py` | ISC; cross-brush ours |
-| `eng.webp`, `sve.webp`, `ita.webp`, `esp.webp` | language buttons on the landing page; source of the cloth flags in the app footers | unknown image files; the flag designs themselves are national symbols in the public domain | file source unknown |
-| `pirate.webp` | Pirate language button and drag easter egg on the landing page; source of the cloth pirate flag | unknown; the original JPEG was edited in Photoshop CC 2015 on 2018-03-26 (EXIF) | unknown, not cleared |
+| `icons.svg` | interface icons, all pages (menu, undo, redo, trash, x, check, alert; beer and ship-wheel for the staff label, T6; chevron-down on the bartender order bar, T8; cross-brush, the order-row remove mark, V5; crown, user, flask-conical and log-in for the demo logins, V8) | [Lucide](https://lucide.dev) icon paths, copied into one sprite in V11; cross-brush drawn in `tools/textures/brush.py` | ISC; cross-brush ours |
+| `tools/textures/src/`: `eng.webp`, `sve.webp`, `ita.webp`, `esp.webp` | not served since V7 (moved out of `img/`); source files for the cloth flags (`tools/textures/gentex10.py`) | unknown image files; the flag designs themselves are national symbols in the public domain | file source unknown |
+| `tools/textures/src/white3.png` | not served since V9 (moved out of `img/`); source file for `logo/aged.webp` | 2018 team's own logo (Pirates of the Caribbean group) | team's own work |
+| `tools/textures/src/pirate.webp` | not served since V7 (moved out of `img/`); source file for the cloth pirate flag, which now carries the drag easter egg | unknown; the original JPEG was edited in Photoshop CC 2015 on 2018-03-26 (EXIF) | unknown, not cleared |
 | `drinks/*.webp` (207 files) | drink cards, order rows, bartender order details | product photos; the file names are Systembolaget article numbers matching `db/DB_SYSTEMBOLAGET.js` | third-party product photos, rights with the producers or Systembolaget; not free. Used only in this non-commercial student demo |
 
 ### Textures in `img/textures/` (V4)
@@ -24,7 +26,7 @@ Cut, toned and resized derivatives only (300 KB in all). The raw source files ar
 | `tab-note1-3.webp`, `tab-note-wide1-3.webp` | inactive tabs, all three working views | [Texturelabs](https://texturelabs.org) Paper 328, cropped; torn top edge traced from Texturelabs Paper 215 | Texturelabs licence: use in projects allowed, no redistribution of the raw files |
 | `slip1.webp`, `slip2.webp` | About and Passwords slips, landing page | Texturelabs Paper 328 (paper), Paper 215 (torn edges), Details 144 (rusted nail head) | Texturelabs licence, as above |
 | `rivet.webp` | corner rivets on the brass buttons and the landing signs; nails on the About and Passwords windows | Texturelabs Details 144, head cut out | Texturelabs licence, as above |
-| `tarnish.webp` | brass buttons and flag plaques (multiply layer) | Texturelabs Metal 132, greyscale | Texturelabs licence, as above |
+| `tarnish.webp` | brass buttons (multiply layer) | Texturelabs Metal 132, greyscale | Texturelabs licence, as above |
 | `rust.webp` | small plates: Add, Mark as Paid, Cancel Order, TOTAL (multiply layer) | Texturelabs Metal 132, colour, 70 % | Texturelabs licence, as above |
 | `paper-list.webp` | phone category menu and order ledger, customer; About and Passwords windows, landing | Texturelabs Paper 328, cropped, lightened to a 0.33 luminance floor | Texturelabs licence, as above |
 | `iron-frame.webp` | iron corner brackets on the login box (`border-image`) | Texturelabs Metal 155, greyscale toned; rivets from `rivet.webp` | Texturelabs licence, as above |
@@ -52,7 +54,7 @@ The flags were cut in V11 from 1200x750 PNG/JPEG (260 KB) to 128x80 WebP, twice 
 
 | What | Where | Source | Licence |
 |---|---|---|---|
-| Easter egg video and poster | `index.html` `#great` | hot-linked from `img-9gag-fun.9cache.com` | unknown, not cleared; to be replaced with a CC asset in V9 |
+| Easter egg video and poster | was `index.html` `#great` | hot-linked from `img-9gag-fun.9cache.com` | removed in V9, replaced by `logo/ghost-ship.webp` (public domain) |
 
 ## Fonts and libraries (loaded from CDNs)
 

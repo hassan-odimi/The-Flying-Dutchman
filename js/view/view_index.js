@@ -72,3 +72,73 @@ var logo_alt = ["The Flying Dutchman",
                 "L'Olandese Volante",
                 "El Holandés Volador",
                 "Th' Flyin' Dutchman"];
+
+// V9: the logo button's action, read after logo_alt
+var summon_action = ["summon the ghost ship",
+                     "kalla fram spökskeppet",
+                     "evoca la nave fantasma",
+                     "invoca el barco fantasma",
+                     "raise th' ghost ship"];
+
+// V8: demo-logins panel in the Passwords window
+var passwords_title = ["Login Passwords",
+                       "Inloggningsuppgifter",
+                       "Credenziali di accesso",
+                       "Credenciales de acceso",
+                       "Th' Secret Words"];
+
+var demo_intro = ["Demo accounts. Use fills the login form for you.",
+                  "Demokonton. Använd fyller i inloggningen åt dig.",
+                  "Account demo. Usa compila il modulo di accesso per te.",
+                  "Cuentas de demostración. Usar rellena el formulario por ti.",
+                  "Demo accounts. Use 'er fills in th' login fer ye."];
+
+var use_label = ["Use",
+                 "Använd",
+                 "Usa",
+                 "Usar",
+                 "Use 'er"];
+
+var group_vip = ["VIP customers",
+                 "VIP-gäster",
+                 "Clienti VIP",
+                 "Clientes VIP",
+                 "VIP buccaneers"];
+
+var group_regular = ["Customer, no credit",
+                     "Gäst utan kredit",
+                     "Cliente senza credito",
+                     "Cliente sin crédito",
+                     "Landlubber, no doubloons"];
+
+var group_bartenders = ["Bartenders",
+                        "Bartendrar",
+                        "Baristi",
+                        "Camareros",
+                        "Grog pourers"];
+
+var group_manager = ["Manager",
+                     "Arbetsledare",
+                     "Gestore",
+                     "Gerente",
+                     "Cap'n"];
+
+var group_test = ["Test users, every page",
+                  "Testanvändare, alla sidor",
+                  "Utenti di prova, tutte le pagine",
+                  "Usuarios de prueba, todas las páginas",
+                  "Test swabs, every deck"];
+
+var role_customer = ["Customer",
+                     "Gäst",
+                     "Cliente",
+                     "Cliente",
+                     "Buccaneer"];
+
+var role_bartender = ["Bartender",
+                      "Bartender",
+                      "Barista",
+                      "Camarero",
+                      "Grog pourer"];
+
+var role_manager = group_manager; // one manager, same word

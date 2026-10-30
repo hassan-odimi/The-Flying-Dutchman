@@ -13,7 +13,7 @@ for x in range(0, W, 3): wd.line((x, 0, x, H), fill=228)
 for y in range(0, H, 3): wd.line((0, y, W, y), fill=232)
 for n, name in enumerate(('eng', 'sve', 'ita', 'esp', 'pirate')):
     random.seed(20 + n)
-    f = Image.open(f'img/{name}.webp').convert('RGB').resize((W, H), Image.LANCZOS)
+    f = Image.open(f'tools/textures/src/{name}.webp').convert('RGB').resize((W, H), Image.LANCZOS)
     f = ImageEnhance.Color(f).enhance(0.7)                # sun-faded dye
     f = Image.blend(f, Image.new('RGB', (W, H), (214, 196, 160)), 0.14)
     ph, k = random.uniform(0, 6), random.uniform(2.2, 3.2)

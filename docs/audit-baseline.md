@@ -692,3 +692,69 @@ Hassan chose the credit label top right in the staff label pattern (HA) with a b
 
 Tests: a new test in `tests/textures.spec.js` checks the coin label (no plate, clear of the greeting, Pirate word), one `id="logout"`, the cord and nails, the five cloth flags, that the middle flag hangs lowest, no sideways scroll, and the swash staff title. Not checked: a real phone, and browsers without `atan2()` in CSS (older than Chrome 111, Firefox 108, Safari 15.4), where the flags hang straight.
 
+
+### V7 done (2026-10-30): landing page
+
+T3 (windows), T4 (login box) and T5 (signs) already covered most of V7. This round finished the rest. Hassan chose A for all three questions. Mockups: `docs/visual-options/v7-flags.png` (A under the sign, same size; B under the sign with 80 px flags; C pinned to the bottom edge), `v7-toast-before.png`, `v7-before-800.png`. After screenshots: `docs/visual-after/v7-landing-{1280,800,375,320}.png`.
+
+- **Flag line:** the landing language menu is now wrapped in a `<footer>`, so it uses the V6 rules unchanged: cloth flags (`img/textures/flag-*.webp`) sewn onto the hemp cord between two rusty nails, 24 px below "Order your Drinks!". The enamel plaques are gone. That removes their CSS, the `--shadow-plaque` token, the 20 % menu margins and the phone percent sizes in `css/index.css`.
+- **Wrap fixed:** before, the menu was 20 % in from each side and the first flag had another 20 % indent, so at 641 to 999 px the pirate flag dropped to a second row (measured at 641, 700, 800 and 900 px). The cord has a fixed width, so the flags now stay on one row at every width from 320 to 1280 px.
+- **Phone targets:** on phones each flag link is now at least 44 px tall (the flags are 56x35). This also fixes the app footers, which had the same 35 px gap.
+- **Toast and windows:** opening About or Passwords now closes an open toast (`hideToast()` in `js/index.js`). The live region has already read the message. Before, at 1280 x 800 the toast (top 542) sat on the About window (bottom 628).
+- **Storm seam (found during V7):** when the page was shorter than the window (800 x 800), the storm covered only the 550 px of content and then repeated, with a visible seam. `html { min-height: 100% }` makes it cover the whole screen.
+- **Easter egg:** `#pirateFlag` keeps `draggable` and `ondragstart`. Dropping it on the logo still swaps in the video (V9 replaces that video).
+- **Old flag files:** `img/{eng,sve,ita,esp,pirate}.webp` were no longer served. They moved to `tools/textures/src/` because `gentex10.py` builds the cloth flags from them.
+- **Contrast:** no text changed (the flags are named images). axe: 0 violations at 1280, 800, 375 and 320 px. No sideways scroll at 320 or 375 px.
+
+| Measure | Before | After |
+|---|---|---|
+| Landing flags | enamel plaques, 2 rows at 641-999 px | cloth flags on the cord, 1 row at every width |
+| Flag target on phones | 35 px tall | 44 px |
+| Toast over an open About window | overlaps it by 86 px at 1280 x 800 | closes when the window opens |
+| Storm at 800 x 800 | repeats below 550 px | covers the screen |
+| `npm test` | 137 | 139 |
+
+Test added in `tests/textures.spec.js`: cord and five cloth flags on the landing page, one row and no sideways scroll at 320, 375, 641, 800, 1000 and 1280 px, the storm covers the screen, an open toast closes when About opens, and dropping the pirate flag on the logo still shows the video.
+
+### V8 done (2026-10-30): demo-logins panel
+
+Two rounds. Hassan picked A (rows with a Use button that fills the login form) and asked for it improved: no scrolling on big screens, icons for the user types, and secondary buttons. He then picked A1 of three layouts (A2 one tall column, A3 icon-only test buttons). Mockups: `docs/visual-options/v8-logins.png` (A rows, B iron account buttons that log in at once, C plain table), `v8-logins-2.png` (A1, A2, A3). After screenshots: `docs/visual-after/v8-logins-{1280,375}.png`, `v8-logins-pirate-1280.png`, `v8-after-use-1280.png`.
+
+- **Groups:** VIP customers, customer without credit, bartenders, manager and test users, each heading led by a role icon (Lucide crown, user, beer, ship-wheel, flask-conical; four new symbols in `img/icons.svg`). Each row is name, password and Use. Before, there were eight bullet pairs ("username: / password:").
+- **Use:** a secondary button, a sepia outline with a log-in icon and no plate. It closes the window, opens the login box for the right role (`openLogin()`, unchanged), fills both fields, clears any old error and moves focus to Log In. The visitor still presses Log In, so the form and its error shake stay part of the demo. Each Use is named after its account for screen readers ("Use hassan"); test and sudo get one worded button per role (Customer, Bartender, Manager).
+- **No scrolling from 1100 px:** the sheet widens to 860 px with two columns (customers, crew) and the test users across the bottom. It is 470 px tall, so the whole list fits at 1280 x 720. Narrower screens keep one scrolling column.
+- **Phones:** staff accounts keep their Use buttons (Hassan's pick, so every page can be tried on a phone). Buttons are 44 px; the test role buttons share a full row.
+- **5 languages:** title, intro, group headings, Use and the role words (`js/view/view_index.js`, read by `translate()` in `js/index.js`). Before, the window was English only.
+- **Found during V8:** the list sat beside the floated Close, so it lost 44 px of width in both windows (`clear: both` on `.scrollable`). On phones the intro line ran into the Close plate's shadow (4.42:1), so it now stops short of the Close.
+- **Contrast** (worst pixel with the text hidden, 1280 and 375): sepia text 5.64:1 or better, Use on hover 4.83:1, role icons 3.31:1 (decorative next to their words), the outline is sepia, 5.64:1. axe: 0 violations at 1280, 1100, 1024, 800, 375 and 320 px. No sideways scroll.
+
+| Measure | Before | After |
+|---|---|---|
+| Accounts | 8 bullet pairs, English | grouped rows with role icons, 5 languages |
+| Filling the form | copy by hand | Use fills it and focuses Log In |
+| Scrolling at 1280 x 720 | list scrolls | fits |
+| List width beside Close | 44 px lost | full width |
+| `npm test` | 139 | 141 |
+
+Test added in `tests/textures.spec.js`: five role icons, no scrolling at 1280 x 720, Use named per account, outline (no plate), Use fills both fields and focuses Log In, Enter lands on bartender.html, Swedish labels, 44 px buttons and no sideways scroll at 375 px.
+
+### V9 done (2026-10-30): easter egg and landing logo
+
+Hassan picked A (the Eilshemius painting, feathered into the storm, over A2 framed and B a ghost-tinted logo) and a click path next to the drag (over drag only). He also asked for more detail on the static logo. Four rounds there: brass and stronger wear were rejected, and he picked the lightly aged sailcloth (L3) with Paper 328 out of five papers. Mockups: `docs/visual-options/v9-egg.png`, `v9-logo.png`, `v9-logo-2.png`, `v9-logo-3.png`, `v9-logo-4.png`. After screenshots: `docs/visual-after/v9-{logo,focus,ghost}-{1280,375}.png`.
+
+- **Painting:** Louis M. Eilshemius, *The Flying Dutchman* (1908, Whitney), public domain, 44 KB webp (`img/logo/ghost-ship.webp`). It replaces the hot-linked 9gag duck video, its poster and the flat green page (`--gag-green` deleted). The storm stays.
+- **Logo:** `img/logo/aged.webp` (160 KB, was a 325 KB PNG), baked by `tools/textures/gentex11.py`: Paper 328 fill, about 4 % fine wear showing a faded primer, and a drop shadow in CSS. The source PNG moved to `tools/textures/src/`.
+- **Toggle button:** the logo is now `<button id="summon" aria-pressed>`, named "The Flying Dutchman: summon the ghost ship" in 5 languages. Dropping the pirate flag, a click, a tap, Enter or Space all toggle it (`toggleGhost()` replaces `picToGif()`). Before, the egg was drag-only (WCAG 2.5.7, 2.1.1) and the logo's name never changed with the video.
+- **Motion:** the two images crossfade in 250 ms (`--lift-out`, `--toast-ease`); the hidden one also gets `visibility: hidden`, so the screen reader never meets it. No fade under reduced motion.
+- **Removed:** the `<video>` with a duplicate `id`, its inline styles and the unused `.gif` rule.
+- **Contrast:** no text on either image. Focus shows the site's white ring around the logo. axe: 0 violations at 1280 and 375 px, with the logo and the painting. No sideways scroll at 375.
+
+| Measure | Before | After |
+|---|---|---|
+| Easter egg media | hot-linked 9gag video, licence unknown | local public-domain painting, 44 KB |
+| Ways to trigger it | drag only | drag, click, tap, Enter, Space |
+| Logo | flat white PNG, 325 KB | aged sailcloth webp, 160 KB, drop shadow |
+| `npm test` | 141 | 143 (two projects run the new test) |
+
+Test added in `tests/textures.spec.js`: the logo button's name and `aria-pressed`, the aged logo file, no video or 9gag link, Enter shows the painting and hides the logo, a pirate-flag drop brings the logo back, the Swedish label, and no sideways scroll at 375 px. The V7 landing test now expects the painting after the drop, and the screen-reader test hears "button, The Flying Dutchman: summon the ghost ship, not pressed" instead of "image, The Flying Dutchman". Full run with that fix: 142 of 143; the Firefox bartender docket test failed once under parallel load and passes alone.
+

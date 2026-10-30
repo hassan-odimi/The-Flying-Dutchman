@@ -89,7 +89,7 @@ components:
 
 **Creative North Star: "The Captain's Tavern"**
 
-A warm wooden bar on a pirate ship. Dark wood planks (`img/wood2.jpg` under a 45 % black scrim, `--wood`) cover the background of all three working views. Sea-glass green panels sit on top like frosted portholes, with brass and rum-red fittings for the actions that matter. The storm (`img/storm.jpg`) and the white ship logo belong to the landing page only: the storm stays outside, and inside the tavern it is cosy and hospitable.
+A warm wooden bar on a pirate ship. Dark wood planks (`img/wood2.jpg` under a 45 % black scrim, `--wood`) cover the background of all three working views. Sea-glass green panels sit on top like frosted portholes, with brass and rum-red fittings for the actions that matter. The storm (`img/storm.jpg`) and the ship logo (white paint on old sailcloth, `img/logo/aged.webp`) belong to the landing page only: the storm stays outside, and inside the tavern it is cosy and hospitable.
 
 The working views (customer, bartender, management) are tools first. The theme lives in materials (wood, sea glass, brass), in the swash display font, and in the Pirate language option. Layout and controls follow familiar patterns: tabs over a product grid, an order panel on the right, and primary and danger buttons at the bottom.
 
@@ -165,7 +165,7 @@ Depth comes from shadows, not from tonal layering. Each shadow has two layers of
 ### Shadow Vocabulary
 - **Raised** (`--shadow-raised: 0 2px 6px, 0 10px 26px`): panels and tabs on the wood (drink list, order panel, order queue, category tabs).
 - **Float** (`--shadow-float: 0 2px 6px, 0 12px 28px`): buttons, the category menu, toasts and landing buttons.
-- **Brass, Iron, Plaque** (`--shadow-brass`, `--shadow-iron`, `--shadow-plaque`): Float plus an inset bevel (light top edge, dark bottom edge) for the metal buttons and flag plaques.
+- **Brass, Iron** (`--shadow-brass`, `--shadow-iron`): Float plus an inset bevel (light top edge, dark bottom edge) for the metal buttons.
 - **Pressed** (`--shadow-pressed: 0 1px 2px`): a button held down.
 - **None** (`--shadow-none`): the quiet Log Out outline.
 - Paper tabs and slips use a `drop-shadow` filter instead, so the shadow follows the torn edge.
@@ -202,8 +202,14 @@ Sturdy and tactile, like brass fittings on a bar.
 ### About and Passwords slips (landing page, 1280)
 - Two torn slips of the same paper hang from the top edge, each held by a rusted nail head with a rust stain bleeding into the paper (`slip1-2.webp`). Vertical sepia label, 60x170 px, tilted -2° and 1.5°; on hover or focus they straighten and drop 4 px. Under 769 px they stay the labelled red and green bottom buttons.
 
+### Demo logins (Passwords window)
+- Accounts grouped by role, each heading led by a Brass Shadow role icon (crown VIP, user, beer, ship wheel, flask for the test users). Rows are name, password and a secondary Use button: a 1.5 px sepia outline with a log-in icon, no plate, so it never competes with the brass Log In it leads to. Hover and focus add a light sepia wash (`--hover-sepia`). Use fills the login form and focuses Log In. From 1100 px the sheet widens to two columns (customers, crew) with the test users across the bottom.
+
+### Landing logo and easter egg
+- The ship logo is lightly aged sailcloth (Paper 328, sparse fine wear) with a dark drop shadow that lifts it off the storm. It is a toggle button ("The Flying Dutchman: summon the ghost ship", `aria-pressed`). Dropping the pirate flag on it, or pressing it, crossfades to Eilshemius' ghost-ship painting (1908, public domain), feathered into the storm; again brings the logo back. 250 ms fade with `--toast-ease`, none under reduced motion.
+
 ### Language flags
-- At 1280 each flag is a weathered enamel plaque: 30 % sepia, the brass tarnish multiplied over it, and a plaque bevel (`--shadow-plaque`). The flags are named images, so no text contrast applies. Phones keep plain flags.
+- On every page (landing since V7) the flags are worn cloth sewn onto a hemp cord between two rusty nails. The flags are named images, so no text contrast applies.
 
 ### Cards / Containers
 - **Drink card (customer):** Pale Sea Glass on a shelf grid, as many 160 px columns as fit (4 at 1280, 2 on phones, 140 px min there). Fixed rows: name (two lines), bottle (160 px, 112 on phones), price, so a stock badge never moves the name. 8 px corners, no shadow at rest; on hover it lifts 2 px with the Float shadow (150 ms in, 250 ms out, none under reduced motion) and drops back while pressed (the shadow stays).

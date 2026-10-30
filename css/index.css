@@ -14,12 +14,38 @@
     color: var(--ink-on-dark);
     cursor: default;
 }
-#piratePic {
-    display:block;
-    height: 40%;
+/* V9: the logo is a toggle button. The pirate flag dropped on it, or a press, crossfades the aged logo
+   (gentex11, Paper 328) to Eilshemius' ghost ship (1908), feathered into the storm */
+#summon {
+    display: block;
+    position: relative;
     width: 40%;
-    margin-right: 29%;
-    margin-left: 31%;
+    margin: 0 29% 0 31%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+#summon img {
+    display: block;
+    transition: opacity var(--lift-out) var(--toast-ease), visibility 0s;
+}
+#piratePic { width: 100%; filter: drop-shadow(0 2px 2px var(--shadow-lift)) drop-shadow(0 0 10px var(--shadow-lift)); }
+#ghostShip {
+    position: absolute;
+    inset: 0;
+    width: auto; /* height sets the width, so the feathered mask follows the painting */
+    height: 100%;
+    margin: auto;
+    mask-image: radial-gradient(closest-side, var(--ink) 72%, transparent);
+}
+#summon[aria-pressed="true"] #piratePic, #summon[aria-pressed="false"] #ghostShip {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--lift-out) var(--toast-ease), visibility 0s var(--lift-out);
+}
+@media (prefers-reduced-motion: reduce) {
+    #summon img { transition: none !important; } /* the hidden-state rule is more specific */
 }
 
 /*Menu Buttons*/
@@ -46,10 +72,9 @@
 
     margin: 2%;
 }
-.languages_menu{
-    margin-left: 20%;
-    margin-right: 20%;
-}
+body > footer { margin-top: var(--space-5); } /* V7: the V6 flag line hangs under the customer sign */
+
+html { min-height: 100%; } /* the storm covers the screen when the page is shorter (it repeated below 550px at 800x800) */
 
 body {
     background-image: url("../img/storm.jpg");
@@ -209,17 +234,69 @@ body {
 .scrollable {
     overflow: auto;
     height: 400px;
+    clear: both; /* an overflow box sits beside the floated Close and lost its 44px width */
+    margin-top: var(--space-2);
+}
+
+/* Demo logins (V8): accounts grouped by role with a role icon; Use is a secondary sepia outline that fills
+   the login form. From 1100px the sheet widens to two columns, so the list fits 1280x720 without scrolling */
+#passwords_window h2 { margin: 0 0 var(--space-1); }
+#demo_intro { margin: 0 0 var(--space-2); }
+.account_group h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-3) 0 2px;
+    font-size: var(--text-md);
+}
+.account_group h3 .icon { width: 22px; height: 22px; color: var(--brass-dark); }
+.accounts { list-style: none; margin: 0; padding: 0; }
+.accounts li {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 3px 0;
+    border-bottom: 1px dashed var(--rule-sepia);
+}
+.uses { display: flex; gap: 6px; }
+.use {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1.5px solid var(--ink-sepia);
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--ink-sepia);
+    font: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: background-color var(--lift-out) var(--toast-ease);
+}
+.use .icon { width: 16px; height: 16px; }
+.use:hover, .use:focus-visible { background-color: var(--hover-sepia); transition-duration: var(--lift-in); }
+.use:active { background-color: var(--rule-sepia); }
+@media (prefers-reduced-motion: reduce) { .use { transition: none; } }
+
+@media (min-width: 1100px) {
+    #passwords_window { width: min(860px, 70%); height: auto; margin-left: auto; margin-right: auto; left: 0; right: 0; }
+    #passwords_window .scrollable { height: auto; }
+    .account_cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+}
+@media (max-width: 768px) {
+    #demo_intro { padding-right: 56px; } /* the line under Close would sit in its shadow (4.42:1) */
+    .use { min-height: 44px; min-width: 44px; }
+    .test_accounts li { grid-template-columns: 1fr 1fr; }
+    .test_accounts .uses { grid-column: 1 / -1; }
+    .test_accounts .use { flex: 1; }
 }
 
 
 
 
-
-.gif {
-    vertical-align: middle;
-    display:none;
-    clear: both;
-}
 
 .test {
     loop: loop;
@@ -381,31 +458,11 @@ input[type=password], select {
         margin-left: 15%;
         margin-top: 15%;
     }
-    #piratePic{
+    #summon {
         width: 90%;
-        margin-left: 5%;
-        margin-top: 30%;
+        margin: 30% 5% 0;
     }
 
-
-    .languages_menu {
-        width: 95%;
-        margin-left: 2.5%;
-        margin-top: 30%;
-    }
-
-    .languages img 
-    {
-/*
-        width: 45px;
-        height: 25px;*/
-        width: 15%;
-        height: 15%;
-        margin: 2%; /* the old padding spacing, so five flags fit one row */
-    }
-    .languages {
-        margin-left: 2%
-    }
 
     .login {
         width: 65%;

@@ -276,3 +276,75 @@ test('header and footer: coin credit label, swash staff titles, flags sewn on a 
   await login(page, 'bartender');
   expect(await style(page.locator('#orders_q'), 'fontFamily')).toContain('Berkshire Swash');
 });
+
+test('landing: cloth flag line on one row at any width, toast gives way to a window, pirate drop still works', async ({ page }) => {
+  await page.goto('/index.html');
+  const flags = page.locator('footer .languages_menu img');
+  expect(await page.locator('footer .languages_menu').evaluate((e) => getComputedStyle(e, '::before').backgroundImage)).toContain('rope.webp');
+  for (const n of ['eng', 'sve', 'ita', 'esp', 'pirate']) await expect(flags.and(page.locator(`[src$="flag-${n}.webp"]`))).toHaveCount(1);
+  for (const width of [320, 375, 641, 800, 1000, 1280]) {
+    await page.setViewportSize({ width, height: 800 });
+    const tops = await flags.evaluateAll((l) => l.map((i) => i.getBoundingClientRect().y));
+    expect(Math.max(...tops) - Math.min(...tops)).toBeLessThan(20); // one row; only the sag differs
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    expect(await page.evaluate(() => document.documentElement.getBoundingClientRect().height)).toBeGreaterThanOrEqual(800); // storm fills the screen
+  }
+  await page.evaluate(() => showToast('Access denied', true));
+  await expect(page.locator('#toast')).toHaveClass(/is-open/);
+  await page.click('#about');
+  await expect(page.locator('#toast')).not.toHaveClass(/is-open/);
+  await page.click('#about_window .close_window');
+  await page.locator('#pirateFlag').dragTo(page.locator('#piratePic'));
+  await expect(page.locator('#ghostShip')).toBeVisible();
+  await expect(page.locator('#piratePic')).toBeHidden();
+});
+
+test('easter egg: aged logo is a toggle button, drop or press shows the ghost ship, no hot links, 5 languages', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/index.html');
+  const egg = page.getByRole('button', { name: 'The Flying Dutchman: summon the ghost ship' });
+  await expect(egg).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('#piratePic')).toHaveAttribute('src', 'img/logo/aged.webp');
+  await expect(page.locator('#ghostShip')).toBeHidden();
+  expect(await page.locator('video, [src*="9cache"], [poster]').count()).toBe(0); // the 9gag video is gone
+  await egg.focus();
+  await page.keyboard.press('Enter');
+  await expect(egg).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('#ghostShip')).toBeVisible();
+  await expect(page.locator('#piratePic')).toBeHidden();
+  await page.locator('#pirateFlag').dragTo(egg);
+  await expect(egg).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('#piratePic')).toBeVisible();
+  await page.click('#sve');
+  await expect(page.locator('#summon_label')).toHaveText('Flygande Holländaren: kalla fram spökskeppet');
+  await page.setViewportSize({ width: 375, height: 812 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+});
+
+test('demo logins: grouped with role icons, Use fills the form, fits 1280x720, 44px on phones, 5 languages', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto('/index.html');
+  await page.click('#passwords');
+  const list = page.locator('#passwords_window .scrollable');
+  expect(await list.evaluate((e) => e.scrollHeight <= e.clientHeight + 1)).toBe(true); // no scrolling
+  await expect(page.locator('.account_group h3 svg use')).toHaveCount(5);
+  await expect(page.getByRole('button', { name: 'Use hassan' })).toBeVisible(); // each Use is named after its account
+  const use = page.locator('.use[data-user="yawen"]');
+  expect(await style(use, 'backgroundImage')).toBe('none'); // secondary: an outline, no plate
+  await use.click();
+  await expect(page.locator('#passwords_window')).toBeHidden();
+  await expect(page.locator('#user_name_input')).toHaveValue('yawen');
+  await expect(page.locator('#password_input')).toHaveValue('yawen123');
+  await expect(page.locator('#login')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await page.waitForURL('**/bartender.html');
+  await page.goto('/index.html');
+  await page.evaluate(() => localStorage.setItem('index', 1));
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.reload();
+  await page.click('#passwords');
+  await expect(page.locator('.use[data-user="hassan"] .use_label')).toHaveText('Använd');
+  await expect(page.locator('#group_test')).toHaveText('Testanvändare, alla sidor');
+  for (const b of await page.locator('.use').evaluateAll((l) => l.map((e) => [e.offsetWidth, e.offsetHeight]))) expect(Math.min(...b)).toBeGreaterThanOrEqual(44);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+});

@@ -35,6 +35,7 @@
   --danger-text: #8b0000;       /* 4.86:1 or better on every sea-glass surface */
   --danger-text-on-dark: #ffb4a8;
   --danger-fill: #AF370B;       /* white text */
+  --hover-sepia: rgba(42, 23, 9, 0.12);  /* sepia ink wash behind the secondary Use buttons on the Passwords sheet (V8) */
   --hover-danger: rgba(139, 0, 0, 0.12);  /* red ink wash behind the order-row remove cross on hover and focus */
   --alert-fill: #c8102e;        /* new order, white text 5.88:1 */
 
@@ -53,7 +54,6 @@
   /* 2018 originals */
   --accent-blue: #3240ff;
   --accent-lime: #2dff12;
-  --gag-green: #62CB62;
   --bright-red: red;
   --bright-green: green;
   --bright-grey: grey;
@@ -118,7 +118,6 @@
   --shadow-brass: inset 0 1px 0 var(--brass-light), inset 0 -2px 0 var(--shadow-lift), var(--shadow-float);
   --shadow-iron: inset 0 1px 0 var(--iron-light), inset 0 -2px 0 var(--shadow-lift), var(--shadow-float);
   --shadow-rust: inset 0 1px 0 var(--rust-light), inset 0 -2px 0 var(--shadow-lift), var(--shadow-float);
-  --shadow-plaque: inset 0 1px 0 var(--brass-light), inset 0 -2px 0 var(--shadow-lift), inset 0 0 0 1px var(--brass-dark), inset 0 0 8px var(--shadow-lift);
   --shadow-none: none;
   --radius-sm: 4px;      /* buttons, inputs */
   --radius-md: 8px;      /* cards, panels, tab tops, dialogs */
@@ -270,47 +269,6 @@ a:active {
 
 
 /* LANGUAGE MENU */
-.languages {
-    margin-left: 20%;
-}
-
-.languages img {
-    width: 64px;
-    height: 40px; /* flags are 1.6:1, files 128x80 for 2x screens */
-    float: left;
-    margin: var(--space-3);
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-float);
-    filter: sepia(0.3) saturate(0.85);
-}
-
-/* Weathered enamel plaques (1280 layout): the brass tarnish multiplied over each flag.
-   Each wrapper floats so it can hold the overlay; the first keeps the 20% indent */
-@media (min-width: 769px) {
-    .languages {
-        position: relative;
-        float: left;
-        margin-left: 0;
-    }
-    .languages_menu a:first-child .languages { margin-left: 20%; }
-    .languages::after {
-        content: "";
-        position: absolute;
-        left: var(--space-3);
-        top: var(--space-3);
-        width: 64px;
-        height: 40px;
-        border-radius: var(--radius-sm);
-        background: url("../img/textures/tarnish.webp") -140px -70px / 400px 200px;
-        mix-blend-mode: multiply;
-        box-shadow: var(--shadow-plaque);
-        pointer-events: none;
-    }
-    #sve .languages::after { background-position: -220px -80px; }
-    #ita .languages::after { background-position: -60px -90px; }
-    #esp .languages::after { background-position: -280px -60px; }
-}
-
 .languages_menu{
     bottom: 0px;
     display: block;
@@ -368,7 +326,6 @@ footer .languages img {
     box-shadow: var(--shadow-none);
     filter: drop-shadow(0 2px 2px var(--ink));
 }
-footer .languages::after { content: none; } /* no enamel plaque on cloth */
 footer .languages::before { /* the sleeve's shade under the cord */
     content: "";
     position: absolute;
@@ -406,6 +363,7 @@ footer .languages_menu a:nth-child(4) .languages { translate: 0 3.4px; rotate: a
 footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: atan2(-51.2px, 100cqw - 24px); }
 @media (max-width: 768px) {
     footer .languages_menu { --fw: 56px; }
+    footer .languages_menu a { min-height: 44px; } /* 56x35 flags, 44px phone target */
 }
 @media (min-width: 769px) and (max-width: 1099px) {
     footer .languages_menu { --fw: 48px; width: 360px; } /* room for Log Out, undo/redo and Place Order on one row */

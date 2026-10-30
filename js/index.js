@@ -25,23 +25,11 @@ function closeLogin(){
     $('#loginBox').hide();
 }
 
-// change between displaying picture/gif
-function picToGif(ev) {
+// the pirate flag dropped on the logo, or a press of it, crossfades to the ghost ship (css/index.css)
+function toggleGhost(ev) {
     ev.preventDefault();
-    if($('#piratePic').css('display') == 'block') { // if the logo is currently displayed
-        $('#piratePic').hide();
-        $('#great').show();
-   
-        document.getElementById('great').play();
-        $('body').css('background-color', "var(--gag-green)");
-        $('body').css('background-image', 'none');
-    } else { // if the gif is currently displayed
-        $('#piratePic').show();
-        $('#great').hide();
-        document.getElementById('great').pause();
-        $('body').css('background-color', "var(--paper)");
-        $('body').css('background-image', 'url(img/storm.jpg)');
-    }
+    var b = document.getElementById('summon');
+    b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') != 'true');
 }
 
 function allowDrop(ev) { ev.preventDefault(); }
@@ -56,6 +44,7 @@ $(document).on('click','#about',function() {
     $("#about_window").removeClass("hidden");
 
     $("#overlay").removeClass("hidden");
+    hideToast(); // the toast would sit on the window; the live region already announced it
 });
 
 $(document).on('click','#passwords',function() {
@@ -66,6 +55,7 @@ $(document).on('click','#passwords',function() {
     $("#passwords").addClass("full_length");
 
     $("#overlay").removeClass("hidden");
+    hideToast(); // the toast would sit on the window; the live region already announced it
 });
 
 $(document).on('click','.close_window',function() {
@@ -78,6 +68,15 @@ $(document).on('click','.close_window',function() {
     $("#overlay").addClass("hidden");
 });
 
+// V8: Use fills the login form for a demo account; the visitor still presses Log In
+$(document).on('click','.use',function() {
+    $("#passwords_window .close_window").click();
+    openLogin('loginBox', 'block', this.dataset.role);
+    $("#user_name_input").val(this.dataset.user);
+    $("#password_input").val(this.dataset.pass).trigger("input"); // clears an old error
+    $("#login").focus();
+});
+
 function translate (index) {
     $("#page_title").text(page_title[index]);
     $("#welcome").text(welcome[index]);
@@ -88,5 +87,9 @@ function translate (index) {
     $("#password").text(password[index]);
     $("#login").text(login[index]);
     $("#close, .close_window").attr("aria-label", close_label[index]);
-    $("#piratePic").attr("alt", logo_alt[index]);
+    $("#summon_label").text(logo_alt[index] + ": " + summon_action[index]);
+    $.each(["passwords_title", "demo_intro", "group_vip", "group_regular", "group_bartenders", "group_manager", "group_test"],
+        function (i, id) { $("#" + id).text(window[id][index]); });
+    $.each(["use_label", "role_customer", "role_bartender", "role_manager"],
+        function (i, c) { $("." + c).text(window[c][index]); });
 }
