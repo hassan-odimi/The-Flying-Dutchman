@@ -1,6 +1,7 @@
 /** The Flying Dutchman
  *  view_common.js
  *  Created by 'Pirates of the Caribbean' on 21 of February 2018.
+ *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
  */
 
 /* ALL COMMON PAGE TEXTS
@@ -64,6 +65,12 @@ var remove_word = ["Remove",
                    "Toss overboard"];
 
 // Feedback messages (toast + screen-reader announcements)
+var title_login_failed = ["Login failed",
+                          "Inloggningen misslyckades",
+                          "Accesso non riuscito",
+                          "Error de inicio de sesión",
+                          "Boardin' failed"];
+
 var msg_wrong_username = ["Wrong user name. Try again.",
                           "Fel användarnamn. Försök igen.",
                           "Nome utente errato. Riprova.",
@@ -76,11 +83,16 @@ var msg_wrong_password = ["Wrong password. Try again.",
                           "Contraseña incorrecta. Inténtalo de nuevo.",
                           "That be the wrong password. Try again."];
 
-var msg_access_denied = ["Access denied. You were sent to your own page.",
-                         "Åtkomst nekad. Du skickades till din egen sida.",
-                         "Accesso negato. Sei stato portato alla tua pagina.",
-                         "Acceso denegado. Te llevamos a tu propia página.",
-                         "No entry, matey! Back to yer own deck."];
+var title_access_denied = ["Access denied",
+                           "Åtkomst nekad",
+                           "Accesso negato",
+                           "Acceso denegado",
+                           "No entry, matey!"];
+var msg_access_denied = ["You were sent to your own page.",
+                         "Du skickades till din egen sida.",
+                         "Sei stato portato alla tua pagina.",
+                         "Te llevamos a tu propia página.",
+                         "Back to yer own deck."];
 
 // "Heineken added. Total: SEK 100:-"
 var msg_added = ["added",

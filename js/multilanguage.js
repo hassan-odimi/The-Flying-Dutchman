@@ -1,6 +1,7 @@
 /** The Flying Dutchman
  *  multilanguage.js
  *  Created by 'Pirates of the Caribbean' on 09 of February 2018.
+ *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
  */
 
 /*LANGUAGE SELECTION CONTROL
@@ -26,8 +27,8 @@ setLanguage(localStorage.getItem("index") || 0); /* Call with each page load (re
 $(document).ready(function () { /*Call setLanguage() on menu (flags) selection*/
     $.each(flags, function (index, flag) {
         $("#" + flag).click(function () {
+            localStorage.setItem("index", index); /*Save selected index for the next loaded pages (and for texts built in translate())*/
             setLanguage(index);
-            localStorage.setItem("index", index); /*Save selected index for the next loaded pages*/
             return false; // stop href="#" jumping to the top
         });
     });

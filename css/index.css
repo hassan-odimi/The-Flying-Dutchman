@@ -1,6 +1,7 @@
 /* The Flying  Dutchman
    index.css
    Created by 'Pirates of the Caribbean' on 20 of February 2018.
+   Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
 */
 
 
@@ -83,7 +84,7 @@ body {
     max-width: 100%;
     background-repeat: repeat-y;
 
-    font-family: 'Oswald', sans-serif;
+    font-family: var(--font-body);
     color: var(--ink-on-dark);
 }
 
@@ -101,20 +102,26 @@ body {
 
 }
 
-/* Close (V4; T3 adds the About and Passwords windows): a small weathered iron plate (Texturelabs Metal 155),
-   white X 10.48:1 on the kelp under it */
+/* Close (F6): a round bolt head (Texturelabs Details 141 + Metal 132), white X stroke 3 with a 1px dark shadow */
 #close, .close_window {
     float: right;
     display: grid;
     place-items: center;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     padding: 0;
-    border-radius: var(--radius-sm);
+    border: 0;
+    border-radius: var(--radius-round);
     color: var(--ink-on-dark);
-    background: url("../img/textures/iron.webp") 0 0 / 400px 200px, var(--bar);
-    background-blend-mode: multiply;
-    box-shadow: var(--shadow-iron);
+    background: url("../img/textures/bolt.webp") center / 100% 100% no-repeat;
+    box-shadow: var(--shadow-none);
+    filter: drop-shadow(0 2px 3px var(--shadow-lift));
+}
+#close:focus-visible, .close_window:focus-visible { box-shadow: 0 0 0 6px var(--ink); } /* keep the ring's dark half */
+#close:hover, .close_window:hover { filter: brightness(0.88) drop-shadow(0 2px 3px var(--shadow-lift)); }
+#close .icon, .close_window .icon {
+    stroke-width: 3;
+    filter: drop-shadow(0 1px 1px var(--ink));
 }
 
 
@@ -176,7 +183,7 @@ body {
     border: 0;
     writing-mode: vertical-rl;
     line-height: 60px;
-    font-family: 'Oswald', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-base);
     color: var(--ink-sepia);
     background: url("../img/textures/slip1.webp") 0 0 / 100% 100% no-repeat;
@@ -224,6 +231,36 @@ body {
     clear: both;
     z-index: 999;
 }
+
+/* About (F10): a wide sheet that fits its copy, no inner scroll. Three ruled columns; one small textured icon per heading. Phones scroll the sheet itself (rules below). */
+#about_window {
+    width: min(920px, 92vw);
+    height: auto;
+    margin: 5% auto 0;
+    left: 0;
+    right: 0;
+    padding: 36px 32px 24px;
+    box-sizing: border-box;
+}
+#about_window h2 { margin: 0 0 var(--space-2); font-family: var(--font-display); font-size: var(--text-display); font-weight: var(--weight-body); text-align: center; }
+.about_lede { max-width: 60ch; margin: 0 auto var(--space-4); font-size: var(--text-md); line-height: 1.4; text-align: center; }
+.about_cols {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: var(--space-5);
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--rule-sepia);
+    border-bottom: 1px solid var(--rule-sepia);
+}
+.about_cols h3 { display: flex; font-family: var(--font-display); font-weight: var(--weight-body); align-items: center; gap: var(--space-2); margin: 0 0 var(--space-2); font-size: var(--text-lg); }
+.about_cols h3::before { content: ""; flex: none; width: 24px; height: 24px; background: 0 0 / 100% 100% no-repeat; }
+.about_cols .about_try::before { background-image: url("../img/icons/about-anchor.webp"); }
+.about_cols .about_built::before { background-image: url("../img/icons/about-wheel.webp"); }
+.about_cols .about_crew::before { background-image: url("../img/icons/about-skull.webp"); }
+.about_cols ul { margin: 0; padding: 0; list-style: none; }
+.about_cols li { position: relative; padding-left: 16px; line-height: 1.45; }
+.about_cols li::before { content: "\2013"; position: absolute; left: 0; } /* a plain dash, no icon per line */
+.about_source { margin: var(--space-3) 0 0; text-align: center; }
 
 /* links on the sheet stay sepia and underlined; the global white hover and red press fail on paper */
 #about_window a, #about_window a:hover, #about_window a:active {
@@ -413,7 +450,7 @@ input[type=password], select {
     padding: var(--space-3) var(--space-5);
     border: 0;
     border-radius: var(--radius-sm);
-    font-family: 'Oswald', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-md);
     cursor: pointer;
 }
@@ -477,7 +514,7 @@ input[type=password], select {
 /* Login error: pale-red border on the wrong field, bold message with icon under the form */
 .t-input {
     border: 3px solid transparent;
-    font-family: 'Oswald', sans-serif; /* T4: not the browser default */
+    font-family: var(--font-body); /* T4: not the browser default */
     box-shadow: var(--shadow-inset);
 }
 
@@ -558,7 +595,7 @@ input[type=password], select {
         box-sizing: border-box;
         padding: 0 8px;
         border-right-style: solid;
-        font-family: 'Oswald', sans-serif;
+        font-family: var(--font-body);
         font-size: var(--text-base);
         display: flex;
         align-items: center;
@@ -594,6 +631,11 @@ input[type=password], select {
     }
 
     .scrollable { height: auto; max-height: 55vh; }
+
+    #about_window { width: auto; margin: 5% 4% 0; padding: 36px 16px 16px; max-height: 90dvh; }
+    .about_cols { grid-template-columns: 1fr; gap: var(--space-3); }
+    #about_window h2 { padding: 0 52px; } /* clear of the Close plate, both sides so the title stays centred */
+    .about_lede { font-size: var(--text-base); }
 
     .close_window, .close {
         min-width: 44px;

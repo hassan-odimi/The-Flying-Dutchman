@@ -13,7 +13,7 @@ test('tabs say pressed and not pressed', async ({ page }) => {
 });
 
 test('order rows expand and collapse', async ({ page }) => {
-  expect(await tabTo(page, /ORDER #/)).toMatch(/, not expanded$/);
+  expect(await tabTo(page, /^button, Order \d+, /)).toMatch(/, not expanded$/);
   await page.keyboard.press('Enter');
   await page.keyboard.press('Shift+Tab');
   await page.keyboard.press('Tab');
@@ -21,33 +21,124 @@ test('order rows expand and collapse', async ({ page }) => {
 });
 
 test('buttons inside a collapsed order are not reachable', async ({ page }) => {
-  await tabTo(page, /ORDER #/);
+  await tabTo(page, /^button, Order \d+, /);
   await page.keyboard.press('Tab');
-  expect(await page.evaluate(() => sr.lastSpokenPhrase())).toMatch(/ORDER #/);
+  expect(await page.evaluate(() => sr.lastSpokenPhrase())).toMatch(/^button, Order \d+, /);
 });
 
 test('order rows read without separator noise', async ({ page }) => {
-  expect(await tabTo(page, /ORDER #/)).not.toMatch(/\||:::/);
+  expect(await tabTo(page, /^button, Order \d+, /)).not.toMatch(/\||:::/);
 });
 
 test('mark as paid is confirmed once', async ({ page }) => {
-  await tabTo(page, /ORDER #00020/);
+  await tabTo(page, /^button, Order 20, /);
   await page.keyboard.press('Enter');
   await tabTo(page, /Mark as Paid/, 5);
   await heard(page);
   await page.keyboard.press('Enter');
-  expect(count(await heard(page), /^polite: /)).toBe(1);
+  let n = 0; // the live region can be late under load: wait for the first, then give a second one time to show up
+  await expect.poll(async () => (n += count(await heard(page), /^polite: /))).toBeGreaterThan(0);
+  await page.waitForTimeout(300);
+  expect(n + count(await heard(page), /^polite: /)).toBe(1);
 });
 
 test('cancel order is confirmed once', async ({ page }) => {
-  await tabTo(page, /ORDER #00020/);
+  await tabTo(page, /^button, Order 20, /);
   await page.keyboard.press('Enter');
   await tabTo(page, /Cancel Order/, 5);
   await heard(page);
   await page.keyboard.press('Enter');
-  expect(count(await heard(page), /^polite: /)).toBe(1);
+  let n = 0; // the live region can be late under load: wait for the first, then give a second one time to show up
+  await expect.poll(async () => (n += count(await heard(page), /^polite: /))).toBeGreaterThan(0);
+  await page.waitForTimeout(300);
+  expect(n + count(await heard(page), /^polite: /)).toBe(1);
 });
 
 test('axe: no WCAG 2.2 AA violations', async ({ page }) => {
   await axe(page);
+});
+
+test('Update Orders is idle on load, then shows a new order when clicked', async ({ page }) => {
+  await expect(page.locator('#retrieve_orders')).not.toHaveClass(/has-new/);
+  const before = await page.locator('.accordion').count();
+  await page.evaluate(() => { // what customer.js does when an order is placed
+    const orders = JSON.parse(localStorage.getItem('SESSION')) || SESSIONS_TRANSACTIONS;
+    orders.push({ ...orders[0], transaction_id: 'T99999', paid: false });
+    localStorage.setItem('SESSION', JSON.stringify(orders));
+    localStorage.setItem('NEWORDER', 1);
+  });
+  await expect(page.locator('#retrieve_orders')).toHaveClass(/has-new/, { timeout: 5000 });
+  await page.click('#retrieve_orders');
+  await expect(page.locator('#retrieve_orders')).not.toHaveClass(/has-new/);
+  await expect(page.locator('.accordion')).toHaveCount(before + 1);
+});
+
+test('fresh load: Update Orders is not lit', async ({ page }) => {
+  await page.waitForTimeout(2500); // one poll tick
+  await expect(page.locator('#retrieve_orders')).not.toHaveClass(/has-new/);
+});
+
+test('paid stamp says "with credit" when no bartender took the payment', async ({ page }) => {
+  await page.evaluate(() => { SESSIONS_TRANSACTIONS.push({ ...SESSIONS_TRANSACTIONS[0], transaction_id: 'T99998', paid: true, bartender_id: 'VIP Self-Service' }); rePrintTab(); });
+  await expect(page.locator('#T99998 .o_state')).toHaveText('Paid with credit');
+  await expect(page.locator('.o_state', { hasText: 'Paid by' }).first()).toBeVisible(); // named bartenders still print "by"
+});
+
+test('a card reads number, customer, time, total, state, and the total says kronor (F11)', async ({ page }) => {
+  expect(await tabTo(page, /^button, Order 20, /)).toMatch(/^button, Order 20, Zuleika Gorecki, 23:48, Total 50 kronor, Not paid, not expanded$/);
+  await page.evaluate(() => localStorage.setItem('index', 1)); // texts are built with the language chosen
+  await page.click('#sve'); // Swedish
+  await page.focus('.accordion'); // first card
+  expect(await page.evaluate(() => document.querySelector('.accordion').textContent)).toMatch(/Beställning 20, Zuleika Gorecki, 23:48, Totalt 50 kronor, Obetald/);
+  await expect(page.locator('.group h2').first()).toHaveText('Väntar');
+});
+
+test('orders lie in piles: waiting piles of five newest first, one paid pile of six; tabs filter (F11)', async ({ page }) => {
+  const n = await page.evaluate(() => ({ open: SESSIONS_TRANSACTIONS.filter((o) => !o.paid).length, paid: SESSIONS_TRANSACTIONS.filter((o) => o.paid).length }));
+  const sizes = (sel) => page.locator(sel + ' .pile').evaluateAll((p) => p.map((e) => e.querySelectorAll('.pc').length));
+  const waiting = await sizes('.group.waiting');
+  expect(waiting.reduce((a, b) => a + b, 0)).toBe(n.open);
+  expect(waiting.slice(0, -1).every((c) => c === 5)).toBe(true);
+  expect(await sizes('.group.paid')).toEqual([Math.min(6, n.paid)]);
+  await expect(page.locator('.group.waiting .pc').first().locator('.pc_idx b').first()).toHaveText('20'); // newest on top
+  await page.click('#unpaid');
+  await expect(page.locator('.group.paid')).toHaveCount(0);
+  await page.click('#paid');
+  await expect(page.locator('.group.waiting')).toHaveCount(0);
+  const paidPiles = await sizes('.group.paid');
+  expect(paidPiles.reduce((a, b) => a + b, 0)).toBe(n.paid);
+  expect(paidPiles.slice(0, -1).every((c) => c === 5)).toBe(true);
+  expect(await page.locator('.pc').evaluateAll((l) => l.some((e) => /SEK/.test(e.textContent)))).toBe(false); // the :- already says kronor
+});
+
+test('a card opens in place: its pile and the other piles do not move, one open card per pile, Esc closes it (F11)', async ({ page }) => {
+  const rects = () => page.locator('.pile').evaluateAll((l) => l.map((e) => { const r = e.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top), Math.round(r.height)]; }));
+  const before = await rects();
+  const cards = page.locator('.group.waiting .pile').first().locator('.accordion');
+  await cards.nth(1).click();
+  await page.waitForTimeout(400);
+  expect(await rects()).toEqual(before);
+  await expect(cards.nth(1)).toHaveAttribute('aria-expanded', 'true');
+  await expect.poll(async () => (await cards.nth(1).locator('xpath=..').boundingBox()).width).toBeGreaterThan(280); // grown to 284 px
+  await cards.nth(0).click(); // the open card covers the ones below it, so pick the card above
+  await expect(cards.nth(1)).toHaveAttribute('aria-expanded', 'false');
+  await expect(cards.nth(0)).toHaveAttribute('aria-expanded', 'true');
+  await page.locator('.pc:has(> .accordion.active) .order').focus();
+  await page.keyboard.press('Escape');
+  await expect(cards.nth(0)).toHaveAttribute('aria-expanded', 'false');
+  await expect(cards.nth(0)).toBeFocused();
+});
+
+test('marking an order paid moves it to the paid pile and cancelling closes the pile up (F11)', async ({ page }) => {
+  const count = () => page.locator('.group.waiting .pc').count();
+  const n = await count();
+  await page.locator('.accordion#T00020').click();
+  await page.locator('.pay#T00020').click();
+  expect(await count()).toBe(n - 1);
+  await expect(page.locator('#all')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.group.paid .pc').first().locator('.pc_idx b').first()).toHaveText('20');
+  await page.locator('.accordion#T00018').click();
+  await page.locator('.delete#T00018').click();
+  expect(await count()).toBe(n - 2);
+  await expect(page.locator('.accordion#T00018')).toHaveCount(0);
 });

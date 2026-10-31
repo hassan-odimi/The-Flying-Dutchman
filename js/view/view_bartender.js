@@ -2,6 +2,7 @@
  *  view_bartender.js
  *  Created by 'Pirates of the Caribbean' on 21 of February 2018.
  *  Updated on 23 of February 2018.
+ *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
  */
 
 /* BARTENDER PAGE TEXTS
@@ -43,35 +44,42 @@ var mark_paid= ["Mark as Paid",
                 "Marcar como pagado",
                 "Mark as Paid"];
 
+var paid_credit= ["with credit",
+                  "med kredit",
+                  "con credito",
+                  "con crédito",
+                  "with yer credit"];
 
-// Alert pop-up messages
 
-function message_mark_paid (order_id, index) {
-    switch (index){
-        case 0:
-            return "The order #" + order_id.slice(1) + " has been marked as paid!";
-        case 1:
-            return "Beställningen #" + order_id.slice(1) + " har markerats som betald!";
-        case 2:
-            return "La ordine #" + order_id.slice(1) + " si ha stampato como pagata";
-        case 3:
-            return "La orden #" + order_id.slice(1) + " se ha marcado como paga!";
-        case 4:
-            return "Th' debt' #" + order_id.slice(1) + " been pai'!";
-    }
+// Toast messages: a short title and one detail line (read together by the screen reader)
+var title_mark_paid = ["Marked as paid",
+                       "Markerad som betald",
+                       "Segnato come pagato",
+                       "Marcado como pagado",
+                       "Debt be settled"];
+var title_delete_order = ["Order removed",
+                          "Beställning borttagen",
+                          "Ordine rimosso",
+                          "Pedido eliminado",
+                          "Order be forgotten"];
+
+var order_word = ["Order", "Beställning", "Ordine", "Orden", "Debt"];
+
+function message_order_ref (order_id, index) {
+    return order_word[index] + " #" + order_id.slice(1);
 }
 
-function message_delete_order (order_id, index) {
-    switch (index){
-        case 0:
-            return "The order #" + order_id.slice(1) + " has been deleted!";
-        case 1:
-            return "Beställningen #" + order_id.slice(1) + " har markerats som betald!";
-        case 2:
-            return "La ordine #" + order_id.slice(1) + " si ha cancellato";
-        case 3:
-            return "La orden #" + order_id.slice(1) + " se ha eliminado!";
-        case 4:
-            return "Th' debt' #" + order_id.slice(1) + " been forgotten!";
-    }
-}
+// Order cards (F11): pile headings, stamps, and the words only a screen reader hears
+var pile_waiting = ["Waiting", "Väntar", "In attesa", "En espera", "Waitin'"];
+var pile_paid = ["Paid", "Betalda", "Pagati", "Pagados", "Settled"];
+var state_unpaid = ["Not paid", "Obetald", "Non pagato", "No pagado", "Owed"];
+var state_paid = ["Paid", "Betald", "Pagato", "Pagado", "Settled"];
+var paid_by = ["by", "av", "da", "por", "by"];
+var total_word = ["Total", "Totalt", "Totale", "Total", "Total"];
+var kronor_word = ["kronor", "kronor", "corone", "coronas", "kronor"];
+
+var new_orders_label= [" (new orders)",
+                       " (nya beställningar)",
+                       " (nuovi ordini)",
+                       " (pedidos nuevos)",
+                       " (fresh orders, matey)"];

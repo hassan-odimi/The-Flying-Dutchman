@@ -1,6 +1,7 @@
 /** The Flying Dutchman
  *  view_index.js
  *  Created by Pirates of the Caribbean on 21 of February 2018.
+ *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
  */
 
 /* INDEX PAGE TEXTS
@@ -142,3 +143,46 @@ var role_bartender = ["Bartender",
                       "Grog pourer"];
 
 var role_manager = group_manager; // one manager, same word
+
+/* About window (F10): the lede, three headings, two lists (one array per language, five lines each) and the source label. The crew names are not translated. */
+var about_lede = ["A bar ordering system, built in 2018 for User Interface Programming I at Uppsala University. Plain HTML, CSS and jQuery, no framework.",
+                  "Ett beställningssystem för en bar, byggt 2018 i kursen User Interface Programming I vid Uppsala universitet. Ren HTML, CSS och jQuery, inget ramverk.",
+                  "Un sistema di ordinazione per un bar, creato nel 2018 per il corso User Interface Programming I all'Università di Uppsala. Solo HTML, CSS e jQuery, nessun framework.",
+                  "Un sistema de pedidos para un bar, creado en 2018 para el curso User Interface Programming I de la Universidad de Uppsala. HTML, CSS y jQuery, sin frameworks.",
+                  "A tavern orderin' system, built in 2018 fer User Interface Programming I at Uppsala University. Plain HTML, CSS 'n jQuery, no framework, arr."];
+
+var about_try_title = ["Try it",
+                       "Testa",
+                       "Provalo",
+                       "Pruébalo",
+                       "Try it, matey"];
+
+var about_try = [["Open Get the passwords and pick a role.", "Order as a customer, serve as a bartender, restock as a manager.", "Every action can be undone.", "Change language with the flags.", "Drop the pirate flag on the ship."],
+                 ["Öppna Get the passwords och välj en roll.", "Beställ som kund, servera som bartender, fyll på som chef.", "Alla åtgärder kan ångras.", "Byt språk med flaggorna.", "Släpp piratflaggan på skeppet."],
+                 ["Apri Get the passwords e scegli un ruolo.", "Ordina come cliente, servi come barista, rifornisci come gestore.", "Ogni azione può essere annullata.", "Cambia lingua con le bandiere.", "Trascina la bandiera pirata sulla nave."],
+                 ["Abre Get the passwords y elige un rol.", "Pide como cliente, sirve como camarero, repón como gerente.", "Cualquier acción se puede deshacer.", "Cambia el idioma con las banderas.", "Suelta la bandera pirata sobre el barco."],
+                 ["Open Get the passwords 'n pick yer role.", "Order as a customer, serve as a bartender, restock as th' manager.", "Every deed can be undone.", "Change tongue with th' flags.", "Drop th' pirate flag on th' ship."]];
+
+var about_built_title = ["Built with",
+                         "Byggd med",
+                         "Realizzato con",
+                         "Hecho con",
+                         "Built with"];
+
+var about_built = [["HTML, CSS, jQuery", "Undo and redo", "Drag and drop", "5 languages", "Works on phones"],
+                   ["HTML, CSS, jQuery", "Ångra och gör om", "Dra och släpp", "5 språk", "Fungerar på mobiler"],
+                   ["HTML, CSS, jQuery", "Annulla e ripeti", "Trascina e rilascia", "5 lingue", "Funziona sui telefoni"],
+                   ["HTML, CSS, jQuery", "Deshacer y rehacer", "Arrastrar y soltar", "5 idiomas", "Funciona en móviles"],
+                   ["HTML, CSS, jQuery", "Undo 'n redo", "Drag 'n drop", "5 tongues", "Works on phones, matey"]];
+
+var about_crew_title = ["Crew",
+                        "Besättning",
+                        "Equipaggio",
+                        "Tripulación",
+                        "Th' crew"];
+
+var about_source = ["Source code:",
+                    "Källkod:",
+                    "Codice sorgente:",
+                    "Código fuente:",
+                    "Th' source code:"];

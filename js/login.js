@@ -1,6 +1,7 @@
 /** The Flying Dutchman
  *  login.js
  *  Created by 'Pirates of the Caribbean' on .. of February 2018.
+ *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
  */
 
 /*LOGIN PAGE SCRIPTS
@@ -61,11 +62,11 @@ function loginDB(form) {
 // check if the currently logged in user have the proper level of access to use the current page
 function checkAccess() {    
     var ut = localStorage.getItem('usertype');
-    var page = window.location.pathname.split("/").pop().split(".")[0];
+    var page = window.location.pathname.split("/").pop().split(".")[0] || "index"; // "/" has no file name
     var id = (localStorage.getItem("id") || "").slice(1);  // used to check if the user has unquestionale access
     if ((ut == page) || (ut == null && page == 'index') || page == 'index' || id == "€$#=@") {return;}
     else { // redirect to appropriate page if a user tries to access a page they are not allowed to
-        toastAfterLoad(msg_access_denied[lang()], true);
+        toastAfterLoad(title_access_denied[lang()], msg_access_denied[lang()], true);
         goToUserPage(ut);
     }
 }
@@ -81,7 +82,7 @@ function loginError(field, message) {
     field.classList.add("is-shaking");
     setTimeout(function () { field.classList.remove("is-shaking"); }, 300);
 
-    showToast(message, true);
+    showToast(title_login_failed[lang()], message, true);
 }
 
 // typing clears the error
@@ -102,21 +103,22 @@ function announce(message) {
 }
 
 var toastTimer;
-function showToast(message, isError) {
-    announce(message);
+function showToast(title, detail, isError) {
+    announce(title + (detail ? ". " + detail : ""));
     var toast = $("#toast");
-    toast.toggleClass("is-error", !!isError).find(".toast_icon use").attr("href", "img/icons.svg#" + (isError ? "alert" : "check"));
-    toast.find(".toast_text").text(message);
+    toast.toggleClass("is-error", !!isError);
+    toast.find(".toast_title").text(title);
+    toast.find(".toast_detail").text(detail || "");
     toast.addClass("is-open");
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(hideToast, 4000 + message.length * 60); // longer messages stay longer
+    toastTimer = setTimeout(hideToast, 4000 + (title.length + (detail || "").length) * 60); // longer messages stay longer
 }
 
 function hideToast() { $("#toast").removeClass("is-open"); }
 
 // for messages followed by a reload or redirect: shown on the next page
-function toastAfterLoad(message, isError) {
-    sessionStorage.setItem("toast", JSON.stringify([message, !!isError]));
+function toastAfterLoad(title, detail, isError) {
+    sessionStorage.setItem("toast", JSON.stringify([title, detail, !!isError]));
 }
 
 // "Heineken added. Total: SEK 100:-" (customer and management order rows)
@@ -133,14 +135,14 @@ function logOut() {
 $(function () {
     $("body").append('<div id="live" class="sr-only" aria-live="polite"></div>' +
         '<div class="toast_wrap"><div id="toast" class="toast t-toast" aria-hidden="true">' +
-        '<svg class="toast_icon icon" aria-hidden="true"><use href="img/icons.svg#check"/></svg><span class="toast_text"></span></div></div>');
+        '<span class="toast_ribbon"></span><span class="toast_icon"></span><span class="toast_text"><b class="toast_title"></b><span class="toast_detail"></span></span></div></div>');
     $("#toast").hover(function () { clearTimeout(toastTimer); }, function () { toastTimer = setTimeout(hideToast, 4000); });
 
     var pending = sessionStorage.getItem("toast");
     if (pending) {
         sessionStorage.removeItem("toast");
         pending = JSON.parse(pending);
-        setTimeout(function () { showToast(pending[0], pending[1]); }, 300); // let the live region settle first
+        setTimeout(function () { showToast(pending[0], pending[1], pending[2]); }, 300); // let the live region settle first
     }
 
     // mirror the visual .fade state of undo/redo into aria-disabled

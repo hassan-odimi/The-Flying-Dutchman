@@ -1,6 +1,7 @@
 /** The Flying Dutchman
  *  view_management.js
  *  Created by 'Pirates of the Caribbean' on 21 of February 2018.
+ *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
  */
 
 /* MANAGEMENT PAGE TEXTS
@@ -145,15 +146,37 @@ var pay= ["Place Stock Order",
         "Realizar pedido",
         "Place Stock Order"];
 
-// Alert pop-up messages
-var message_empty_order = ["You must select your drinks before placing an order!",
-                   "Du måste välja dina drycker innan du gör din beställning!",
-                   "È necessario selezionare le bevande prima di effettuare un ordine!",
-                   "¡Debe seleccionar sus bebidas antes de realizar un pedido!",
-                   "Ye must select yer drinks afore placin' an order!"];
+// Toast messages: a short title and one detail line (read together by the screen reader)
+var title_empty_order = ["Nothing to order",
+                         "Inget att beställa",
+                         "Niente da ordinare",
+                         "Nada que pedir",
+                         "Naught t' order"];
+var message_empty_order = ["Select your drinks before placing an order.",
+                           "Välj dina drycker innan du beställer.",
+                           "Seleziona le bevande prima di ordinare.",
+                           "Seleccione sus bebidas antes de hacer el pedido.",
+                           "Pick yer drinks afore placin' an order."];
 
-var message_placed_order = ["Your order has been placed!",
-                    "Din beställning är skickad!",
-                    "Il tuo ordine è stato inoltrato!",
-                    "¡Su orden ha sido puesta!",
-                    "Yer order has been placed!"];
+var title_placed_order = ["Order placed",
+                          "Beställning skickad",
+                          "Ordine inoltrato",
+                          "Pedido realizado",
+                          "Order be placed"];
+
+// Order receipt (F13)
+var receipt_title = ["Stock order", "Lagerorder", "Ordine di scorta", "Pedido de existencias", "Stock order"];
+var receipt_total = ["Total", "Totalt", "Totale", "Total", "Total"];
+var receipt_stamp = ["Ordered", "Beställd", "Ordinato", "Pedido hecho", "Ordered"];
+var receipt_note = ["Delivery is booked with each supplier.",
+                    "Leverans bokas hos varje leverantör.",
+                    "La consegna viene prenotata con ogni fornitore.",
+                    "La entrega se reserva con cada proveedor.",
+                    "Delivery be booked with each supplier."];
+var receipt_new = ["Start a new order", "Starta en ny order", "Inizia un nuovo ordine", "Empezar un nuevo pedido", "Start a new order"];
+var receipt_locale = ["en-GB", "sv-SE", "it-IT", "es-ES", "en-GB"];
+
+// the line read out with the toast: "Stock order 0042, total SEK 495."
+function message_receipt (no, total, index) {
+    return receipt_title[index] + " " + no + ", " + receipt_total[index].toLowerCase() + " SEK " + total + ".";
+}

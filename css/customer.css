@@ -1,6 +1,7 @@
 /* The Flying Dutchman
    customer.css
    Created by 'Pirates of the Caribbean' on 18 of February 2018.
+   Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
 */
 
 /*Style Sheet for the customer page*/
@@ -13,7 +14,7 @@ h1 {
     float: none;
     color: var(--ink-on-dark);
     margin-left: 1%;
-    font-family: 'Berkshire Swash', cursive;
+    font-family: var(--font-display);
     font-size: var(--text-display);
     font-weight: var(--weight-body); /* the swash has no bold */
 
@@ -32,7 +33,7 @@ body {
     background-size: cover;
     max-width: 100%;
     background-repeat: repeat-y;
-    font-family: 'Oswald', sans-serif;
+    font-family: var(--font-body);
 }
 
 
@@ -75,7 +76,7 @@ header h2 {
     line-height: 1;
 }
 .credit .amount {
-    font-family: 'Berkshire Swash', serif;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
     line-height: 1.1;
     color: var(--brass-light);
@@ -93,7 +94,7 @@ header h2 {
 /*    height: 30%;*/  
 /*    background-color: #0A2521;*/
     float: left;
-    overflow: auto;
+    display: flow-root; /* holds its floated tabs; no overflow, so no scrollbar beside the tabs (F5) */
 }
 
 .menu h2 {
@@ -107,8 +108,9 @@ header h2 {
 
 .menu li {
     float: left;
-    margin-right:1.5%;
-    width: 11%;
+    margin-right: 6px;
+    width: auto; /* a note fits its label (Spanish, bold when selected); 11% was the 2018 English width */
+    min-width: 11%;
 }
 
 .menu li button {
@@ -117,11 +119,11 @@ header h2 {
     box-sizing: border-box;
     text-align: center;
 }
-/* Tab paper and states live in style.css (V4); the phone dropdown's active item is the same board */
+/* Tab paper and states live in style.css (V4, F7); the phone dropdown's selected item gets the same warm tint, no tack */
 .dropdown .dropdown-content button[aria-pressed="true"] {
     color: var(--ink);
     font-weight: var(--weight-heading);
-    background: url("../img/textures/board-surface.webp") 0 0 / 512px 94px, var(--surface); /* black 8.19:1 */
+    background: var(--tab-tint);
 }
 
 .menu a.current li {
@@ -138,14 +140,9 @@ header h2 {
 
 .drink_list {
     width: 68%;
-   /* height: 500px;*/
-    
-    height: 500px;
-    overflow: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     top: 0px;
     margin-left: 2%;
-    background-color: var(--surface);
     float: left;
 /*    overflow: auto; */
     border-bottom-left-radius: var(--radius-md);
@@ -161,29 +158,37 @@ header h2 {
 }
 
 /* Carved Wood Rule: every panel on the wood is lifted */
-.drink_list, .selection_header, .selection, .checkout { box-shadow: var(--shadow-raised); }
+.selection_header, .selection, .checkout { box-shadow: var(--shadow-raised); }
 
 .main_section{
-    float: top;
-    height: 70%;}
+    display: flow-root;
+    clear: both; /* a BFC box would otherwise sit beside the floated tab row */
+}
 
 .drink {
     /* fixed rows for name, bottle and price, so a stock badge never moves the name */
+    position: relative;
     display: grid;
     grid-template-rows: minmax(2.5em, auto) 160px minmax(3.5em, auto);
     align-items: center;
     gap: var(--space-2);
     padding: var(--space-4) var(--space-3);
-    background-color: var(--surface-soft);
-    border-radius: var(--radius-md);
+    /* torn label card (F8): four baked papers, alpha edges, so the shadow is a filter; sepia 5.2:1 on the darkest pixel */
+    background: url("../img/textures/card-paper1.webp") 0 0 / 100% 100% no-repeat;
+    color: var(--ink-sepia);
+    filter: drop-shadow(0 2px 4px var(--shadow-lift)) drop-shadow(0 6px 12px var(--shadow-lift));
     text-align: center;
     cursor: pointer;
-    transition: transform var(--lift-out) var(--toast-ease), box-shadow var(--lift-out) var(--toast-ease);
+    transition: transform var(--lift-out) var(--toast-ease), filter var(--lift-out) var(--toast-ease);
 }
+.drink:nth-child(4n+2) { background-image: url("../img/textures/card-paper2.webp"); }
+.drink:nth-child(4n+3) { background-image: url("../img/textures/card-paper3.webp"); }
+.drink:nth-child(4n+4) { background-image: url("../img/textures/card-paper4.webp"); }
 
-.drink:hover {
-    transform: translateY(calc(-1 * var(--lift-distance)));
-    box-shadow: var(--shadow-float);
+/* hover and keyboard focus: lift, a slight tilt, the paper warms */
+.drink:is(:hover, :focus-visible) {
+    transform: translateY(calc(-1 * var(--lift-distance))) rotate(-0.8deg);
+    filter: saturate(1.4) sepia(.12) drop-shadow(0 4px 6px var(--shadow-lift)) drop-shadow(0 12px 24px var(--shadow-lift));
     transition-duration: var(--lift-in);
 }
 
@@ -202,19 +207,35 @@ header h2 {
     margin: 0 auto;
 }
 
-/* Stock badges under the price; out of stock also greys the bottle */
+/* Stock stamps (F8): worn ink on the paper. The words stay real text for screen readers. */
 .drink .stock {
     display: table;
     margin: var(--space-2) auto 0;
     padding: 2px var(--space-2);
+    border: 3px double currentColor;
     border-radius: var(--radius-sm);
     font-size: var(--text-xs);
-    color: var(--ink-on-dark);          /* 6.22:1 on Rum Red */
-    background-color: var(--danger-fill);
+    font-weight: var(--weight-heading);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--stamp-red);
+    rotate: -7deg;
+    -webkit-mask: url("../img/textures/stamp-wear.webp") center / 160px auto;
+    mask: url("../img/textures/stamp-wear.webp") center / 160px auto;
 }
 
+/* Out of stock: a bigger black stamp across the greyed bottle */
 .drink .out_stock {
-    background-color: var(--bar);       /* 10.48:1 */
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    translate: -50% -50%;
+    margin: 0;
+    border-width: 4px;
+    font-size: var(--text-md);
+    color: var(--ink-stamp);
+    rotate: -20deg;
+    white-space: nowrap;
 }
 
 .drink.fade {
@@ -227,14 +248,13 @@ header h2 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .drink, .drink:hover { transform: none; transition: none; }
+    .drink, .drink:hover, .drink:focus-visible { transform: none; transition: none; }
 }
 
 /*ORDER COLUMN*/
 .selection_header {
     width: 28%;
-    /*    height: 75px;*/
-    height: 75px;
+    min-height: 75px;
     margin-right: 2%;
 
     float: left;
@@ -246,13 +266,9 @@ header h2 {
 
 
 
-/* Order list (T7): a ruled paper ledger (Paper 328) inside the kelp header and total bar.
-   Sepia 5.72:1 or better on its darkest pixel */
+/* Order list: the ledger paper and rows are shared, see style.css */
 .selection {
     width: 28%;
-    /*    height: 350px; *//* 500px*/
-    height: 350px;
-    background: url("../img/textures/paper-list.webp") 0 0 / 100% 100%, var(--paper);
 
     margin-right: 2%;
     float: left;
@@ -268,112 +284,9 @@ header h2 {
 
 }
 
-/* one ruled row: quantity | bottle | name | price | remove (only the remove is a button) */
-#drink_selection .order {
-    position: relative;
-    display: grid;
-    grid-template-columns: auto 40px 1fr auto auto;
-    grid-template-areas: "qty img name price del";
-    align-items: center;
-    column-gap: var(--space-2);
-    height: auto;
-    min-height: 64px;
-    padding: 4px var(--space-2);
-    color: var(--ink-sepia);
-    border-bottom: 1px solid var(--rule-sepia);
-}
-
-#drink_selection .order img {
-    grid-area: img;
-    height: 52px;
-    justify-self: center;
-    transition: opacity var(--toast-close) var(--toast-ease);
-}
-
-#drink_selection .order > h4 {
-    grid-area: name;
-    margin: 0;
-    font-weight: var(--weight-label);
-}
-
-#drink_selection .order .price {
-    grid-area: price;
-    white-space: nowrap;
-    font-weight: var(--weight-heading);
-}
-
-/* handwritten tally, sepia 5.69:1 or better on the paper */
-#drink_selection .qty {
-    grid-area: qty;
-    min-width: 2.2em;
-    text-align: right;
-    font-family: 'Berkshire Swash', cursive;
-    font-weight: var(--weight-body);
-    font-size: var(--text-lg);
-}
-
-/* remove: a red ink brush cross, no plate (3.38:1 or better on the paper, non-text needs 3:1); a red wash on hover and focus */
-#drink_selection .order .delete {
-    grid-area: del;
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    border: 0;
-    border-radius: var(--radius-round);
-    background: transparent;
-    color: var(--danger-text);
-}
-
-#drink_selection .order .delete .icon { width: 30px; height: 30px; }
-#drink_selection .order .delete:is(:hover, :focus-visible) { background: var(--hover-danger); }
-
-/* the row it would remove gets a brush strike, drawn left to right, and its bottle fades */
-#drink_selection .order::after {
-    content: "";
-    position: absolute;
-    left: 6px;
-    right: 52px;
-    top: 50%;
-    height: 14px;
-    margin-top: -7px;
-    background: var(--danger-text);
-    mask: url("../img/textures/strike.svg") left center / 0% 100% no-repeat;
-    pointer-events: none;
-    transition: mask-size var(--toast-close) var(--toast-ease);
-}
-
-#drink_selection .order:has(.delete:is(:hover, :focus-visible))::after {
-    mask-size: 100% 100%;
-    transition: mask-size var(--toast-open) var(--toast-ease);
-}
-
-#drink_selection .order:has(.delete:is(:hover, :focus-visible)) img { opacity: 0.45; }
-
-@media (prefers-reduced-motion: reduce) {
-    #drink_selection .order::after, #drink_selection .order img { transition: none; }
-}
-
-#drink_selection:empty {
-    min-height: 160px;
-}
-
-#drink_selection:empty::before {
-    content: attr(data-empty);
-    display: block;
-    max-width: 22ch;
-    margin: var(--space-7) auto;
-    text-align: center;
-    font-family: 'Berkshire Swash', cursive;
-    font-size: var(--text-md);
-    line-height: 1.4;
-    color: var(--ink-sepia);
-}
 .checkout {
     width: 28%;
-    /*    height: 75px;*/
-    height: 75px;
+    min-height: 75px;
     background-color: var(--bar);
     float: left;
     margin-right: 2%;
@@ -591,6 +504,10 @@ body {
     .drink img {
         height: 112px;
     }
+    .drink .out_stock {
+        border-width: 3px;
+        font-size: var(--text-base);
+    }
     h4{
         display: inline-block;
         margin: 2%;
@@ -603,6 +520,15 @@ body {
     }
 
     
+    body {
+        height: calc(100dvh - 16px); /* was set by customer.js; the list and the checkout bar fit one phone screen */
+    }
+    .main_section {
+        display: block; /* the 2018 phone layout: floats hang below the 70 % box */
+        clear: none;
+        height: 70%; /* the list scrolls inside it, the checkout bar sits below */
+    }
+
     /* greeting and credit on one row above the menu row (V6); undo/redo move down with it */
     header{
         height: 52px;
@@ -741,11 +667,6 @@ body {
         border: 0;
     }
 
-    #drink_selection .order .delete {
-        width: 44px;
-        height: 44px;
-    }
-
     #total {
         justify-content: flex-start;
         padding-top: 14px;
@@ -756,19 +677,26 @@ body {
         display: flex;
         position: absolute;
         top: 60px; /* 8px under the 52px greeting row */
-        left: 90px;
-        gap: 8px;
+        left: 52px; /* 6px right of the menu button */
+        gap: 6px;
         z-index: 2;
     }
 
     footer .undo_redo_menu button {
         min-width: 44px;
         min-height: 44px;
+        padding: 0 10px;
     }
+
+    #logout_phone { position: absolute; top: 63px; right: 8px; left: auto; float: none; margin: 0; width: auto; padding: 0 12px; min-height: 44px; } /* fixed on the menu row: a floated box would wrap by the label's width */ /* hugs its label; the words stay visible in every language */
 }
 
-/* 320px: the greeting and credit label share one row */
+/* 320px: the greeting and credit label share one row; Undo, Redo and Log Out share the menu row, Spanish included */
 @media (max-width: 359px) {
+    footer .undo_redo_menu { gap: 2px; }
+    footer .undo_redo_menu button { padding: 0 3px; }
+    footer .undo_redo_menu .anchor { width: 1.1em; height: 1.1em; }
+    #logout_phone { padding: 0 4px; }
     .welcome h1{ font-size: var(--text-md); margin-top: 12px; max-width: calc(100% - 128px); }
     .credit{ padding: 6px 8px; column-gap: 6px; }
     .credit .coin{ width: 24px; height: 24px; }

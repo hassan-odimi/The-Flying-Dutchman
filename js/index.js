@@ -1,6 +1,7 @@
 /** The Flying Dutchman
  *  index.js
  *  Created by 'Pirates of the Caribbean' on 11 of February 2018.
+ *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
  */
 
 /*INDEX PAGE SCRIPTS
@@ -90,6 +91,10 @@ function translate (index) {
     $("#summon_label").text(logo_alt[index] + ": " + summon_action[index]);
     $.each(["passwords_title", "demo_intro", "group_vip", "group_regular", "group_bartenders", "group_manager", "group_test"],
         function (i, id) { $("#" + id).text(window[id][index]); });
+    $.each(["about_lede", "about_try_title", "about_built_title", "about_crew_title", "about_source"],
+        function (i, id) { $("#" + id).text(window[id][index]); });
+    $.each(["about_try", "about_built"],
+        function (i, id) { $("#" + id + " li").each(function (n) { $(this).text(window[id][index][n]); }); });
     $.each(["use_label", "role_customer", "role_bartender", "role_manager"],
         function (i, c) { $("." + c).text(window[c][index]); });
 }

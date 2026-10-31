@@ -31,20 +31,31 @@ Cut, toned and resized derivatives only (300 KB in all). The raw source files ar
 | `paper-list.webp` | phone category menu and order ledger, customer; About and Passwords windows, landing | Texturelabs Paper 328, cropped, lightened to a 0.33 luminance floor | Texturelabs licence, as above |
 | `iron-frame.webp` | iron corner brackets on the login box (`border-image`) | Texturelabs Metal 155, greyscale toned; rivets from `rivet.webp` | Texturelabs licence, as above |
 | `iron.webp` | Close buttons and the staff login signs (multiply layer) | Texturelabs Metal 155, greyscale | Texturelabs licence, as above |
-| `docket.webp` | bartender order bars and the open-order docket | Texturelabs Paper 320, portrait crop with the burnt foot, lightened to a 0.36 luminance floor (`tools/textures/gentex7.py`) | Texturelabs licence, as above |
-| `tack.webp` | the tack pinning the docket and the toast | Texturelabs Details 141, cut out | Texturelabs licence, as above |
+| `tack.webp` | the tack pinning the toast | Texturelabs Details 141, cut out | Texturelabs licence, as above |
 | `stamp-wear.webp` | wear mask on the NOT PAID / PAID stamps (90 % ink or more), the toast icon and its red error ribbon | Texturelabs InkPaint 128, greyscale to alpha | Texturelabs licence, as above |
-| `torn-edge.webp` | torn right edge of paid order bars (mask) | drawn in `gentex7.py` | ours |
 | `note.webp` | toast note, all pages (`border-image`, 9-slice so the burnt rim keeps its size) | Texturelabs Paper 329, inner area lightened to a 0.36 luminance floor (`tools/textures/gentex8.py`) | Texturelabs licence, as above |
 | `strike.svg` | brush strike over an order row while its remove cross is hovered or focused (mask) | drawn in `tools/textures/brush.py` | ours |
-| `mist.webp` | sea mist under an open toast | Texturelabs Atmosphere 142, greyscale to white alpha, faded to a soft bank | Texturelabs licence, as above |
+| `mist.webp` | low sea mist under an open toast (F9), 1400 x 300, tiles in X | Texturelabs Atmosphere 142, crop (0, 1300, 4240, 3121), greyscale to white alpha with `a = min(255, 1.5 * v^0.9)`, last 200 px crossfaded over the first 200 (`gentex12.py`) | Texturelabs licence, as above |
+| `seal-red.webp`, `seal-green.webp` | toast icons, error and done (F9) | [photo 21VlmPMZEtw](https://unsplash.com/photos/21VlmPMZEtw) by Paolo Chiabrando on Unsplash, the wax seal cut out by colour, holes filled, imprint sharpened, 160 x 160; green is a hue shift of the red (`gentex12.py`) | Unsplash licence, as above |
+| `icons/about-anchor.webp`, `icons/about-wheel.webp`, `icons/about-skull.webp` | one icon before each About column heading (F10), 96 x 96 alpha shown at 24 px | The silhouette of the project's anchor drawing (`anchor.png`), of the ship's wheel (`rudder.png`, outline kept dark inside a filled silhouette) and of the skull and crossed swords on `flag-pirate.webp`, filled with dark brass toned from Texturelabs Metal 155, 1 px bevel (`gentex12.py`) | Project assets and Texturelabs licence, as above; the raw PNGs stay out of the repo |
 | `coin.webp` | gold cob coin on the customer credit label | Texturelabs Details 141 (the metal disc), toned to gold, uneven cob edge and a worn cross struck in (`tools/textures/gentex9.py`) | Texturelabs licence, as above |
 | `rope.webp` | hemp cord of the flag line, app footers | [photo cEWREu21dmU](https://unsplash.com/photos/cEWREu21dmU) by Thomas Kinto on Unsplash, a strip keyed off its black ground, shrunk to cord thickness, tiled and bent into the sag (`gentex9.py`) | [Unsplash licence](https://unsplash.com/license): free use and changes, no resale as stock |
+| `mast.webp`, `coil.webp` | scrollbar track and thumb, every page | `mast.webp`: a strip of Texturelabs Wood 131 with cylinder shading. `coil.webp`: pieces of `rope.webp` tilted and stacked, lightened so the thumb is 3.57:1 against the track (`gentex12.py`) | Texturelabs licence, as above; rope as `rope.webp` |
+| `plate-worn.webp` | Log Out, Undo, Redo plates (F6) | Texturelabs Metal 155 iron face (colour 0.45, tone-mapped, then 0.92 brightness so white is 5.5:1 at rest and 4.58:1 on hover), Metal 132 rust rim, chipped outline, light top bevel (`gentex12.py`, seed 11) | Texturelabs licence, as above |
+| `bolt.webp` | Close X (F6) | Texturelabs Details 141 crop, brightness 0.6, multiplied by Metal 132 rust, round alpha (`gentex12.py`) | Texturelabs licence, as above |
+| `icons/anchor.webp` | Undo and Redo icon, used as a CSS mask (F6) | The project's own anchor drawing (`anchor.png`, rounded stock), scaled to 128 x 128 alpha (`gentex12.py`) | Project asset; the raw PNG stays out of the repo |
+| `card-paper1..4.webp` | customer drink cards (F8), assigned by `:nth-child(4n+...)` | Texturelabs Paper 328, four crops, 400 x 600 with alpha: a torn top, a nicked corner, a V-tear in the side, a worn fold; light stains, pale fibre fringe, brightness lift in the bottom band so the stamp ink reads (`gentex12.py`, seeds 801-804) | Texturelabs licence, as above |
+| `row-paper1..4.webp` | management drink rows (F12), assigned by `:nth-child(4n+...)` from 1280 px wide; narrower layouts use `card-paper1` and `card-paper4` | Texturelabs Paper 328, four crops, 1200 x 200 with alpha: a long torn top, a nicked corner, a V-tear in the bottom edge, a worn fold; light stains, pale fibre fringe, floor at luminance 0.40 so sepia and the red stock count read (`gentex12.py`, seeds 901-904) | Texturelabs licence, as above |
+| `card-face.webp` | bartender order cards (F11), 600 x 900 | "French Portrait card deck - 1850", Bibliothèque nationale de France, Gallica `btv1b10527601s`, engraver Nicolas-Marie Gatteaux, via Wikimedia Commons: the clean lower part of the Ace of Hearts with its faint watermark, mirrored to fill (`gentex12.py`) | Public domain (BnF scan of a work from 1850) |
+| `pip-heart.webp`, `pip-spade.webp` | corner index and big centre pip of the order cards (F11), 128 x 128 alpha | the engraved heart and spade of the same deck's Ace of Hearts and Ace of Spades, cut by ink threshold, the scan's ink colour kept (`gentex12.py`) | Public domain, as above |
+| `tax-stamp.webp` | blue tax stamp on paid order cards, 35 % opacity (F11), 220 px wide alpha | the "République Française" stamp of the same deck's Ace of Clubs, alpha from blue minus red (`gentex12.py`) | Public domain, as above |
+| `felt-green.webp` | the bartender's card table baize (F11), 512 x 512 seamless | [ambientCG Fabric 034](https://ambientcg.com/view?id=Fabric034), CC0, greyscale, autocontrast, tinted `#0b2a1c` to `#2f6a4c`, 25 % Texturelabs Atmosphere 133 wear stains mirrored 2 x 2 (`gentex12.py`) | CC0 (ambientCG); stains Texturelabs licence, as above |
+| `tab-bottom1..3.webp` | torn bottom edge of the three bartender tabs, mask (F11), 920 x 80 alpha | each `tab-note-wide1-3.webp`'s own torn top, flipped and mirrored (`gentex12.py`) | ours |
 | `nail.webp` | rusty nail heads holding the cord, app footers | [photo U_Ytvt1eTfM](https://unsplash.com/photos/U_Ytvt1eTfM) by Ian Talmacs on Unsplash, one head cut out and domed with a light from the top left (`gentex9.py`) | Unsplash licence, as above |
 | `flag-eng/sve/ita/esp/pirate.webp` | cloth flags of the flag line, app footers | our flag files above, woven with Texturelabs Paper 214, folded, faded, stained with Wood 131 and torn at the fly (`tools/textures/gentex10.py`) | flag designs public domain; textures Texturelabs licence |
 | `board-surface.webp`, `board-kelp.webp` | active tab board | [Poly Haven](https://polyhaven.com/a/green_rough_planks) Green Rough Planks by Rob Tuytel, toned to Sea Glass and Weathered Copper | CC0 |
 
-The label areas of the paper files were lightened where needed so sepia text keeps 5:1 on their darkest pixel; `tests/textures.spec.js` checks this on the files.
+The label areas of the paper files were lightened where needed so sepia text keeps 5:1 on their darkest pixel; `tests/textures.spec.js` checks this on the files. `docket.webp` and `torn-edge.webp` (T8, `tools/textures/gentex7.py`) were removed in F11, the cards replace them.
 
 The drink photos were converted in V10 from PNG (up to 4002 px tall, 48.5 MB) to WebP, 400 px tall at most, quality 82 (2.5 MB). The original PNGs remain in git history before that change.
 
@@ -60,7 +71,7 @@ The flags were cut in V11 from 1200x750 PNG/JPEG (260 KB) to 128x80 WebP, twice 
 
 | What | Source | Licence |
 |---|---|---|
-| Oswald (variable, 400 to 700) | Google Fonts | SIL Open Font License 1.1 |
-| Berkshire Swash | Google Fonts | SIL Open Font License 1.1 |
+| Alegreya Sans (400, 500, 700) | Google Fonts | SIL Open Font License 1.1 |
+| Pirata One (400) | Google Fonts | SIL Open Font License 1.1 |
 | jQuery 3.2.1 | ajax.googleapis.com | MIT |
 | axe-core 4.10.2 (tests only) | cdnjs | MPL 2.0 |

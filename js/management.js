@@ -1,6 +1,7 @@
 /** The Flying Dutchman
  *  management.js
  *  Created by 'Pirates of the Caribbean' on 11 of February 2018.
+ *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
  */
 
 /*MANAGEMENT PAGE SCRIPTS
@@ -182,12 +183,24 @@ $(document).ready(function() {
             sessionStorage.setItem("orders_counter", orders_counter);
             sessionStorage.setItem("SESSION_STOCK_INFO",JSON.stringify(SESSION_STOCK_INFO));
 
+            var lines = $("#drink_selection .order").map(function () {
+                var row = $(this);
+                return {name: row.children("h4").not(".price").text(), qty: row.find(".qty").text(), price: row.find(".price").text()};
+            }).get();
+            var receipt_sum = big_total;
+
             resetPage();
-            showToast(message_placed_order[lang()]);
-//            alert("Order is placed message goes here!");
+            var no = showReceipt(lines, receipt_sum);
+            showToast(title_placed_order[lang()], message_receipt(no, receipt_sum, lang()));
 
-        } else { showToast(message_empty_order[lang()], true); }
+        } else { showToast(title_empty_order[lang()], message_empty_order[lang()], true); }
 
+    });
+
+    $(document).on('click','.receipt_new',function(){
+        $(this).closest('.receipt').remove();
+        var first = $('#drink_database .add_button').first();
+        (first.length ? first : $('#pay')).focus(); // back to the list
     });
 
     $(document).on('click','.delete',function(){
@@ -298,35 +311,21 @@ function addOrder (article_id, number) {
 
     if (i == -1){ // if drink is not already on the big_orders print to DOM
 
-        $.each(DB_SYSTEMBOLAGET, function(element){
+        $("#drink_selection .receipt").remove(); // the first new Add clears the last receipt
+        $.each(DB_SYSTEMBOLAGET.concat(DB_MIKES), function(element){ // the database, then the specials
             if (this.artikelid == article_id){ // retrieve article from the database
                 $("#drink_selection").prepend(
                     '<div class="order" id="'+ this.artikelid +'">' +
-                    '<button type="button" class="delete" aria-labelledby="remove_word name' + this.artikelid + '"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#trash"/></svg></button>' +
-                    '<h4 class="price">SEK <span class="hiden_price_sum">' + (this.prisinklmoms * number) + '</span>:-</h4>' +
+                    '<b class="qty">' + number + '\u00d7</b>' +
+                    '<button type="button" class="delete" aria-labelledby="remove_word name' + this.artikelid + '"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#cross-brush"/></svg></button>' +
+                    '<h4 class="price">SEK <span class="hiden_price_sum">' + (parseInt(this.prisinklmoms) * number) + '</span>:-</h4>' +
                     '<span class="sum" hidden>' + parseInt(this.prisinklmoms) + '</span>' +
                     '<img src="img/drinks/' + this.artikelid + '.webp" alt="" loading="lazy">' +
-                    '<h4 id="name' + this.artikelid + '">' + this.namn + ' ' + this.namn2 + '<span class="quantity textRed"> ( x ' + number + ')</span></h4>' +
+                    '<h4 id="name' + this.artikelid + '">' + this.namn + ' ' + this.namn2 + '</h4>' +
                     '</div>'
                 )
-                big_total += parseInt(this.prisinklmoms * number);
-                ;}
-        });
-
-        //For specials
-        $.each(DB_MIKES, function(element){
-            if (this.artikelid == article_id){ // retrieve article from the database
-                $("#drink_selection").prepend(
-                    '<div class="order" id="'+ this.artikelid +'">' +
-                    '<button type="button" class="delete" aria-labelledby="remove_word name' + this.artikelid + '"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#trash"/></svg></button>' +
-                    '<h4 class="price">SEK <span class="hiden_price_sum">' + (this.prisinklmoms * number) + '</span>:-</h4>' +
-                    '<span class="sum" hidden>' + parseInt(this.prisinklmoms) + '</span>' +
-                    '<img src="img/drinks/' + this.artikelid + '.webp" alt="" loading="lazy">' +
-                    '<h4 id="name' + this.artikelid + '">' + this.namn + ' ' + this.namn2 + '<span class="quantity textRed"> ( x ' + number + ')</span></h4>' +
-                    '</div>'
-                )
-                big_total += parseInt(this.prisinklmoms * number);
-                ;}
+                big_total += parseInt(this.prisinklmoms) * number;
+            }
         });
 
         big_orders.push(article_id);
@@ -337,7 +336,7 @@ function addOrder (article_id, number) {
 
         big_total += parseInt($("#"+article_id).find('.sum').html()) * number;
 
-        $("#"+article_id).find('.quantity').empty().append(" ( x " + big_quantity[i] + ")");
+        $("#"+article_id).find('.qty').text(big_quantity[i] + '\u00d7');
 
         update_price = parseInt($("#"+article_id).find('.sum').html()) * big_quantity[i];
         $("#"+article_id).find('.hiden_price_sum').empty().append(update_price);
@@ -346,6 +345,44 @@ function addOrder (article_id, number) {
     updateTotal();
     //FOR TESTING PURPOSES
     //alert (big_orders +' X '+big_quantity)
+}
+
+// F13: the receipt slip replaces the empty ledger; returns the running number, "0042"
+function showReceipt (lines, total) {
+    var no = ("000" + ((parseInt(localStorage.getItem("STOCK_ORDER_NO")) || 0) + 1)).slice(-4);
+    localStorage.setItem("STOCK_ORDER_NO", parseInt(no, 10));
+
+    var list = $('<ul class="receipt_lines">');
+    $.each(lines, function () {
+        list.append($('<li>').append($('<span>').text(this.name), $('<b>').text(this.qty), $('<span class="receipt_price">').text(this.price)));
+    });
+
+    $("#drink_selection").append(
+        $('<div class="receipt">').append(
+            $('<section class="receipt_slip" aria-labelledby="receipt_head">').append(
+                $('<h3 id="receipt_head" class="receipt_head">').append($('<span class="receipt_title">'), ' ', $('<b>').text('#' + no)),
+                $('<time class="receipt_time">').attr("datetime", new Date().toISOString()),
+                list,
+                $('<p class="receipt_sum">').append($('<span class="receipt_total">'), $('<b>').text('SEK ' + total + ':-')),
+                $('<p class="receipt_stamp">'),
+                $('<p class="receipt_note">'),
+                $('<button type="button" class="small_button blue receipt_new">')
+            )
+        )
+    );
+    translateReceipt(lang());
+    return no;
+}
+
+function translateReceipt (index) {
+    $(".receipt_title").text(receipt_title[index]);
+    $(".receipt_total").text(receipt_total[index]);
+    $(".receipt_stamp").text(receipt_stamp[index]);
+    $(".receipt_note").text(receipt_note[index]);
+    $(".receipt_new").text(receipt_new[index]);
+    $(".receipt_time").each(function () {
+        $(this).text(new Date($(this).attr("datetime")).toLocaleString(receipt_locale[index], {day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"}));
+    });
 }
 
 function updateTotal (){
@@ -487,4 +524,5 @@ function translate (index) {
 
     $("#big_total").text(big_total[index]);
     $("#pay").text(pay[index]);
-}
+    translateReceipt(index);
+}

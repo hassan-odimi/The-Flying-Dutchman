@@ -2,6 +2,7 @@
  *  view_customer.js
  *  Created by 'Pirates of the Caribbean' on 21 of February 2018.
  *  Updated on 23 of February 2018.
+ *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
  */
 
 /* CUSTOMER PAGE TEXTS
@@ -139,27 +140,39 @@ var your_credit = ["Credit:",
                    "Crédito:",
                    "Doubloons:" ];
 
-// Alert pop-up messages
-var message_empty_order = ["You must select your drinks before placing an order!",
-                   "Du måste välja dina drycker innan du gör din beställning!",
-                   "È necessario selezionare le bevande prima di effettuare un ordine!",
-                   "¡Debe seleccionar sus bebidas antes de realizar un pedido!",
-                   "Ye must select yer drinks afore placin' an order!"
-                  ];
+// Toast messages: a short title and one detail line (read together by the screen reader)
+var title_empty_order = ["Nothing to order",
+                         "Inget att beställa",
+                         "Niente da ordinare",
+                         "Nada que pedir",
+                         "Naught t' order"];
+var message_empty_order = ["Select your drinks before placing an order.",
+                           "Välj dina drycker innan du beställer.",
+                           "Seleziona le bevande prima di ordinare.",
+                           "Seleccione sus bebidas antes de hacer el pedido.",
+                           "Pick yer drinks afore placin' an order."];
 
-var message_payed_order = ["Your order has been payed using your available credit, you can pick up your beverages in the VIP fridge.",
-                   "Din beställning har blivit betalad med din tillgängliga kredit, du kan hämta dina drycker i VIP kylen.",
-                   "Il tuo ordine è stato pagato utilizzando il tuo credito disponibile, puoi ritirare le tue bevande nel frigo VIP.",
-                   "Su orden ha sido pagada usando su crédito disponible, puede recoger sus bebidas en el refrigerador VIP.",
-                   "Yer order has been payed usin' yer available credit, ye can pick up yer beverages in th' VIP fridge."
-                  ];
+var title_payed_order = ["Order paid",
+                         "Beställning betald",
+                         "Ordine pagato",
+                         "Pedido pagado",
+                         "Order be paid"];
+var message_payed_order = ["Paid from your credit. Pick up your drinks in the VIP fridge.",
+                           "Betald med din kredit. Hämta dina drycker i VIP-kylen.",
+                           "Pagato con il tuo credito. Ritira le bevande nel frigo VIP.",
+                           "Pagado con su crédito. Recoja sus bebidas en el refrigerador VIP.",
+                           "Paid from yer credit. Pick up yer drinks in th' VIP fridge."];
 
-var message_placed_order = ["Your order has been placed! Direct to the counter and pay for your order before you can pick up your drinks.",
-                    "Din beställning är skickad! Var vänlig betala vid disken innan du kan hämta dina drycker.",
-                    "Il tuo ordine è stato inoltrato! Direttamente al banco e paga il tuo ordine prima di poter ritirare i tuoi drink.",
-                    "¡Su orden ha sido puesta! Dirígete al mostrador y paga tu pedido antes de que puedas recoger tus bebidas.",
-                    "Yer order has been placed! Direct t' th' counter 'n pay fer yer order afore ye can pick up yer drinks."         
-                   ];
+var title_placed_order = ["Order placed",
+                          "Beställning skickad",
+                          "Ordine inoltrato",
+                          "Pedido realizado",
+                          "Order be placed"];
+var message_placed_order = ["Go to the counter and pay before you pick up your drinks.",
+                            "Betala vid disken innan du hämtar dina drycker.",
+                            "Vai al banco e paga prima di ritirare i drink.",
+                            "Dirígete al mostrador y paga antes de recoger tus bebidas.",
+                            "Head t' th' counter 'n pay afore ye pick up yer drinks."];
 
 
 // Accessible name of the small-screen category menu button

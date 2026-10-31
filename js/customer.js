@@ -2,6 +2,7 @@
  *  customer.js
  *  Created by 'Pirates of the Caribbean' on 11 of February 2018.
  *  Updated on 16 March
+ *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
  */
 
 /*CUSTOMER PAGE SCRIPTS
@@ -23,8 +24,6 @@ var undone = new Array(); //keeps track of 'redone' actions
 $(document).ready(function() {
     retrieveDB();         // load database on page load
     highlightTab(".all"); // highlight the 'all'-tab
-    
-    $('body').css("height", $(window).height() - 16);  // set height of the body relative to the screen
     
     // filter drinks by category
     $(".all").click(function() {
@@ -130,8 +129,8 @@ $(document).ready(function() {
                 $('#cre').html( $('#cre').html() - total);
                 newOrder.paid = true;  // mark transaction as paid
                 newOrder.bartender_id = "VIP Self-Service";
-                showToast(message_payed_order[lang()]);
-            } else { showToast(message_placed_order[lang()]); }
+                showToast(title_payed_order[lang()], message_payed_order[lang()]);
+            } else { showToast(title_placed_order[lang()], message_placed_order[lang()]); }
 
             SESSIONS_TRANSACTIONS.push(newOrder);
 
@@ -157,7 +156,7 @@ $(document).ready(function() {
             // Clear all fields
             resetPage();
 
-        } else { showToast(message_empty_order[lang()], true); }
+        } else { showToast(title_empty_order[lang()], message_empty_order[lang()], true); }
     });
 
     $(document).on('click','.drink',function(){
@@ -222,7 +221,6 @@ $(document).ready(function() {
     
     // make sure the selection is displayed in bigscreen mode
     $(window).resize(function(){
-        $('body').css("height", $(window).height() - 16);   // adjust the height accordingly
         if ($(window).width() > 768) { $('.selection').css("display", "block") }
         else { $('.selection').css("display", "none") }
     });
@@ -436,7 +434,7 @@ function rePrintTab() {  // reprint the currently displayed beverage tab
     }); 
 }
 
-// resets the page after an order has been payed, this cannot be undone
+// resets the page after an order has been paid, this cannot be undone
 function resetPage() {
     order = [];    
     quantity = [];

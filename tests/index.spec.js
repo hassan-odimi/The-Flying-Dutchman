@@ -64,3 +64,13 @@ test('closed toast does not block clicks on Order your Drinks', async ({ page })
   await page.click('#customer', { timeout: 3000 });
   await expect(page.locator('#loginBox')).toBeVisible();
 });
+
+test('root URL stays on the landing page without an access-denied toast', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  await page.waitForTimeout(600); // toast and redirect would both fire within 300 ms
+  expect(new URL(page.url()).pathname).toBe('/');
+  await expect(page.locator('#toast')).not.toHaveClass(/is-open/);
+  expect(await page.evaluate(() => sessionStorage.getItem('toast'))).toBeNull();
+});

@@ -1,6 +1,7 @@
 /* The Flying Dutchman
    style.css
    Created by 'Pirates of the Caribbean' on 09 of February 2018.
+   Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
 */
 
 /*Style Sheet common to all pages*/
@@ -14,6 +15,7 @@
   --control-strong: #567973;
   --paper: #fff;
   --paper-veil: rgba(255, 255, 255, 0.9);
+  --slip-wash: rgba(255, 255, 255, 0.45);  /* lifts the stock order receipt off the ledger paper under it (F13) */
 
   /* kelp: dark bars */
   --bar: #254540;               /* white text 10.48:1 */
@@ -26,9 +28,11 @@
   --ink-muted: #4a6a65;
   --ink-deep: #15443d;
   --ink-sepia: #2a1709;         /* on the paper tabs and slips, 5.2:1 or better on their darkest pixel */
+  --ink-card-soft: #43362a;     /* time on the 1850 card stock, 5.3:1 on its darkest pixel, the 0.43 floor (F11) */
   --rule-sepia: rgba(42, 23, 9, 0.35);  /* ruled lines on the phone category sheet and the order ledger */
   --paper-fold: #c9b48f;        /* the back of a folded paper corner (T8 paid slips) */
   --paper-ear: linear-gradient(45deg, var(--paper-fold) 50%, transparent 50%) top right / 26px 26px no-repeat, linear-gradient(225deg, var(--control-strong) 50%, transparent 50%) top right / 26px 26px no-repeat;
+  --tab-tint: rgba(214, 140, 40, 0.3);  /* the selected phone category: a warm wash on the sheet, like the selected tab note */
   --hover-sepia: rgba(42, 23, 9, 0.08); /* hover on the sheet: sepia 4.62:1 on the darkest hovered pixel */
 
   /* danger */
@@ -41,6 +45,10 @@
 
   /* flags, brass */
   --flag-red: #8e1f2c;
+  --stamp-red: #6a121e;         /* LOW STOCK ink: 5.0:1 on the darkest card paper under it, worn at 90 % ink and warmed by hover (flag red gave 3.8) */
+  --stamp-green: #0f3d18;       /* ORDERED ink (F13): 3.11:1 or better on its worst pixel, worn at 85 % ink at the thin end (flag green gave 2.01) */
+  --ink-stamp: #1c1410;        /* near-black stamp ink, OUT OF STOCK (F8) */
+  --list-edge: rgba(6, 26, 22, 0.6);  /* dark kelp, the inner shadow round the drink list (F8) */
   --flag-red-light: #AD2535;
   --flag-green: #1e6b2b;
   --gold: #926e30;
@@ -93,11 +101,15 @@
   --text-md: 1.25rem;      /* 20 px */
   --text-lg: 1.563rem;     /* 25 px */
   --text-xl: 1.953rem;     /* 31.25 px */
+  --text-xxl: 2.5rem;      /* 40 px, the stock count on a management row (F12) */
   --text-display: clamp(1.953rem, 1.6rem + 1.2vw, 2.441rem); /* 31.25 to 39 px, the one swash greeting */
+
+  --font-display: 'Pirata One', serif;      /* titles, greeting, names: one weight (400), no bold */
+  --font-body: 'Alegreya Sans', sans-serif; /* everything else: 400, 500, 700 */
 
   --weight-body: 400;
   --weight-label: 500;
-  --weight-heading: 600;
+  --weight-heading: 700;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -119,15 +131,67 @@
   --shadow-iron: inset 0 1px 0 var(--iron-light), inset 0 -2px 0 var(--shadow-lift), var(--shadow-float);
   --shadow-rust: inset 0 1px 0 var(--rust-light), inset 0 -2px 0 var(--shadow-lift), var(--shadow-float);
   --shadow-none: none;
+  --shadow-well: inset 0 0 50px var(--list-edge), var(--shadow-raised);               /* the drink list: a dark rim inside, lifted outside */
+  --felt: url("../img/textures/felt-green.webp") 0 0 / 512px;                       /* the card table baize (F11) */
+  --felt-vignette: rgba(0, 0, 0, 0.45);
+  --shadow-contact: rgba(0, 0, 0, 0.85);                                           /* the dark patch under a torn tab */
+  --shadow-felt: inset 0 0 70px var(--felt-vignette), var(--shadow-raised);        /* the table: dark rim inside, lifted outside */
+  --shadow-card: 0 1px 2px var(--shadow-lift), 0 3px 8px var(--shadow-lift);       /* a playing card resting on the baize */
+  --shadow-lifted: 0 3px 5px var(--shadow-lift), 0 14px 22px var(--shadow-lift); /* a card lifted by the hand */
+  --shadow-coil: 0 2px 3px var(--shadow-lift);                                    /* the rope coil of a scrollbar thumb */
+  --mast: #1e1d1c;  /* scrollbar track: average of mast.webp; the rope is 3.57:1 against it */
+  --rope: #895e2d;  /* scrollbar thumb: average of coil.webp */
   --radius-sm: 4px;      /* buttons, inputs */
   --radius-md: 8px;      /* cards, panels, tab tops, dialogs */
+  --radius-lg: 12px;     /* playing cards (F11) */
+  --radius-rail: 18px;   /* the card table's wooden rail (F11) */
   --radius-round: 50%;
 }
 
-/* Only real weights: Oswald loads 400 to 700, Berkshire Swash only 400, so never let the browser fake bold */
+/* PAGE SHELL (F5): from 769 px wide and 600 px high the page is one screen. Rows: header, tab row, main, footer;
+   only the drink list and the order list scroll. Under 600 px high (landscape phones, 200% zoom) the 2018 floats
+   and normal page scrolling take over, so the list never shrinks to nothing. Phones keep their stacked layout. */
+@media (min-width: 769px) and (min-height: 600px) {
+    body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        height: 100dvh;
+        margin: 0;
+    }
+    body > header { grid-row: 1; }
+    body > .menu { grid-row: 2; }
+    body > .main_section, body > .order_list { grid-row: 3; }
+    body > footer { grid-row: 4; }
+
+    /* drink list (left) and order column (right): header, list, checkout */
+    body > .main_section {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 28%);
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        min-height: 0;
+        margin: 0 2% var(--space-4); /* clear of the flag cord's nails */
+    }
+    .main_section > .drink_list { grid-column: 1; grid-row: 1 / 4; width: auto; height: auto; margin: 0; }
+    .main_section > .selection_header { grid-column: 2; grid-row: 1; width: auto; margin: 0; }
+    .main_section > .selection { grid-column: 2; grid-row: 2; width: auto; height: auto; min-height: 0; margin: 0; }
+    .main_section > .checkout { grid-column: 2; grid-row: 3; width: auto; margin: 0; }
+}
+
+/* SCROLLBARS (F5): a rope coil winding up a weathered mast. Chromium and Safari draw the textures; Firefox gets plain colours.
+   Chrome 121+ drops ::-webkit-scrollbar when scrollbar-color is set, so that is limited to browsers without it */
+::-webkit-scrollbar { width: 16px; height: 16px; }
+::-webkit-scrollbar-button { display: none; }
+::-webkit-scrollbar-corner { background: var(--mast); }
+::-webkit-scrollbar-track { background: url("../img/textures/mast.webp") 0 0 / 16px auto repeat-y, var(--mast); }
+::-webkit-scrollbar-thumb { background: url("../img/textures/coil.webp") 0 0 / 16px auto repeat-y, var(--rope); border-radius: var(--radius-sm); box-shadow: var(--shadow-coil); }
+@supports not selector(::-webkit-scrollbar) { * { scrollbar-color: var(--rope) var(--mast); } }
+
+/* Only real weights: Alegreya Sans loads 400, 500 and 700, Pirata One only 400, so never let the browser fake bold */
 body {
     font-weight: var(--weight-body);
     font-synthesis: none;
+    font-variant-numeric: lining-nums tabular-nums; /* Alegreya Sans defaults to old-style figures; prices and order numbers must line up */
 }
 
 h1 { font-size: var(--text-xl); }
@@ -149,7 +213,7 @@ header{
 
 /* Staff page titles in the customer greeting's swash (V6) */
 #orders_q, #title {
-    font-family: 'Berkshire Swash', cursive;
+    font-family: var(--font-display);
     font-weight: var(--weight-body); /* the swash has no bold */
     text-shadow: 0 1px 2px var(--ink), 0 0 8px var(--ink);
 }
@@ -193,7 +257,7 @@ header{
     line-height: 1;
 }
 .info span {
-    font-family: 'Berkshire Swash', serif;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
     line-height: 1.1;
     color: var(--brass-light);
@@ -241,6 +305,13 @@ button {
     margin: 1.33em 0;
 }
 .h4.price { font-weight: var(--weight-heading); } /* drink card price */
+
+/* The drink list on both pages: kelp board with rust specks and tarnish under the cards (F8) */
+.drink_list {
+    background: url("../img/textures/rust.webp") 0 0 / 400px 200px, url("../img/textures/tarnish.webp") 0 0 / 300px 150px, url("../img/textures/board-kelp.webp") 0 0 / 512px 94px, var(--control-strong);
+    background-blend-mode: multiply, multiply, normal, normal;
+    box-shadow: var(--shadow-well);
+}
 
 .small_button {
     margin: 0.8%;
@@ -365,8 +436,18 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
     footer .languages_menu { --fw: 56px; }
     footer .languages_menu a { min-height: 44px; } /* 56x35 flags, 44px phone target */
 }
-@media (min-width: 769px) and (max-width: 1099px) {
-    footer .languages_menu { --fw: 48px; width: 360px; } /* room for Log Out, undo/redo and Place Order on one row */
+/* The Undo and Redo words show at every width, so the single footer row is tiered by width (Spanish is the widest) */
+@media (min-width: 769px) and (max-width: 999px) {
+    footer { gap: 6px; }
+    footer .languages_menu { --fw: 36px; width: 216px; }
+    footer button.small_button { padding-inline: 10px; }
+    footer .undo_redo_menu button { padding: 0 8px; }
+}
+@media (min-width: 1000px) and (max-width: 1099px) {
+    footer .languages_menu { --fw: 48px; width: 340px; }
+}
+@media (min-width: 1100px) and (max-width: 1249px) {
+    footer .languages_menu { --fw: 56px; width: 400px; }
 }
 @media (max-width: 359px) {
     footer .languages_menu { --fw: 46px; }
@@ -384,30 +465,12 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 }
 
 #undo, #redo {
-    color: var(--ink-on-dark); /* Sail White on wood, like every other text on the wood */
-    text-shadow: 0 0 2px var(--ink), 0 1px 2px var(--ink); /* dark halo keeps the white readable on light planks */
     float: none;
     height: 100%;
     margin-right: 8px;
     white-space: nowrap;
 }
-#undo:hover, #redo:hover {
-                 color: var(--surface-soft);
-             }
-
-/* Word beside the icon on wide screens; icon only below 1250px (the footer row runs out of room in Spanish), word kept for screen readers */
-@media (max-width: 1249px) {
-    .undo_label, .redo_label {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-    }
-}
-
-
+.undo_redo_menu button { min-height: 44px; padding: 0 12px; } /* a plate, not a text link; phones tighten the padding per page */
 .fade {
     opacity: 0.5;
     pointer-events: none;
@@ -427,9 +490,12 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
     color: green;
 } */
 
-/* TABS (V4): torn sailors' notes on the wood; the active tab is a board joined to the panel below.
-   Textures are cut from Texturelabs Paper 328 and Poly Haven Green Rough Planks, see docs/ASSETS.md */
+/* TABS (V4, F7): torn sailors' notes on the wood. Idle notes are dimmed, a hovered note is clean paper,
+   the selected note is warm-tinted, pulled forward and pinned with a rusty tack.
+   Textures are cut from Texturelabs Paper 328, see docs/ASSETS.md. Sepia text on the idle paper: 4.67:1 on the worst pixel
+   (the planned .82 gave 3.7 and .88 gave 4.09, short of 4.5) */
 .menu li button {
+    position: relative;
     height: 36px;
     margin-top: 4px;
     padding: 8px var(--space-3) 0;
@@ -437,8 +503,8 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
     border-radius: 0;
     color: var(--ink-sepia);
     background: url("../img/textures/tab-note1.webp") 0 0 / 100% 100% no-repeat;
-    filter: drop-shadow(0 2px 3px var(--shadow-lift));
-    transition: height var(--lift-out) var(--toast-ease), margin-top var(--lift-out) var(--toast-ease);
+    filter: brightness(.95) saturate(.7) drop-shadow(0 2px 3px var(--shadow-lift));
+    transition: height var(--lift-out) var(--toast-ease), margin-top var(--lift-out) var(--toast-ease), filter var(--lift-out) var(--toast-ease);
 }
 .menu li:nth-child(3n+2) button { background-image: url("../img/textures/tab-note2.webp"); }
 .menu li:nth-child(3n) button { background-image: url("../img/textures/tab-note3.webp"); }
@@ -448,19 +514,40 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 .menu li button:hover {
     height: 38px;
     margin-top: 2px;
+    filter: drop-shadow(0 3px 4px var(--shadow-lift));
     transition-duration: var(--lift-in);
 }
 
-/* Active tab: styled from aria-pressed, which the JS already sets */
+/* Selected tab: styled from aria-pressed, which the JS already sets. Keeps its own torn note; sepia 5.4:1 on the worst pixel */
 .menu li button[aria-pressed="true"] {
-    height: 40px;
-    margin-top: 0;
-    padding-top: 0;
+    z-index: 2;
+    height: 46px;
+    margin-top: -6px;
+    padding-top: 12px;
     transform: none;
-    filter: none;
+    filter: saturate(2.2) sepia(.25) brightness(.96) drop-shadow(0 4px 6px var(--shadow-lift));
     color: var(--ink);
+    font-size: var(--text-md);
     font-weight: var(--weight-heading);
-    background: url("../img/textures/board-surface.webp") 0 0 / 512px 94px, var(--surface); /* black text 8.89:1 on its lightest grain */
+}
+.menu li button[aria-pressed="true"]::before { /* the tack: decorative */
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    translate: -50% 0;
+    border-radius: var(--radius-round);
+    background: url("../img/textures/rivet.webp") center / 100% 100% no-repeat;
+    filter: drop-shadow(0 1px 2px var(--shadow-lift));
+}
+
+@media (min-width: 769px) and (max-width: 1099px) {
+    .menu li button { padding-inline: var(--space-2); } /* seven notes, bold when selected, stay on one row in Spanish */
+}
+@media (min-width: 769px) and (max-width: 849px) {
+    .menu li button { padding-inline: var(--space-1); }
 }
 
 /* BUTTONS (V4): hover darkens, press sinks 1px */
@@ -491,19 +578,40 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
     box-shadow: var(--shadow-brass);
 }
 
-/* Log Out is the quiet way out: an outline, not a second red call to action */
-#logout.red, #logout_phone.red {
-    background: none;
-    border: 2px solid var(--ink-on-dark);
-    color: var(--ink-on-dark);
-    text-shadow: 0 0 2px var(--ink), 0 1px 2px var(--ink);
+/* Worn iron plates (F6): Log Out, Undo, Redo, and Update Orders on the bartender page (F7). One chipped plate texture (Texturelabs Metal 155 + 132), quieter than the brass Place Order.
+   The drop shadow follows the chipped outline; box-shadow would draw a rectangle. White 4.83:1 or better on the worst pixel */
+#logout, #logout_phone, #undo, #redo, #retrieve_orders {
+    background: url("../img/textures/plate-worn.webp") 0 0 / 100% 100% no-repeat;
+    border: 0;
+    border-radius: 0;
     box-shadow: var(--shadow-none);
+    color: var(--ink-on-dark);
+    text-shadow: 0 1px 1px var(--ink);
+    filter: drop-shadow(0 2px 3px var(--shadow-lift));
+    transition: transform var(--lift-in) var(--toast-ease), filter var(--lift-in) var(--toast-ease);
 }
-#logout.red:hover, #logout_phone.red:hover { background: var(--scrim); filter: none; }
+#logout, #logout_phone { rotate: -0.6deg; }
+#redo { rotate: 0.8deg; }
+#logout:hover, #logout_phone:hover, #undo:hover, #redo:hover, #retrieve_orders:hover { filter: brightness(1.12) drop-shadow(0 2px 3px var(--shadow-lift)); }
+#logout:active, #logout_phone:active, #undo:active, #redo:active, #retrieve_orders:active { transform: translateY(1px); filter: drop-shadow(0 1px 2px var(--shadow-lift)); box-shadow: var(--shadow-none); }
+
+#logout:focus-visible, #logout_phone:focus-visible, #undo:focus-visible, #redo:focus-visible, #retrieve_orders:focus-visible { box-shadow: 0 0 0 6px var(--ink); } /* keep the ring's dark half that box-shadow: none above would drop */
+
+/* Anchor icon (F6) for Undo and Redo: the arrow's turn direction, as a tilt. Undo counter-clockwise, Redo clockwise */
+.anchor {
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: middle;
+    background: currentColor;
+    mask: url("../img/icons/anchor.webp") center / contain no-repeat;
+}
+#undo .anchor { rotate: -32deg; }
+#redo .anchor { rotate: 32deg; }
 
 @media (prefers-reduced-motion: reduce) {
-    .menu li button, .red, .blue, .light_green, .add_button .h4, .flipper, #login, #close, .close_window { transition: none; }
-    .red:active, .blue:active, .light_green:active, .add_button:active .h4, .flipper:active, #login:active, #close:active, .close_window:active { transform: none; }
+    .menu li button, .red, .blue, .light_green, .add_button .h4, .flipper, #login, #close, .close_window, #logout, #logout_phone, #undo, #redo, #retrieve_orders { transition: none; }
+    .red:active, .blue:active, .light_green:active, .add_button:active .h4, .flipper:active, #login:active, #close:active, .close_window:active, #logout:active, #logout_phone:active, #undo:active, #redo:active, #retrieve_orders:active { transform: none; }
 }
 
 /* COLORS */
@@ -587,6 +695,132 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
     color: var(--ink-soft-on-dark);
 }
 
+/* ORDER LEDGER (T7, shared by customer and management): a ruled paper ledger (Paper 328) inside the kelp header and total bar.
+   Sepia 5.72:1 or better on its darkest pixel */
+.selection {
+    background: url("../img/textures/paper-list.webp") 0 0 / 100% 100%, var(--paper);
+    container-type: inline-size; /* narrow ledgers (a 280 px column, a phone) stack the price under the name */
+}
+
+/* one ruled row: quantity | bottle | name | price | remove (only the remove is a button) */
+#drink_selection .order {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 40px 1fr auto auto;
+    grid-template-areas: "qty img name price del";
+    align-items: center;
+    column-gap: var(--space-2);
+    height: auto;
+    min-height: 64px;
+    padding: 4px var(--space-2);
+    color: var(--ink-sepia);
+    border-bottom: 1px solid var(--rule-sepia);
+}
+
+#drink_selection .order img {
+    grid-area: img;
+    height: 52px;
+    justify-self: center;
+    transition: opacity var(--toast-close) var(--toast-ease);
+}
+
+#drink_selection .order > h4 {
+    grid-area: name;
+    margin: 0;
+    font-weight: var(--weight-label);
+}
+
+#drink_selection .order .price {
+    grid-area: price;
+    white-space: nowrap;
+    font-weight: var(--weight-heading);
+}
+
+/* handwritten tally, sepia 5.69:1 or better on the paper */
+#drink_selection .qty {
+    grid-area: qty;
+    min-width: 2.2em;
+    text-align: right;
+    font-family: var(--font-display);
+    font-weight: var(--weight-body);
+    font-size: var(--text-lg);
+}
+
+/* remove: a red ink brush cross, no plate (3.38:1 or better on the paper, non-text needs 3:1); a red wash on hover and focus */
+#drink_selection .order .delete {
+    grid-area: del;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-round);
+    background: transparent;
+    color: var(--danger-text);
+}
+
+#drink_selection .order .delete .icon { width: 30px; height: 30px; }
+#drink_selection .order .delete:is(:hover, :focus-visible) { background: var(--hover-danger); }
+
+/* the row it would remove gets a brush strike, drawn left to right, and its bottle fades */
+#drink_selection .order::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    right: 52px;
+    top: 50%;
+    height: 14px;
+    margin-top: -7px;
+    background: var(--danger-text);
+    mask: url("../img/textures/strike.svg") left center / 0% 100% no-repeat;
+    pointer-events: none;
+    transition: mask-size var(--toast-close) var(--toast-ease);
+}
+
+#drink_selection .order:has(.delete:is(:hover, :focus-visible))::after {
+    mask-size: 100% 100%;
+    transition: mask-size var(--toast-open) var(--toast-ease);
+}
+
+#drink_selection .order:has(.delete:is(:hover, :focus-visible)) img { opacity: 0.45; }
+
+@media (prefers-reduced-motion: reduce) {
+    #drink_selection .order::after, #drink_selection .order img { transition: none; }
+}
+
+#drink_selection:empty {
+    min-height: 160px;
+}
+
+#drink_selection:empty::before {
+    content: attr(data-empty);
+    display: block;
+    max-width: 22ch;
+    margin: var(--space-7) auto;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    line-height: 1.4;
+    color: var(--ink-sepia);
+}
+
+@container (max-width: 400px) {
+    #drink_selection .order {
+        grid-template-columns: auto 40px minmax(0, 1fr) auto;
+        grid-template-areas: "qty img name del" "qty img price del";
+    }
+    #drink_selection .order .price { justify-self: start; }
+}
+
+/* Phones: 44px touch targets for remove */
+@media (max-width: 768px) {
+    #drink_selection .order .delete {
+        width: 44px;
+        height: 44px;
+    }
+}
+
 /* FEEDBACK */
 
 /* Visually hidden; the one aria-live region lives here */
@@ -611,20 +845,20 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
     z-index: 1000;
 }
 
-/* T9: a burnt paper note pinned with a tack; sepia 6.61:1 or better. Errors add the alert icon and a worn red ribbon */
+/* T9: a burnt paper note pinned with a tack; sepia 6.61:1 or better. Title and detail (F9); errors get a red wax seal and a worn red ribbon */
 .toast {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 10px;
-    max-width: 480px;
-    padding: 16px 12px 2px;
+    gap: 12px;
+    max-width: 460px;
+    padding: 18px 16px 6px;
     border: 16px solid transparent;
     border-image: url("../img/textures/note.webp") 48 fill / 16px stretch; /* 9-slice: the burnt rim keeps its size */
     color: var(--ink-sepia);
-    font-family: 'Oswald', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-base);
-    text-shadow: 0 0 1px var(--rule-sepia);
+    line-height: 1.35;
     box-shadow: var(--shadow-float);
     rotate: -1deg;
 }
@@ -643,19 +877,24 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 
 .toast.is-open { pointer-events: auto; } /* a closed toast is invisible, so it must not catch clicks */
 
+.toast_text { display: grid; gap: 2px; }
+.toast_title { font-size: var(--text-md); font-weight: var(--weight-heading); }
+.toast_detail:empty { display: none; }
+
+/* Wax seal: green = done, red = error (decorative, the words carry the meaning) */
 .toast_icon {
     flex: none;
-    width: 26px;
-    height: 26px;
-    stroke-width: 2.25;
-    mask: url("../img/textures/stamp-wear.webp") 0 0 / 80px 40px; /* worn ink */
+    width: 44px;
+    height: 44px;
+    background: url("../img/textures/seal-green.webp") 0 0 / 100% 100% no-repeat;
+    filter: drop-shadow(0 2px 2px var(--shadow-lift));
 }
 
 .toast.is-error { rotate: 1deg; }
-.toast.is-error .toast_icon { color: var(--flag-red); }
+.toast.is-error .toast_icon { background-image: url("../img/textures/seal-red.webp"); }
 
-.toast.is-error::before {
-    content: "";
+.toast_ribbon {
+    display: none;
     position: absolute;
     left: -4px;
     top: -6px;
@@ -664,27 +903,41 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
     background: var(--flag-red);
     mask: url("../img/textures/stamp-wear.webp") 0 0 / 60px 120px;
 }
+.toast.is-error .toast_ribbon { display: block; }
 
-/* Sea mist rolls in under the open note; it never catches clicks */
-.toast_wrap::before {
+/* Low sea mist (F9): two feathered layers drift behind the open note, one each way; never over the text, never catching clicks */
+.toast_wrap { isolation: isolate; }
+.toast_wrap::before, .toast_wrap::after {
     content: "";
     position: absolute;
+    z-index: -1;
     left: 50%;
-    bottom: -110px;
-    width: min(760px, 150vw);
-    height: 240px;
-    background: url("../img/textures/mist.webp") center / 100% 100%;
+    bottom: -70px;
+    width: min(1000px, 150vw);
+    height: 300px;
+    background: url("../img/textures/mist.webp") 0 0 / 1400px 300px repeat-x;
+    mask: radial-gradient(closest-side, var(--ink) 35%, transparent);
     opacity: 0;
     translate: -50% var(--toast-distance);
     pointer-events: none;
+    animation: mist-drift 40s linear infinite paused;
     transition: opacity var(--toast-close) var(--toast-ease), translate var(--toast-close) var(--toast-ease);
 }
-
-.toast_wrap:has(.is-open)::before {
+.toast_wrap::after {
+    bottom: -90px;
+    height: 220px;
+    background-size: 1027px 220px;
+    --tile: 1027px;
+    animation: mist-drift 55s linear infinite reverse paused;
+}
+.toast_wrap:has(.is-open)::before, .toast_wrap:has(.is-open)::after {
     opacity: 0.95;
     translate: -50% 0;
+    animation-play-state: running;
     transition: opacity var(--toast-open) var(--toast-ease), translate var(--toast-open) var(--toast-ease);
 }
+.toast_wrap:has(.is-open)::after { opacity: 0.75; }
+@keyframes mist-drift { to { background-position-x: var(--tile, 1400px); } } /* one tile, so the loop is seamless */
 
 @media (max-width: 768px) {
     .toast_wrap { bottom: 16px; }
@@ -713,5 +966,5 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .t-toast, .toast_wrap::before { transition: none !important; }
+  .t-toast, .toast_wrap::before, .toast_wrap::after { transition: none !important; animation: none !important; }
 }

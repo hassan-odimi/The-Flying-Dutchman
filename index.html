@@ -1,6 +1,7 @@
 <!-- The Flying Dutchman
      index.html
-     Created by 'Pirates of the Caribbean' on 09 of February 2018. -->
+     Created by 'Pirates of the Caribbean' on 09 of February 2018.
+     Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi. -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +26,7 @@
     <!-- CSS Icons -->
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Oswald:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 
   </head>
   <body>
@@ -67,28 +68,31 @@
 
       <button type="button" class="close_window" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#x"/></svg></button>
 
-      <h2>The Flying Dutchman</h2>
+      <h2 id="about_title">The Flying Dutchman</h2>
+      <p id="about_lede" class="about_lede">A bar ordering system, built in 2018 for User Interface Programming I at Uppsala University. Plain HTML, CSS and jQuery, no framework.</p>
 
-      <div class= "scrollable">
-
-        <p>This is our submission project for User Interface Programming I at Uppsala University</p>
-        <p>For this task we had to create an interface for a fictitious bar, but we were not allow to use any web framework or any other tool other than HTML, CSS and JavaScript (with JQuery).
-        To complete this task, we had to implement a dummy database and create fully functional ordering system implementing interface design principles. Moreover, this website is fully responsive and implements undo/redo and drag and drop (try dragging the pirate flag to the ship).</p>
-
-        <p>Click on the green tab to get some passwords and try out our implementation. Scroll down for link to the repo on Github.</p>
-        <p>We are the Pirates of the Caribbean!</p>
-        <h3>Group Members are:</h3>
-        <ul>
-          <li>Mauro José Pappaterra</li>
-          <li>Jenny Olsson</li>
-          <li>Hassan Odimi</li>
-          <li>Yawen Yi</li>
-          <li>Elsa Slättegård</li>
-        </ul>
-
-        <p>Github repo: <a href="https://github.com/yogurt1989/The-Flying-Dutchman.git" target="_blank">https://github.com/yogurt1989/The-Flying-Dutchman.git</a></p>
-
+      <div class="about_cols">
+        <section>
+          <h3 id="about_try_title" class="about_try">Try it</h3>
+          <ul id="about_try"><li></li><li></li><li></li><li></li><li></li></ul>
+        </section>
+        <section>
+          <h3 id="about_built_title" class="about_built">Built with</h3>
+          <ul id="about_built"><li></li><li></li><li></li><li></li><li></li></ul>
+        </section>
+        <section>
+          <h3 id="about_crew_title" class="about_crew">Crew</h3>
+          <ul>
+            <li>Mauro José Pappaterra</li>
+            <li>Jenny Olsson</li>
+            <li>Hassan Odimi</li>
+            <li>Yawen Yi</li>
+            <li>Elsa Slättegård</li>
+          </ul>
+        </section>
       </div>
+
+      <p class="about_source"><span id="about_source">Source code:</span> <a href="https://github.com/yogurt1989/The-Flying-Dutchman" target="_blank" rel="noopener">github.com/yogurt1989/The-Flying-Dutchman</a></p>
 
     </div>
 

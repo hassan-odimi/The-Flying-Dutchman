@@ -1,6 +1,7 @@
 /* The Flying Dutchman
    customer.css
    Created by 'Pirates of the Caribbean' on 18 of February 2018.
+   Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
 */
 
 /*Style Sheet for the management page*/
@@ -11,7 +12,7 @@ body {
     background-size: cover;
     max-width: 100%;
     background-repeat: repeat-y;
-    font-family: 'Oswald', sans-serif;
+    font-family: var(--font-body);
 }
 
 h2{
@@ -36,13 +37,18 @@ header{
 }
 
 /*MENU COLUMN*/
+.main_section {
+    display: flow-root;
+    clear: both; /* a BFC box would otherwise sit beside the floated tab row */
+}
+
 .menu {
     width: 70%;
     /*    height: 30%;*/
     /*    background-color: #0A2521;*/
     bottom: 0px;
     float: left;
-    overflow: auto;
+    display: flow-root; /* holds its floated tabs; no overflow, so no scrollbar beside the tabs (F5) */
 }
 
 .menu h2 {
@@ -58,6 +64,7 @@ header{
     float: left;
     margin-right:1.5%;
     width: 20%;
+    min-width: max-content; /* Alegreya Sans is wider: "Shortage Alert (!)" stays on one line, the row wraps instead */
 }
 
 .menu li button {
@@ -78,46 +85,50 @@ header{
 
 .drink_list {
     width: 68%;
-    height: 70vh;
     margin-left: 2%;
 
     float: left;
     overflow: auto;
     border-bottom-left-radius: var(--radius-md);
-
-    background-color: var(--surface);
-
 }
 
 /* Carved Wood Rule: every panel on the wood is lifted */
-.drink_list, .selection_header, .selection, .checkout { box-shadow: var(--shadow-raised); }
+.selection_header, .selection, .checkout { box-shadow: var(--shadow-raised); }
 
 .drink {
-    /* one row: bottle | details | stock | Add buttons */
+    /* one compact paper row (F12): bottle | specs in two columns | stock | Add buttons in a row.
+       Four baked torn papers, alpha edges, so the shadow is a filter; sepia 4.5:1 or better on the darkest pixel */
     display: grid;
-    grid-template-columns: 112px 1fr 128px 112px;
-    gap: var(--space-5);
+    grid-template-columns: 90px minmax(0, 1fr) 140px 300px;
+    gap: var(--space-4);
     align-items: center;
     margin: var(--space-3) var(--space-4);
-    padding: var(--space-4);
-    background-color: var(--surface-soft);
-    border-radius: var(--radius-md);
-    color: var(--ink);
+    padding: var(--space-5);
+    background: url("../img/textures/row-paper1.webp") 0 0 / 100% 100% no-repeat;
+    color: var(--ink-sepia);
+    filter: drop-shadow(0 2px 4px var(--shadow-lift)) drop-shadow(0 6px 12px var(--shadow-lift));
 }
+.drink:nth-child(4n+2) { background-image: url("../img/textures/row-paper2.webp"); }
+.drink:nth-child(4n+3) { background-image: url("../img/textures/row-paper3.webp"); }
+.drink:nth-child(4n+4) { background-image: url("../img/textures/row-paper4.webp"); }
+.drink:nth-child(odd) { rotate: -0.3deg; }
+.drink:nth-child(even) { rotate: 0.3deg; }
 
 .drink .c1 img {
     display: block;
-    height: 160px;
+    height: 110px;
     margin: 0 auto;
 }
 
 .drink .c2 {
+    columns: 2;
+    column-gap: var(--space-5);
     line-height: 1.5;
 }
 
 .drink .c3 h2 {
     margin: 0;
-    font-size: var(--text-xl);
+    font-size: var(--text-xxl);
     line-height: 1.1;
     text-align: center;
 }
@@ -129,13 +140,17 @@ header{
     font-weight: var(--weight-label);
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--ink);    /* the label stays black whatever the stock colour */
+    color: var(--ink-sepia);    /* the label stays sepia whatever the stock colour */
 }
 
 .drink .c4 {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap; /* long labels (Aggiungere +100) wrap to a second line instead of leaving the row */
     gap: var(--space-2);
+}
+
+.add_button {
+    flex: 1 1 5rem;
 }
 
 .add_button .h4 {
@@ -154,8 +169,7 @@ header{
 /*ORDER COLUMN*/
 .selection_header {
     width: 100%;
-    /*    height: 75px;*/
-    height: 75px;
+    min-height: 75px;
     margin-right: 2%;
     margin-bottom: 25px;
 
@@ -169,9 +183,7 @@ header{
 
 .selection {
     width: 28%;
-    /*    height: 350px; *//* 500px*/
-    height: 70vh;
-    background-color: var(--control-strong);
+    min-height: 70vh; /* only without the F5 grid (short windows); the grid sizes it */
 
     margin-right: 2%;
     float: left;
@@ -179,6 +191,85 @@ header{
 }
 
 
+
+/* ORDER RECEIPT (F13): a slip on the ledger after Place Stock Order. The shadow sits on .receipt because the zig-zag mask on the slip would clip it.
+   Sepia on the washed Paper 328, ORDERED in worn green ink (large text, 3:1) */
+.receipt {
+    margin: var(--space-4) var(--space-3) var(--space-5);
+    filter: drop-shadow(0 3px 3px var(--shadow-lift));
+}
+
+.receipt_slip {
+    padding: var(--space-4) var(--space-4) calc(var(--space-5) + 10px);
+    color: var(--ink-sepia);
+    background: linear-gradient(var(--slip-wash), var(--slip-wash)), url("../img/textures/paper-list.webp") 100% 100% / 100% 100%, var(--paper);
+    mask:
+        conic-gradient(from -45deg at bottom, var(--ink) 90deg, transparent 0) bottom / 20px 10px repeat-x,
+        linear-gradient(var(--ink), var(--ink)) top / 100% calc(100% - 9px) no-repeat;
+}
+
+.receipt_head {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: var(--weight-body);
+}
+
+.receipt_time { display: block; margin-bottom: var(--space-3); }
+
+.receipt_lines { margin: 0; padding: 0; list-style: none; border-top: 1px dashed var(--rule-sepia); }
+
+.receipt_lines li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    column-gap: var(--space-2);
+    padding: var(--space-2) 0;
+    border-bottom: 1px dashed var(--rule-sepia);
+}
+
+.receipt_price { min-width: 5.5ch; text-align: right; font-weight: var(--weight-heading); }
+
+.receipt_sum {
+    display: flex;
+    justify-content: space-between;
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-md);
+    font-weight: var(--weight-heading);
+}
+
+.receipt_note { margin: var(--space-3) 0 0; }
+
+/* ORDERED: double border, worn (stamp-wear at its own scale and offset), uneven pressure left to right, a faint offset double strike.
+   Imperfect: unequal border widths, a slight skew, a ragged edge (static SVG filter #rough in management.html), two bites out of the border corners */
+.receipt_stamp {
+    width: fit-content;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: var(--space-5) auto var(--space-4);
+    padding: 4px 14px;
+    font-size: var(--text-md);
+    font-weight: var(--weight-heading);
+    line-height: 1.15;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--stamp-green);
+    border: double var(--stamp-green);
+    border-width: 4px 5px 3px 4px;
+    border-radius: var(--radius-sm);
+    text-shadow: 1px 1px 0 color-mix(in srgb, var(--stamp-green) 30%, transparent);
+    rotate: -12deg;
+    transform: skewX(-2deg);
+    filter: url(#rough);
+    mask:
+        url("../img/textures/stamp-wear.webp") 30% 70% / 210px auto,
+        linear-gradient(100deg, var(--ink), color-mix(in srgb, var(--ink) 85%, transparent)),
+        radial-gradient(circle at 88% 0, transparent 7px, var(--ink) 8px),
+        radial-gradient(circle at 7% 100%, transparent 6px, var(--ink) 7px);
+    mask-composite: intersect;
+}
+
+.receipt_new { display: block; width: auto; margin: var(--space-3) 0 0; padding: var(--space-3); }
 
 .selection_div {
     width: 28%;
@@ -190,36 +281,10 @@ header{
 
 }
 
-.order {
-    background-color: var(--surface);
-
-    padding-left: 1.5%;
-    padding-right: 1.5%;
-    margin: 2%;
-    margin-bottom: 10%;
-
-    border-style: solid;
-    border-color: var(--surface);
-    border-width: thin;
-
-    width: 92%;
-    clear: both;
-}
-
-.order .price {
-    float: right;
-}
-
-.order img {
-    height: 80px;
-    float: left;
-}
-
 .checkout {
     width: 100%;
-    /*    height: 75px;*/
     clear: both;
-    height: 75px;
+    min-height: 75px;
     background-color: var(--bar);
     float: left;
     margin-right: 2%;
@@ -231,15 +296,6 @@ header{
     float: left;
     color: var(--ink-soft-on-dark);
     margin-left: 4%;
-}
-
-.delete {
-    background-color: var(--danger-fill);
-    color: var(--ink-on-dark);
-    float: right;
-    width: 24px;
-    min-height: 24px; /* WCAG 2.5.8 */
-    text-align: center;
 }
 
 .logout {
@@ -271,26 +327,76 @@ footer .small_button{
     float: right;
 }
 
-/* Zero stock: muted, 3.68:1 on Pale Sea Glass, so only on the 31 px stock number (large text) */
+/* Zero stock: soft sepia on the paper row, 40 px so large text */
 .drink .textLightGreen {
-    color: var(--ink-muted);
+    color: var(--ink-card-soft);
 }
 
-/* Order column beside the drink list (same pattern as customer), so the order and
-   Place Stock Order stay in view; below 1024px it stacks under the list as in 2018 */
-@media (min-width: 1024px) {
-    .selection_header, .checkout {
-        width: 28%;
-        clear: none;
-        margin-bottom: 0;
+/* The order column sits beside the drink list from 769 px (page shell, style.css). In short windows
+   (under 600 px high) the 2018 floats take over and the page scrolls. */
+
+/* From 1280 to 1535 px the list is too narrow for four columns: the stock count sits over the Add buttons */
+@media (min-width: 1280px) and (max-width: 1535px) {
+    .drink {
+        grid-template-columns: 90px minmax(0, 1fr) 280px;
+        grid-template-areas: "img spec stock" "img spec add";
+        row-gap: var(--space-2);
+    }
+    .drink .c1 { grid-area: img; }
+    .drink .c2 { grid-area: spec; }
+    .drink .c3 { grid-area: stock; align-self: end; }
+    .drink .c4 { grid-area: add; align-self: start; }
+}
+
+/* Narrow list (phones, and the order column beside it up to 1279 px): card = image + details, then stock, then Add buttons (44px high).
+   The long row papers would be squeezed here, so this shape uses two of the portrait card papers, the two whose torn edges stay clear of the text
+   (the others bite deep into a right-hand corner). */
+@media (max-width: 1279px) {
+    .drink {
+        grid-template-columns: 80px 1fr;
+        gap: var(--space-3) var(--space-4);
+        margin: var(--space-2);
+        padding: var(--space-5);
+    }
+    .drink:nth-child(odd) { background-image: url("../img/textures/card-paper1.webp"); }
+    .drink:nth-child(even) { background-image: url("../img/textures/card-paper4.webp"); }
+
+    .drink .c2 {
+        columns: 11rem;
     }
 
-    .selection {
-        height: calc(70vh - 150px); /* header and checkout are 75px each */
+    .drink .c3 h2 {
+        font-size: var(--text-lg);
     }
 
-    footer {
-        clear: both;
+    .drink .c1 img {
+        height: 120px;
+    }
+
+    .drink .c3, .drink .c4 {
+        grid-column: 1 / -1;
+    }
+
+    .drink .c3 h2 {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-size: var(--text-lg);
+    }
+
+    .add_button .h4 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+    }
+}
+
+/* Small phones: the torn paper keeps 24 px at top and bottom (its tears are deepest there) and 16 px at the sides, so the specs get 16 px more at 320 */
+@media (max-width: 480px) {
+    .drink {
+        grid-template-columns: 64px 1fr;
+        padding: var(--space-5) var(--space-4);
     }
 }
 
@@ -322,52 +428,14 @@ footer .small_button{
         margin-left: 2%;
     }
 
-    .drink {
-        grid-template-columns: 80px 1fr;
-        gap: var(--space-3) var(--space-4);
-        margin: var(--space-2);
-        padding: var(--space-3);
-    }
-
-    .drink .c1 img {
-        height: 120px;
-    }
-
-    .drink .c3, .drink .c4 {
-        grid-column: 1 / -1;
-    }
-
-    .drink .c3 h2 {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        font-size: var(--text-lg);
-    }
-
-    .drink .c4 {
-        flex-direction: row;
-    }
-
-    .add_button {
-        flex: 1;
-    }
-
-    .add_button .h4 {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 44px;
-    }
-
     .selection_header, .checkout, .selection {
         width: 96%;
         margin-left: 2%;
     }
 }
 
-/* Below 1024px the order stacks under the list: keep it short so Place Stock Order is near,
-   and lay the footer out in wrapping rows (as in bartender) with 44px targets */
-@media (max-width: 1023px) {
+/* Phones: the order stacks under the list, kept short so Place Stock Order is near */
+@media (max-width: 768px) {
     .selection_header, .checkout, .selection {
         width: 96%;
         margin-left: 2%;
@@ -379,11 +447,16 @@ footer .small_button{
         max-height: 28vh;
     }
 
+    .selection:has(.receipt) { max-height: none; }
+
     .drink_list {
         width: 96%;
         max-height: 46vh;
     }
+}
 
+/* Below 1024px lay the footer out in wrapping rows (as in bartender) with 44px targets */
+@media (max-width: 1023px) {
     footer {
         display: flex;
         flex-wrap: wrap;

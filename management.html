@@ -1,6 +1,7 @@
 <!-- The Flying Dutchman
      management.html
-     Created by 'Pirates of the Caribbean' on 09 of February 2018. -->
+     Created by 'Pirates of the Caribbean' on 09 of February 2018.
+     Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi. -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +25,7 @@
     <link rel="stylesheet" href="css/management.css">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Oswald:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 
   </head>
   <body>
@@ -68,6 +69,8 @@
       <h2 id="total">Total: SEK 0 :-</h2>
     </div>
 
+    </div><!-- .main_section -->
+
     <footer>
 
       <!-- LOG OUT BUTTON -->
@@ -84,8 +87,8 @@
 
       <!-- UNDO-REDO MENU -->
       <div class="undo_redo_menu">
-        <button type="button" id="undo" class="fade"><svg class="icon icon-2x" aria-hidden="true"><use href="img/icons.svg#undo"/></svg> <span class="undo_label">Undo</span></button>
-        <button type="button" id="redo" class="fade"><svg class="icon icon-2x" aria-hidden="true"><use href="img/icons.svg#redo"/></svg> <span class="redo_label">Redo</span></button>
+        <button type="button" id="undo" class="fade"><span class="anchor" aria-hidden="true"></span> <span class="undo_label">Undo</span></button>
+        <button type="button" id="redo" class="fade"><span class="anchor" aria-hidden="true"></span> <span class="redo_label">Redo</span></button>
       </div>
 
       <!-- PAY BUTTON -->
@@ -115,5 +118,6 @@
     <script src="js/login.js" type="text/javascript"></script>
     <script src="js/multilanguage.js" type="text/javascript"></script>
 
+  <svg width="0" height="0" aria-hidden="true" focusable="false"><filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.5"/></filter></svg>
   </body>
 </html>

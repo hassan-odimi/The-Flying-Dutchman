@@ -3,9 +3,9 @@ const { test, expect } = require('@playwright/test');
 const { axe } = require('./helpers');
 
 // Staff buttons are hidden on phones (css/index.css), so click them in script like a tablet visitor would reach them
-async function loginMobile(page, role) {
+async function loginMobile(page, role, lang = 0) {
   await page.goto('/index.html');
-  await page.evaluate(() => localStorage.setItem('index', 0));
+  await page.evaluate((l) => localStorage.setItem('index', l), lang);
   await page.reload();
   await page.evaluate((id) => document.getElementById(id).click(), role);
   await page.fill('#user_name_input', 'test');
@@ -119,3 +119,28 @@ test('management: has a viewport, stacks, Add buttons and footer are touch sized
   expect(await tooSmall(page, 24)).toEqual([]);
   await axe(page);
 });
+
+// F6: Undo, Redo and Log Out keep their words at 320 px in Spanish; plates stay apart, inside the screen, 44 px high
+for (const role of ['customer', 'bartender', 'management']) {
+  test(`${role}: Log Out, Undo and Redo show their words at 320 px in Spanish`, async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 700 });
+    await loginMobile(page, role, 3);
+    expect(await noScroll(page)).toBe(true);
+    const ids = ['#undo', '#redo', role === 'customer' ? '#logout_phone' : '#logout'];
+    const boxes = [];
+    for (const id of ids) {
+      const el = page.locator(id), b = await el.boundingBox();
+      expect(b.height, id).toBeGreaterThanOrEqual(44);
+      expect(b.x, id).toBeGreaterThanOrEqual(0);
+      expect(b.x + b.width, id).toBeLessThanOrEqual(320);
+      expect(await el.evaluate((e) => e.scrollWidth <= e.clientWidth), id + ' text fits').toBe(true);
+      boxes.push(b);
+    }
+    expect(await page.locator('#undo .undo_label').evaluate((e) => e.getBoundingClientRect().width)).toBeGreaterThan(20);
+    expect(await page.locator('#redo .redo_label').evaluate((e) => e.getBoundingClientRect().width)).toBeGreaterThan(20);
+    for (let i = 0; i < 3; i++) for (let j = i + 1; j < 3; j++) {
+      const a = boxes[i], c = boxes[j];
+      expect(a.x + a.width <= c.x || c.x + c.width <= a.x || a.y + a.height <= c.y || c.y + c.height <= a.y, `${ids[i]} and ${ids[j]} overlap`).toBe(true);
+    }
+  });
+}

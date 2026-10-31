@@ -1,6 +1,7 @@
 /** The Flying Dutchman
  *  bartender.js
  *  Created by 'Pirates of the Caribbean' on 11 of February 2018.
+ *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
 */
 
 /*BARTENDER PAGE SCRIPTS
@@ -16,9 +17,8 @@ var done = new Array(); // keeps track of 'done' actions
 var undone = new Array();                    // keeps track of 'redone' actions
 
 $(document).ready(function() {
-    retrieveOrders(); // retrieve all orders from the database
-    addBackground();
-     highlightTab("*#all"); // highlight the 'all'-tab
+    rePrintTab(); // print all orders from the database
+    highlightTab("*#all"); // highlight the 'all'-tab
 
     pushStateTo(done);  // push initial state to 'done' stack
     $("#redo").addClass("fade");
@@ -27,7 +27,7 @@ $(document).ready(function() {
     // check if a new order has been submitted
     t1 = window.setInterval(function() {checkOnOrders()}, 2000);
     function checkOnOrders() {
-        if (localStorage.getItem("NEWORDER") != 0) {
+        if (localStorage.getItem("NEWORDER") == 1) {
             $("#retrieve_orders").addClass("has-new");
             localStorage.setItem("NEWORDER", 0);
         }          
@@ -35,7 +35,7 @@ $(document).ready(function() {
 
     // display new orders on click 
     $("#retrieve_orders").click(function() {
-        if (localStorage.getItem("NEWORDER") == 1) {
+        if ($(this).hasClass("has-new")) {
             $("#retrieve_orders").removeClass("has-new");
             updateTransactions();
             clearUndone();
@@ -43,48 +43,25 @@ $(document).ready(function() {
     });
     
     // filter orders by category
-    $("#all").click(function() {
-        highlightTab("*#all");
-        current_tab = "all";
-        $("#all_orders").empty();
-        retrieveOrders();
-        addBackground();
-    });
-
-    $("#unpaid").click(function() {
-        highlightTab("*#unpaid");
-        current_tab = "unpaid";
-        $("#all_orders").empty();
-        $.each(SESSIONS_TRANSACTIONS, function(element){
-            if (this.paid != true){ // filter only unpaid
-                printToDOM(this);
-            };
+    $.each(["all", "unpaid", "paid"], function(i, tab) {
+        $("#" + tab).click(function() {
+            highlightTab("*#" + tab);
+            current_tab = tab;
+            rePrintTab();
         });
-        addBackground();
     });
 
-    $("#paid").click(function() {
-        highlightTab("*#paid");
-        current_tab = "paid";
-        $("#all_orders").empty();
-        $.each(SESSIONS_TRANSACTIONS, function(element){
-            if (this.paid == true){ // filter only unpaid
-                printToDOM(this);
-            };
-        });
-        addBackground();
-    });
-
-    /* Accordion Script*/
+    /* Card script (F11): one card open per pile, Esc closes it and gives focus back to the card */
     $(document).on('click','.accordion',function(){
-        this.classList.toggle("active");
-        this.setAttribute("aria-expanded", this.classList.contains("active"));
-        var panel = this.nextElementSibling;
-        if (panel.style.maxHeight){
-            panel.style.maxHeight = null;
-        } else {
-            panel.style.maxHeight = panel.scrollHeight + "px";
-        }
+        var open = !this.classList.contains("active");
+        $(this).closest('.pile').find('.accordion.active').each(function() { setOpen(this, false); });
+        setOpen(this, open);
+    });
+
+    $(document).on('keydown', function(e) {
+        if (e.key != "Escape") return;
+        var card = $(".accordion.active").filter(function() { return this.parentNode.contains(document.activeElement); })[0];
+        if (card) { setOpen(card, false); card.focus(); }
     });
 
     $(document).on('click','.delete',function() {
@@ -122,16 +99,13 @@ $(document).ready(function() {
         sessionStorage.setItem("SESSION_STOCK_INFO",JSON.stringify(SESSION_STOCK_INFO));
 
 
-        /* Remove from DOM */
-        $(this).closest('.panel').remove();
-        $('#' + find_transaction_id).remove();
-        
+        rePrintTab(); // the pile closes up
         /* Undo-Redo */
         pushStateTo(done);  // update done stack
         clearUndone();      // clear undone stack after a 'proper' action
 
         /* Alert user*/
-        showToast(message_delete_order(find_transaction_id, lang()));
+        showToast(title_delete_order[lang()], message_order_ref(find_transaction_id, lang()));
     });
 
     $(document).on('click','.pay',function() {
@@ -152,16 +126,16 @@ $(document).ready(function() {
         sessionStorage.setItem("SESSION_TRANSACTIONS",JSON.stringify(SESSIONS_TRANSACTIONS));
 
         /* Update DOM */
-        retrieveOrders(); // retrieve all orders from the database
-        addBackground();
         current_tab = "all";
+        highlightTab("*#all");
+        rePrintTab();
         
         /* Undo-Redo */
         pushStateTo(done);  // update done stack
         clearUndone();      // clear undone stack after a 'proper' action
 
         /* Alert user*/
-        showToast(message_mark_paid(find_transaction_id, lang()));
+        showToast(title_mark_paid[lang()], message_order_ref(find_transaction_id, lang()));
     });
     
     $(document).on('click','#undo',function() {
@@ -176,48 +150,53 @@ $(document).ready(function() {
     
 });
 
-function printToDOM (element) {
-    var i = $.inArray(element,SESSIONS_TRANSACTIONS);
+function setOpen(card, open) {
+    card.classList.toggle("active", open);
+    card.setAttribute("aria-expanded", open);
+}
 
-    var number = element.transaction_id.slice(1), date = element.timestamp.split(' '), time = date[1].slice(0, 5);
-
-    // T8: the order bar is a paper slip in columns, read left to right; the labels stay for screen readers
-    var content = '<button type="button" class="accordion ' + (element.paid ? 'order_paid' : 'order_open') + '" aria-expanded="false" id="'+ element.transaction_id +'">' +
-        '<span class="o_no"><small>ORDER</small> #'+ number + '</span>' +
-        '<span class="o_who"><small class="sr-only">Customer: </small>' + getCustomerName(element.customer_id) + ' <small>' + element.customer_id + '</small></span>' +
-        '<span class="o_when"><small class="sr-only">Date: </small><small>' + date[0] + '</small> ' + time + '</span>' +
-        '<span class="o_sum"><small>Total: </small>SEK '+ element.amount +':-</span>' +
-        paidStamp(element.paid, element) +
-        '<svg class="icon o_chev" aria-hidden="true"><use href="img/icons.svg#chevron-down"/></svg></button>' +
-        '<div class="panel">' +
-        '<p class="docket_head"><b>#' + number + '</b><span>' + time + '</span></p>' +
-        '<div class="order">' +
+// F11: an order is a playing card, a pile holds up to five. Index, name, total, time and state are the band you scan;
+// the docket (lines, total, actions) opens in place. Indices are decoration, the accessible name is read from the sr-only parts.
+function cardHTML (element) {
+    var L = lang(), no = parseInt(element.transaction_id.slice(1), 10), time = element.timestamp.split(' ')[1].slice(0, 5);
+    var idx = '<span class="pc_idx" aria-hidden="true"><b>' + no + '</b><i></i></span>', name = getCustomerName(element.customer_id);
+    var state = paidStamp(element.paid, element);
+    var content = '<div class="pc ' + (element.paid ? 'paid' : 'open') + '">' +
+        '<button type="button" class="accordion ' + (element.paid ? 'order_paid' : 'order_open') + '" aria-expanded="false" id="'+ element.transaction_id +'">' +
+        '<span class="sr-only">' + [order_word[L] + ' ' + no, name, time, total_word[L] + ' ' + element.amount + ' ' + kronor_word[L], stateText(element)].join(', ') + '</span>' +
+        idx +
+        '<span class="o_who" aria-hidden="true">' + name + '</span>' +
+        '<span class="o_when" aria-hidden="true">' + time + '</span>' +
+        '<span class="o_sum" aria-hidden="true">' + element.amount + ':-</span>' +
+        state + '</button>' +
+        '<div class="panel"><div class="docket">' +
+        '<div class="order" tabindex="0" role="region" aria-label="' + order_word[L] + ' ' + no + '">' +
 
         printOrder(element.order,element.quantities) + // Contents of the order printed here
 
-        '</div>';
+        '</div>' +
+        '<p class="total"><b>' + total_word[L] + '</b> ' + element.amount + ':-</p>';
 
     if (element.paid == false){ // this part is only printed to unpaid transactions
         content += '<div class="checkout">' +
-            '<button type="button" class="small_button red delete cancel_order" id="' + element.transaction_id + '" >Cancel Order</button>' +
-            '<button type="button" class="small_button light_green pay mark_paid" id="' + element.transaction_id + '" >Mark as Paid</button>' +
-            '<p class="total"><b>TOTAL:</b> SEK '+ element.amount +':-</p>' +
+            '<button type="button" class="small_button red delete cancel_order" id="' + element.transaction_id + '" >' + cancel_order[L] + '</button>' +
+            '<button type="button" class="small_button light_green pay mark_paid" id="' + element.transaction_id + '" >' + mark_paid[L] + '</button>' +
             '</div>';
     } else {
-        content += '<div class="paidfor">' +
-            '<p class="stamp"><b>TOTAL PAID:</b> SEK '+ element.amount + ':-</p>' +
-            '</div>';
+        content += '<div class="paidfor"><p class="stamp">' + state_paid[L] + ' ' + paid_by_text(element) + '</p></div>';
     }
 
-    content += '</div>';
-
-    $("#all_orders").prepend(content);
+    return content + '</div></div>' +
+        '<span class="pc_idx pc_idx_end" aria-hidden="true"><b>' + no + '</b><i></i></span></div>';
 }
 
-function retrieveOrders() {
-    $.each(SESSIONS_TRANSACTIONS, function(element){
-        printToDOM(this);
-    });
+// piles of `size` cards, newest first, under one heading
+function groupHTML (kind, heading, orders, size) {
+    var piles = '';
+    for (var i = 0; i < orders.length; i += size) {
+        piles += '<div class="pile">' + $.map(orders.slice(i, i + size), cardHTML).join('') + '</div>';
+    }
+    return '<section class="group ' + kind + '"><h2>' + heading + '</h2><div class="piles">' + piles + '</div></section>';
 }
 
 function getBartenderName(bartender_id){
@@ -260,28 +239,31 @@ function getBrevagePrice(brevage_id){
     return parseInt(price);
 }
 
+function paid_by_text (element) {
+    var name = getBartenderName(element.bartender_id);
+    return name ? '<small>' + paid_by[lang()] + ' ' + name + '</small>' : '<small>' + paid_credit[lang()] + '</small>';
+}
+
+function stateText (element) { // the stamp as plain text, for the card's accessible name
+    return element.paid ? state_paid[lang()] + ' ' + $('<div>' + paid_by_text(element) + '</div>').text() : state_unpaid[lang()];
+}
+
 function paidStamp (boolean, element){
-    if (boolean) return '<span class="o_state">Paid <small>by ' + getBartenderName(element.bartender_id) + '</small></span>';
-    return '<span class="o_state">Not paid</span>';
+    if (boolean) return '<span class="o_state" aria-hidden="true">' + state_paid[lang()] + ' ' + paid_by_text(element) + '</span>';
+    return '<span class="o_state" aria-hidden="true">' + state_unpaid[lang()] + '</span>';
 }
 
 function printOrder(order_array,quantities_array){
-    //alert(order_array);
     var content = '';
 
     $.each(order_array, function (index,value){
         content += '<div class="order_details">' +
-            '<b class="qty">' + quantities_array[index] + '\u00d7</b>' +
+            '<b class="qty">' + quantities_array[index] + '×</b>' +
             '<h4>'+ getBrevageName(value) +'</h4>' +
-            '<img src="img/drinks/'+ value +'.webp" alt="" loading="lazy">' +
-            '<h4 class="price">SEK '+ (getBrevagePrice(value) * quantities_array[index]) +':-</h4>' +
+            '<h4 class="price">'+ (getBrevagePrice(value) * quantities_array[index]) +':-</h4>' +
             '</div>';
     });
     return content;
-}
-
-function addBackground (){
-    $("#all_orders").append('<div class="background_wallpaper"></div>');
 }
 
 /*ALL UNDO/REDO FUNCTIONS*/
@@ -351,14 +333,12 @@ function clearUndone() {
     $("#redo").addClass("fade");
 }
 
-function rePrintTab() {   // reprint the currently displayed tab
-    $("#all_drinks").empty();
-    $.each(SESSIONS_TRANSACTIONS, function(element) {
-        if (current_tab == "all" || ( current_tab == "paid" && this.paid == true) || (current_tab == "unpaid" && this.paid == false)) {    
-            printToDOM(this);                
-        };
-    });
-    addBackground();
+function rePrintTab() {   // reprint the currently displayed tab: waiting piles, then the paid pile(s)
+    var newest = SESSIONS_TRANSACTIONS.slice().reverse(), html = '';
+    var waiting = $.grep(newest, function(o) { return !o.paid; }), paid = $.grep(newest, function(o) { return o.paid; });
+    if (current_tab != "paid" && waiting.length) html += groupHTML("waiting", pile_waiting[lang()], waiting, 5);
+    if (current_tab != "unpaid" && paid.length) html += current_tab == "paid" ? groupHTML("paid", pile_paid[lang()], paid, 5) : groupHTML("paid", pile_paid[lang()], paid.slice(0, 6), 6);
+    $("#all_orders").html(html);
 }
 
 // highlight the currently displayed tab 
@@ -380,4 +360,6 @@ function translate (index) {
     $("#orders_q").text(orders_q[index]);
     $("#cancel_order").text(cancel_order[index]);
     $("#mark_paid").text(mark_paid[index]);
+    $(".new_orders_label").text(new_orders_label[index]);
+    rePrintTab(); // the cards are built with the language chosen
 }

@@ -1,6 +1,7 @@
 /** The Flying Dutchman
  *  view_index.js
  *  Created by Pirates of the Caribbean on 21 of February 2018.
+ *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
  */
 
 /* LOGIN WINDOW TEXTS

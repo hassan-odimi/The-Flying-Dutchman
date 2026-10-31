@@ -17,7 +17,7 @@ test('no colour literals outside :root in the CSS or in .css() calls in the JS',
   }
 });
 
-test('active tab follows --surface, so the theme changes in one place', async ({ page }) => {
+test('the drink list follows --control-strong, so the theme changes in one place; the selected tab keeps its own note (F7, F8)', async ({ page }) => {
   await page.goto('/index.html');
   await page.evaluate(() => localStorage.setItem('index', 0));
   await page.reload();
@@ -28,9 +28,10 @@ test('active tab follows --surface, so the theme changes in one place', async ({
   await page.keyboard.press('Enter');
   await page.waitForURL('**/management.html');
   const bg = (sel) => page.locator(sel).evaluate((e) => getComputedStyle(e).backgroundColor);
-  expect(await bg('#drinks_list')).toBe('rgb(164, 185, 182)');
-  await page.evaluate(() => document.documentElement.style.setProperty('--surface', 'rgb(1, 2, 3)'));
-  expect(await bg('#drinks_list')).toBe('rgb(1, 2, 3)');
+  expect(await bg('.drink_list')).toBe('rgb(86, 121, 115)');
+  await page.evaluate(() => document.documentElement.style.setProperty('--control-strong', 'rgb(1, 2, 3)'));
+  expect(await bg('.drink_list')).toBe('rgb(1, 2, 3)');
+  expect(await bg('#drinks_list')).not.toBe('rgb(1, 2, 3)'); // the selected tab is a torn note, not the panel colour
   expect(await bg('#check_stock')).not.toBe('rgb(1, 2, 3)');
 });
 
@@ -47,12 +48,15 @@ test('font sizes and weights come from the V1 scale tokens', () => {
   }
 });
 
-test('Oswald loads real 400 to 700 weights and the browser never fakes bold', async ({ page }) => {
+test('Alegreya Sans loads real 400, 500, 700 and Pirata One 400; the browser never fakes bold', async ({ page }) => {
   await page.goto('/index.html');
-  const faces = await page.evaluate(async () => (await document.fonts.load('600 16px Oswald', 'Abc'))
-    .map((f) => f.family.replace(/"/g, '') + ' ' + f.weight));
-  expect(faces).toContain('Oswald 400 700'); // one variable face, so 500 and 600 are drawn, not faked
+  const faces = await page.evaluate(async () => {
+    const got = await Promise.all(['400 16px "Alegreya Sans"', '500 16px "Alegreya Sans"', '700 16px "Alegreya Sans"', '400 16px "Pirata One"'].map((f) => document.fonts.load(f, 'Abc')));
+    return got.flat().map((f) => f.family.replace(/"/g, '') + ' ' + f.weight);
+  });
+  expect(faces).toEqual(expect.arrayContaining(['Alegreya Sans 400', 'Alegreya Sans 500', 'Alegreya Sans 700', 'Pirata One 400']));
   expect(await page.evaluate(() => getComputedStyle(document.body).fontSynthesisWeight)).toBe('none');
+  expect(await page.evaluate(() => getComputedStyle(document.body).fontVariantNumeric)).toBe('lining-nums tabular-nums');
 });
 
 test('corners and shadows come from the V2 material tokens', () => {
