@@ -116,6 +116,18 @@ var inStock=["In Stock:",
             "En stock:",
             "In Stock:"];
 
+var not_stocked=["Not stocked",
+                "Ej i lager",
+                "Non disponibile",
+                "Sin stock",
+                "Not in the hold"];
+
+var catalogue_only=["Catalogue only",
+                "Endast katalog",
+                "Solo catalogo",
+                "Solo catálogo",
+                "Chart only"];
+
 var add_one=["Add +1",
             "Tillägga +1",
             "Aggiungere +1",
@@ -163,6 +175,10 @@ var title_placed_order = ["Order placed",
                           "Ordine inoltrato",
                           "Pedido realizado",
                           "Order be placed"];
+
+// Order panel header and total (the total reads "Total: SEK 154:-")
+var your_order = ["Your Order", "Din beställning", "Il tuo ordine", "Su pedido", "Th' Booty"];
+var total_label = ["Total:", "Totalt:", "Totale:", "Total:", "Total:"];
 
 // Order receipt (F13)
 var receipt_title = ["Stock order", "Lagerorder", "Ordine di scorta", "Pedido de existencias", "Stock order"];

@@ -94,7 +94,7 @@ test('customer: full order by touch, order toggle, undo/redo, 44 px remove', asy
 test('bartender: rows are not clipped, tabs fit, footer targets are 44 px', async ({ page }) => {
   await loginMobile(page, 'bartender');
   expect(await noScroll(page)).toBe(true);
-  expect(await page.locator('.accordion').evaluateAll((a) => a.filter((e) => e.scrollHeight > e.clientHeight + 1).length)).toBe(0);
+  expect(await page.locator('.accordion').evaluateAll((a) => a.filter((e) => [...e.children].some((c) => c.getBoundingClientRect().bottom > e.getBoundingClientRect().bottom + 1)).length)).toBe(0); // real content only: the top card's click extension (::after) overflows on purpose
   const tabs = await page.locator('.menu_tabs').boundingBox(), menu = await page.locator('.menu').boundingBox();
   expect(tabs.x + tabs.width).toBeLessThanOrEqual(menu.x + menu.width + 1);
   for (const sel of ['.menu li button', '#logout', '#undo', '#redo']) expect((await page.locator(sel).first().boundingBox()).height).toBeGreaterThanOrEqual(44);

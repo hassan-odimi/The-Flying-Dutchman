@@ -29,6 +29,9 @@
   --ink-deep: #15443d;
   --ink-sepia: #2a1709;         /* on the paper tabs and slips, 5.2:1 or better on their darkest pixel */
   --ink-card-soft: #43362a;     /* time on the 1850 card stock, 5.3:1 on its darkest pixel, the 0.43 floor (F11) */
+  --scroll-thumb: #6e6a64;      /* docket scrollbar thumb when pointed at: a neutral grey, 3.3:1 on the lightest card-stock pixel */
+  --scroll-faint: rgba(110, 106, 100, 0.35);  /* the same thumb at rest, 1.45:1 on purpose */
+  --press-tint: rgba(42, 23, 9, 0.07);  /* hover tint inside the hairline buttons on the card */
   --rule-sepia: rgba(42, 23, 9, 0.35);  /* ruled lines on the phone category sheet and the order ledger */
   --paper-fold: #c9b48f;        /* the back of a folded paper corner (T8 paid slips) */
   --paper-ear: linear-gradient(45deg, var(--paper-fold) 50%, transparent 50%) top right / 26px 26px no-repeat, linear-gradient(225deg, var(--control-strong) 50%, transparent 50%) top right / 26px 26px no-repeat;
@@ -306,10 +309,10 @@ button {
 }
 .h4.price { font-weight: var(--weight-heading); } /* drink card price */
 
-/* The drink list on both pages: kelp board with rust specks and tarnish under the cards (F8) */
+/* The drink list on both pages: kelp-green board with random rust specks under the cards (F8); one 1024 px tile, gentex13.py */
 .drink_list {
-    background: url("../img/textures/rust.webp") 0 0 / 400px 200px, url("../img/textures/tarnish.webp") 0 0 / 300px 150px, url("../img/textures/board-kelp.webp") 0 0 / 512px 94px, var(--control-strong);
-    background-blend-mode: multiply, multiply, normal, normal;
+    background: url("../img/textures/board-rust.webp") 0 0 / 1024px 1024px, var(--control-strong);
+    background-blend-mode: multiply, normal;
     box-shadow: var(--shadow-well);
 }
 
@@ -377,6 +380,7 @@ footer .languages_menu {
 footer .languages_menu a {
     display: block;
     flex: none;
+    margin-top: 10px; /* the flags hang clear of the cord: the top red of the Spanish flag shows */
 }
 footer .languages_menu a:first-child { margin-left: calc(12px + 0.1 * (100cqw - 24px) - var(--fw) / 2); }
 footer .languages_menu a:last-child { margin-right: calc(12px + 0.1 * (100cqw - 24px) - var(--fw) / 2); }
@@ -656,6 +660,38 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 
 
 
+
+/* Order bars (customer and management): the rust and iron plate of the landing signs, a rivet in each upper corner of the header, and a hemp cord seam where the plate meets the ledger.
+   The textures only darken the bar colour, so the text keeps 5.11:1 (heading), 5.32:1 (total label) and 6.81:1 (amount) on the lightest pixel. Only the header carries rivets */
+.main_section > .selection_header, .main_section > .checkout {
+    position: relative;
+    background:
+        url("../img/textures/rust.webp") 0 0 / 400px 200px,
+        url("../img/textures/iron.webp") 0 0 / 400px 200px,
+        var(--bar);
+    background-blend-mode: multiply, multiply, normal;
+}
+.main_section > .selection_header {
+    background:
+        url("../img/textures/rivet.webp") left 4px top 4px / 12px 12px no-repeat,
+        url("../img/textures/rivet.webp") right 4px top 4px / 12px 12px no-repeat,
+        url("../img/textures/rust.webp") 0 0 / 400px 200px,
+        url("../img/textures/iron.webp") 0 0 / 400px 200px,
+        var(--bar);
+    background-blend-mode: normal, normal, multiply, multiply, normal;
+}
+.main_section > .selection_header::after, .main_section > .checkout::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 14px;
+    background: url("../img/textures/rope.webp") 0 0 / 100% 100%;
+    filter: drop-shadow(0 1px 1px var(--shadow-lift));
+    pointer-events: none;
+}
+.main_section > .selection_header::after { bottom: 0; }
+.main_section > .checkout::before { top: 0; }
 
 /* Landing signs (T5): riveted iron plates on the storm, white 7.36:1 or better on the worst pixel.
    index.css turns "Order your Drinks!" into brass */

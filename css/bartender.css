@@ -164,6 +164,7 @@ h1 {
 .pc::before { inset: 6px; border: 1px solid var(--rule-sepia); border-radius: var(--radius-md); }
 .pile > .pc:last-child::before { background: url("../img/textures/pip-heart.webp") center 62% / 96px 96px no-repeat; }
 .pile > .pc.paid:last-child::before { background-image: url("../img/textures/pip-spade.webp"); }
+.pile > .pc:last-child:has(.accordion.active)::before { background-image: none; } /* an open card shows the docket, and the pip behind it only adds noise */
 .pc.paid::after { top: 4px; right: 10px; width: 120px; height: 80px; background: url("../img/textures/tax-stamp.webp") center / contain no-repeat; opacity: 0.35; }
 
 /* The hand lifts the card you point at; open cards stay put */
@@ -215,35 +216,56 @@ h1 {
     cursor: zoom-in;
 }
 .accordion.active { cursor: zoom-out; }
+.pile > .pc:last-child > .accordion:not(.active)::after { content: ""; position: absolute; top: 100%; left: 0; width: 100%; height: 258px; } /* the top card opens from its whole face, not only the band (Fitts) */
 .accordion .pc_idx { grid-area: idx; align-self: start; }
 .o_who { grid-area: who; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--text-base); font-weight: var(--weight-heading); }
 .o_sum { grid-area: sum; font-size: var(--text-md); font-weight: var(--weight-heading); text-align: right; white-space: nowrap; }
-.o_when { grid-area: when; font-size: var(--text-xs); color: var(--ink-card-soft); }
+.o_when { grid-area: when; display: flex; align-items: center; gap: 3px; font-size: var(--text-xs); color: var(--ink-card-soft); }
+.o_when .icon { width: 10px; height: 10px; opacity: 0.6; } /* a quiet clock marks the time as a timestamp */
 
-/* State stamps, worn by an InkPaint 128 mask (90 % ink or more) */
+/* State stamps: inked by hand, like the stock stamps in customer.css (V2 dry ink). Worn by an InkPaint 128 mask (90 % ink or more) and a light ragged edge;
+   the frame is ::before, so the dry-ink gaps (SVG filters in bartender.html) hit the frame and not the letters. Each card has its own tilt, wear offset and noise */
 .o_state {
     grid-area: state;
     justify-self: end;
+    position: relative;
     box-sizing: border-box;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    padding: 2px 6px;
-    border: 2px solid currentColor;
-    border-radius: var(--radius-sm);
+    padding: 6px 10px; /* the frame sits 2 px inside the box, so the ragged edge is not clipped */
     font-size: var(--text-xs);
     font-weight: var(--weight-heading);
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    -webkit-mask: url("../img/textures/stamp-wear.webp") center / 160px auto;
-    mask: url("../img/textures/stamp-wear.webp") center / 160px auto;
+    text-shadow: 0 0 0.6px currentColor; /* ink bleeds a little */
+    rotate: calc(-3deg + var(--j, 0deg));
+    -webkit-mask: url("../img/textures/stamp-wear.webp") var(--mp, center) / 160px auto;
+    mask: url("../img/textures/stamp-wear.webp") var(--mp, center) / 160px auto;
 }
+.o_state::before, .stamp::before {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    border: 2px solid currentColor;
+    border-radius: var(--radius-sm);
+    pointer-events: none;
+}
+.pc:nth-child(4n+1) :is(.o_state, .stamp) { --j: 1deg;  --mp: 20% 40%; filter: url(#ink-t1); }
+.pc:nth-child(4n+2) :is(.o_state, .stamp) { --j: -2deg; --mp: 70% 10%; filter: url(#ink-t2); }
+.pc:nth-child(4n+3) :is(.o_state, .stamp) { --j: 2deg;  --mp: 40% 80%; filter: url(#ink-t3); }
+.pc:nth-child(4n+4) :is(.o_state, .stamp) { --j: -1deg; --mp: 60% 30%; filter: url(#ink-t4); }
+.pc:nth-child(4n+1) :is(.o_state, .stamp)::before { filter: url(#ink-b1); }
+.pc:nth-child(4n+2) :is(.o_state, .stamp)::before { filter: url(#ink-b2); }
+.pc:nth-child(4n+3) :is(.o_state, .stamp)::before { filter: url(#ink-b3); }
+.pc:nth-child(4n+4) :is(.o_state, .stamp)::before { filter: url(#ink-b4); }
 .o_state small, .stamp small { font-weight: var(--weight-body); letter-spacing: 0; text-transform: none; }
 .o_state small { font-size: var(--text-xs); }
 .stamp small { font-size: var(--text-md); }
-.order_open .o_state { color: var(--stamp-red); transform: rotate(-3deg); }
-.order_paid .o_state { color: var(--bar-deep); border-style: double; border-width: 3px; transform: rotate(-3deg); }
+.order_open .o_state { color: var(--stamp-red); }
+.order_paid .o_state { color: var(--bar-deep); }
+.order_paid .o_state::before { border: 3px double currentColor; }
 
 /* DOCKET: the open card grows to 284 px and shows its order lines (190 px, then scrolls), the total and the actions.
    The panel opens by animating its one grid row from 0fr to 1fr, so no height has to be measured */
@@ -253,15 +275,31 @@ h1 {
     display: grid;
     grid-template-rows: 0fr;
     visibility: hidden; /* keeps the lines and buttons out of Tab order while closed */
-    padding-inline: var(--space-4);
+    padding-inline: var(--space-4) calc(var(--space-4) - 7px);
     color: var(--ink-sepia);
     transition: grid-template-rows var(--lift-out) var(--toast-ease), visibility var(--lift-out);
 }
 .accordion.active + .panel { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows var(--lift-in) var(--toast-ease); } /* visible at once on open, so Tab reaches the buttons */
-.docket { min-height: 0; overflow: hidden; }
+.docket { min-height: 0; padding-right: 7px; overflow: hidden; } /* gives the order list's bar room to lie in the margin */
 
-.order { max-height: 190px; overflow-y: auto; border-top: 1px dashed var(--rule-sepia); }
+.order {
+    max-height: 190px;
+    overflow-y: auto;
+    margin-right: -7px; /* the bar lies in the margin the panel gives up: 7 px of it */
+    padding: 1px 6px 0 0;
+    background: repeating-linear-gradient(90deg, var(--rule-sepia) 0 4px, transparent 4px 7px) 0 0 / calc(100% - 7px) 1px no-repeat; /* the dashed top rule */
+}
 .order:focus-visible { outline-color: var(--ink-sepia); outline-offset: -3px; box-shadow: var(--shadow-none); } /* inside the docket, which clips an outer ring */
+/* The order list scrolls on a slim 2 px bar that lies in the card's margin, 4 px clear of the prices (the dashed rule is a background so it stops at the text edge).
+   Faint at rest, grey (3.3:1) when pointed at or focused. Chromium and Safari draw it; Firefox gets a thin bar in the same two greys */
+.order::-webkit-scrollbar { width: 5px; }
+.order::-webkit-scrollbar-track { background: none; }
+.order::-webkit-scrollbar-thumb { background: var(--scroll-faint); border: 1.5px solid transparent; background-clip: padding-box; border-radius: var(--radius-sm); box-shadow: var(--shadow-none); }
+.order:is(:hover, :focus-visible)::-webkit-scrollbar-thumb { background-color: var(--scroll-thumb); }
+@supports not selector(::-webkit-scrollbar) {
+    .order { scrollbar-width: thin; scrollbar-color: var(--scroll-faint) transparent; }
+    .order:is(:hover, :focus-visible) { scrollbar-color: var(--scroll-thumb) transparent; }
+}
 .order_details {
     display: grid;
     grid-template-columns: 36px minmax(0, 1fr) auto;
@@ -294,27 +332,43 @@ h1 {
     margin: var(--space-3) 0 var(--space-4);
 }
 .panel .checkout .small_button { float: none; width: auto; height: auto; min-height: 48px; padding: var(--space-1) var(--space-2); font-size: var(--text-base); }
+/* Docket buttons: hairline frames in the stamp inks (Cancel red 8.7:1, Mark as Paid deep green 11:1 on the card stock), no plate; the card is the plate */
+.panel .checkout .small_button {
+    background: none;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-none);
+    filter: none;
+    text-shadow: none;
+    font-weight: var(--weight-label);
+    letter-spacing: 0.02em;
+}
+.panel .checkout .cancel_order { color: var(--stamp-red); }
+.panel .checkout .mark_paid { color: var(--bar-deep); }
+.panel .checkout .small_button:hover { background-color: var(--press-tint); filter: none; }
+.panel .checkout .small_button:active { background-color: var(--press-tint); transform: translateY(1px); box-shadow: var(--shadow-none); filter: none; }
+.panel .checkout .small_button:focus-visible { box-shadow: 0 0 0 6px var(--ink); } /* keep the ring's dark half */
 
 .paidfor { margin: var(--space-4) 0; text-align: center; }
 .stamp {
+    position: relative;
     display: inline-block;
     max-width: 100%;
     box-sizing: border-box;
     margin: 0;
-    padding: 4px 12px;
+    padding: 8px 16px; /* the frame is ::before, inset 2 px so the ragged edge stays inside */
     font-size: var(--text-md);
     font-weight: var(--weight-heading);
     line-height: 1.15;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--bar-deep);
-    border: 4px double var(--bar-deep);
-    border-radius: var(--radius-sm);
     text-shadow: 0 0 1px var(--bar-deep); /* the ink bleeds a little */
-    transform: rotate(-4deg);
-    -webkit-mask: url("../img/textures/stamp-wear.webp") center / 260px auto;
-    mask: url("../img/textures/stamp-wear.webp") center / 260px auto;
+    rotate: calc(-4deg + var(--j, 0deg));
+    -webkit-mask: url("../img/textures/stamp-wear.webp") var(--mp, center) / 260px auto;
+    mask: url("../img/textures/stamp-wear.webp") var(--mp, center) / 260px auto;
 }
+.stamp::before { inset: 0; border: 4px double var(--bar-deep); }
 
 /*ORDER COLUMN*/
 

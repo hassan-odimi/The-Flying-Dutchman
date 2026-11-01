@@ -50,6 +50,27 @@ test('order rows and total use whole kronor, same as the drink list', async ({ p
   await expect(page.locator('#total')).toHaveText('Total: SEK 154:-');
 });
 
+// A drink the bar stocked before and has sold out of gets a round NOT STOCKED seal instead of "In Stock: 0"; a drink never carried gets its dashed pair, the Catalogue only slot
+test('a sold-out drink carries the NOT STOCKED seal and a never-carried one the Catalogue only slot, in every language', async ({ page }) => {
+  const sold = page.locator('.drink', { has: page.locator('#dn593104') }); // Chang Beer: in the stock list at 0
+  const never = page.locator('.drink', { has: page.locator('#dn25053') }); // Braastad XO: never stocked
+  await expect(sold.locator('.seal')).toHaveCount(1);
+  await expect(sold.locator('.inStock')).toHaveCount(0);
+  await expect(sold.locator('.seal .not_stocked')).toHaveText('Not stocked');
+  expect(await sold.locator('.seal svg').getAttribute('aria-hidden')).toBe('true'); // the rim text is not read
+  expect(await sold.locator('.seal').evaluate((e) => getComputedStyle(e).filter)).toContain('#rough');
+  expect(await sold.locator('.seal i').evaluate((e) => getComputedStyle(e).webkitMaskImage || getComputedStyle(e).maskImage)).toContain('anchor');
+  await expect(never.locator('.seal')).toHaveCount(0);
+  await expect(never.locator('.inStock')).toHaveCount(0);
+  await expect(never.locator('.slot .catalogue_only')).toHaveText('Catalogue only');
+  expect(await never.locator('.slot circle').evaluate((e) => getComputedStyle(e).strokeDasharray)).not.toBe('none'); // dashed, the seal's unprinted pair
+  await expect(page.locator('.drink', { has: page.locator('#dn733051') }).locator('.inStock')).toHaveText('In Stock:'); // stocked drinks keep their count
+  await page.evaluate(() => translate(1));
+  await expect(sold.locator('.seal .not_stocked')).toHaveText('Ej i lager');
+  await expect(sold.locator('.seal_txt')).toHaveText('EJ I LAGER · EJ I LAGER ·');
+  await expect(never.locator('.catalogue_only')).toHaveText('Endast katalog');
+});
+
 // F12: torn paper rows, and the shared paper ledger
 test('rows are torn paper in four variants, the stock count is 40 px, Add buttons share a row', async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
@@ -58,7 +79,7 @@ test('rows are torn paper in four variants, the stock count is 40 px, Add button
   const row = page.locator('.drink').first();
   expect(await row.evaluate((e) => getComputedStyle(e).filter)).toContain('drop-shadow');
   expect(await row.evaluate((e) => getComputedStyle(e).color)).toBe('rgb(42, 23, 9)');
-  expect(await row.evaluate((e) => getComputedStyle(e.querySelector('.c3 h2')).fontSize)).toBe('40px');
+  expect(await page.locator('.drink:has(.c3 h2) .c3 h2').first().evaluate((e) => getComputedStyle(e).fontSize)).toBe('40px'); // the first rows are never-stocked slots, so take a row with a count
   expect(await row.evaluate((e) => getComputedStyle(e.querySelector('.c2')).columnCount)).toBe('2');
   const ys = await row.locator('.add_button').evaluateAll((a) => a.map((b) => Math.round(b.getBoundingClientRect().y)));
   expect(Math.max(...ys) - Math.min(...ys)).toBeLessThan(4); // all three on one line (the row's 0.3 deg tilt moves them a pixel)
@@ -132,4 +153,19 @@ test('the receipt follows the language', async ({ page }) => {
   await expect(page.locator('.receipt_title')).toHaveText('Lagerorder');
   await expect(page.locator('.receipt_stamp')).toHaveText('Beställd');
   await expect(page.locator('.receipt_new')).toHaveText('Starta en ny order');
+});
+
+test('Your Order and Total follow the language, and the receipt number survives a log out', async ({ page }) => {
+  await page.locator('.add_button').first().click();
+  await expect(page.locator('#total')).toHaveText(/^Total: SEK \d+:-$/);
+  await page.click('#sve');
+  await expect(page.locator('#your_order')).toHaveText('Din beställning');
+  await expect(page.locator('#total')).toHaveText(/^Totalt: SEK \d+:-$/);
+  await page.click('#pay');
+  await expect(page.locator('.receipt_head')).toHaveText('Lagerorder #0001');
+  await page.click('#logout');
+  await login(page, 'management');
+  await page.locator('.add_button').first().click();
+  await page.click('#pay');
+  await expect(page.locator('.receipt_head')).toHaveText('Stock order #0002');
 });

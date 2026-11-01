@@ -77,7 +77,7 @@
 
 <h4>img:</h4>
 <ul>
-    <li><b>favicon.png:</b> Icon for browser</li>
+    <li><b>favicon.svg, favicon.png:</b> Icon for browser (brass anchor; the PNG is the fallback)</li>
     <li><b>icons.svg:</b> Interface icons (Lucide sprite)</li>
     <li><b>esp.webp:</b> Flag Spain</li>
     <li><b>eng.webp:</b> Flag Union Jack</li>

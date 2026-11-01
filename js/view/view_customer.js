@@ -34,11 +34,11 @@ var customer= ["Customer:",
                 "Pirate:"
                 ];
 
-var credit= ["Credit:",
-            "Kredit:",
-            "Credito:",
-            "Crédito:",
-            "Yu'r Loot:"
+var credit= ["Credit",
+            "Kredit",
+            "Credito",
+            "Crédito",
+            "Yu'r Loot"
 ];
 
 // The drink list panel
@@ -134,11 +134,11 @@ var hello = ["Hello ",
              "Hola ",
              "Ahoy "];
 
-var your_credit = ["Credit:",
-                   "Kredit:",
-                   "Credito:",
-                   "Crédito:",
-                   "Doubloons:" ];
+var your_credit = ["Credit",
+                   "Kredit",
+                   "Credito",
+                   "Crédito",
+                   "Doubloons" ];
 
 // Toast messages: a short title and one detail line (read together by the screen reader)
 var title_empty_order = ["Nothing to order",

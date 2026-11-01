@@ -254,6 +254,29 @@ function checkStock (article_id) {
     return counter;
 }
 
+// stocked before, now at 0: the bar may want to reorder it. A drink the bar never carried is also 0, but is not in the stock list
+function soldOut (article_id) {
+    return checkStock(article_id) == 0 && SESSION_STOCK_INFO.some(function (s) { return s.article_id == article_id; });
+}
+
+function sealRim (index) { // the name twice round the rim
+    var t = not_stocked[index].toUpperCase();
+    return t + ' · ' + t + ' ·';
+}
+
+// A round sepia postmark with the anchor in the middle. The rim text is decoration; the sr-only text is what is read
+function notStockedSeal () {
+    return '<div class="seal"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48"/><circle cx="50" cy="50" r="27"/>' +
+        '<text><textPath class="seal_txt" href="#seal_rim" textLength="224" lengthAdjust="spacing">' + sealRim(lang()) + '</textPath></text></svg>' +
+        '<i aria-hidden="true"></i><span class="sr-only not_stocked">' + not_stocked[lang()] + '</span></div>';
+}
+
+// A drink the bar never carried: the seal's dashed pair, an unprinted place. Its words are visible text, the + is decoration
+function catalogueSlot () {
+    return '<div class="slot"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48"/></svg>' +
+        '<b aria-hidden="true">+</b><span class="catalogue_only">' + catalogue_only[lang()] + '</span></div>';
+}
+
 function printToDOM (element) {
 
     var classes = '';
@@ -290,8 +313,8 @@ function printToDOM (element) {
         (element.prisperliter != null ? '<b class="cost">' + cost[lang()] + '</b> SEK '+ element.prisperliter + '<br>' : '') +
         '</div>' +
 
-        '<div class="c3">' +
-        '<h2 '+ classes +'><span class="inStock">' + inStock[lang()] + '</span> '+ checkStock(element.artikelid) +'</h2>' +
+        '<div class="c3">' + (soldOut(element.artikelid) ? notStockedSeal() : checkStock(element.artikelid) == 0 ? catalogueSlot() :
+        '<h2 '+ classes +'><span class="inStock">' + inStock[lang()] + '</span> '+ checkStock(element.artikelid) +'</h2>') +
         '</div>' +
 
         '<div class="c4">' +
@@ -385,8 +408,8 @@ function translateReceipt (index) {
     });
 }
 
-function updateTotal (){
-    $('#total').empty().append('Total: SEK ' + Math.max(big_total,0) + ':-')
+function updateTotal (index){
+    $('#total').empty().append(total_label[index === undefined ? lang() : index] + ' SEK ' + Math.max(big_total,0) + ':-')
 };
 
 function formatDate (date) {
@@ -518,11 +541,16 @@ function translate (index) {
     // <end> Translating the drink's details
 
     $(".inStock").text(inStock[index]);
+    $(".not_stocked").text(not_stocked[index]);
+    $(".seal_txt").text(sealRim(index));
+    $(".catalogue_only").text(catalogue_only[index]);
     $(".add_one").text(add_one[index]);
     $(".add_ten").text(add_ten[index]);
     $(".add_hundred").text(add_hundred[index]);
 
     $("#big_total").text(big_total[index]);
     $("#pay").text(pay[index]);
+    $("#your_order").text(your_order[index]);
+    updateTotal(index);
     translateReceipt(index);
 }

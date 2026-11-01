@@ -116,15 +116,7 @@ test('buttons darken on hover and sink when pressed; Log Out, Undo and Redo are 
   await expect.poll(() => style(page.locator('#undo'), 'filter')).toContain('brightness(1.12)');
 });
 
-test('small plates: rusty brass and rust-red buttons, and Add +1 darkens and sinks', async ({ page }) => {
-  await login(page, 'bartender');
-  await page.evaluate(() => document.querySelector('.checkout').closest('.panel').previousElementSibling.click());
-  const row = page.locator('.checkout').filter({ visible: true }).first();
-  for (const [sel, layers] of [['.cancel_order', /rust.*tarnish/], ['.mark_paid', /rust.*tarnish/]]) {
-    const bg = await style(row.locator(sel), 'backgroundImage');
-    expect(bg).toMatch(layers);
-    expect(bg).not.toContain('rivet');
-  }
+test('small plates: Add +1 is a rusty brass plate that darkens and sinks (the docket buttons are hairline frames, see the F11 test)', async ({ page }) => {
   await login(page, 'management');
   const add = page.locator('.add_button').first(), plate = add.locator('.h4');
   expect(await style(plate, 'backgroundImage')).toMatch(/rust.*tarnish/);
@@ -240,6 +232,24 @@ test('order panel: paper ledger, a note in the language while empty, one ruled g
   expect(await note()).toContain('Inget beställt');
 });
 
+test('order bars: rusty iron plates, rivets on the header only, and a rope seam towards the ledger', async ({ page }) => {
+  for (const role of ['customer', 'management']) {
+    await login(page, role);
+    const bars = page.locator('.checkout, .selection_header');
+    for (const bar of await bars.all()) {
+      if (!(await bar.isVisible())) continue; // the phone hides the header
+      const bg = await style(bar, 'backgroundImage');
+      expect(bg.includes('rivet')).toBe(await bar.evaluate((e) => e.classList.contains('selection_header')));
+      expect(bg).toContain('rust');
+      expect(bg).toContain('iron');
+  }
+  expect(await style(page.locator('.checkout'), 'backgroundImage')).not.toContain('board');
+  const rope = (sel, pseudo) => page.locator(sel).evaluate((e, p) => getComputedStyle(e, p).backgroundImage, pseudo);
+  expect(await rope('.checkout', '::before')).toContain('rope');
+  expect(await rope('.selection_header', '::after')).toContain('rope');
+  }
+});
+
 test('bartender (F11): playing-card orders on a green baize, torn tabs on the rail, the open card is a docket', async ({ page }) => {
   await login(page, 'bartender');
   const list = page.locator('.order_list');
@@ -255,8 +265,32 @@ test('bartender (F11): playing-card orders on a green baize, torn tabs on the ra
   expect(await pseudo(paid, '::after', 'opacity')).toBe('0.35');
   expect(await pseudo(page.locator('.group.waiting .pile').first().locator('.pc').last(), '::before', 'backgroundImage')).toContain('pip-heart'); // the big pip, bottom card only
   expect(await pseudo(page.locator('.group.waiting .pile').first().locator('.pc').first(), '::before', 'backgroundImage')).toBe('none');
+  await expect(open.locator('.o_when use')).toHaveAttribute('href', 'img/icons.svg#clock'); // a quiet clock marks the time
+  expect(await style(open.locator('.o_when .icon'), 'opacity')).toBe('0.6');
   await expect(open.locator('.o_state')).toHaveText('Not paid');
-  await expect(paid.locator('.o_state')).toContainText('Paid by');
+  await expect(paid.locator('.o_state')).toHaveText('Paid'); // the bartender's name is on the docket stamp
+  await expect(paid.locator('.stamp')).toContainText('Paid by');
+  // the docket's buttons are hairline frames on the card, not plates, and the order bars' rope stays off them
+  await page.locator('.pc.open .o_who').first().click({ force: true });
+  const cancel = page.locator('.pc.open .cancel_order').first();
+  expect(await style(cancel, 'backgroundImage')).toBe('none');
+  expect(await style(cancel, 'borderTopWidth')).toBe('1px');
+  expect(await style(page.locator('.pc.open .order').first(), 'marginRight')).toBe('-7px'); // the scrollbar lies in the card's margin
+  expect(await pseudo(page.locator('.pc.open .checkout').first(), '::before', 'content')).toBe('none');
+  await page.locator('.pc.open .o_who').first().click({ force: true }); // close it again
+  await page.waitForTimeout(400);
+  const bottom = page.locator('.group.waiting .pile').first().locator('.pc').last(); // the bottom card of a pile wears the big pip until it is opened
+  expect(await pseudo(bottom, '::before', 'backgroundImage')).toContain('pip-heart');
+  await bottom.locator('.o_who').click({ force: true });
+  await page.waitForTimeout(400);
+  expect(await pseudo(bottom, '::before', 'backgroundImage')).toBe('none');
+  await bottom.locator('.o_who').click({ force: true });
+  await page.waitForTimeout(400);
+  // the state stamps are inked by hand: a ragged filter on the stamp and its frame, a tilt of their own on every card
+  const tilts = await page.locator('.pc .o_state').evaluateAll((l) => l.slice(0, 4).map((e) => getComputedStyle(e).rotate));
+  expect(new Set(tilts).size).toBe(4);
+  expect(await style(open.locator('.o_state'), 'filter')).toContain('#ink-t1');
+  expect(await pseudo(open.locator('.o_state'), '::before', 'filter')).toContain('#ink-b1');
   // the tabs lie on the rail with a torn bottom; the plate is not a note
   expect(await style(page.locator('.menu'), 'marginBottom')).toBe('-24px');
   for (const [i, id] of [[1, 'all'], [2, 'unpaid'], [3, 'paid']]) expect(await style(page.locator('#' + id), 'maskImage')).toContain('tab-bottom' + i);
@@ -353,10 +387,15 @@ test('header and footer: coin credit label, swash staff titles, flags sewn on a 
   const credit = page.locator('#creditDisplay');
   await expect(credit).toBeVisible(); // on phones too
   await expect(credit.locator('img.coin')).toHaveAttribute('alt', '');
-  await expect(credit).toHaveText(/^Credit: SEK \d+:-$/);
+  await expect(credit).toHaveText(/^Credit SEK \d+:-$/);
   expect(await style(credit, 'backgroundColor')).toBe('rgba(0, 0, 0, 0)'); // a label, no plate
   const h = await page.locator('.welcome h1').boundingBox(), c = await credit.boundingBox();
   expect(h.x + h.width <= c.x || h.y + h.height <= c.y).toBe(true); // never under the greeting
+  if (page.viewportSize().width >= 1024 && page.viewportSize().height >= 600) { // one-screen grid: the credit lines up with the page
+    const [amountRight, panelRight, creditMid, greetMid] = await page.evaluate(() => { const r = (s) => document.querySelector(s).getBoundingClientRect(); return [r('.credit .amount').right, r('.selection_header').right, r('#creditDisplay').top + r('#creditDisplay').height / 2, r('.welcome h1').top + r('.welcome h1').height / 2]; });
+    expect(Math.abs(amountRight - panelRight)).toBeLessThanOrEqual(1); // ends on the order panel's right edge
+    expect(Math.abs(creditMid - greetMid)).toBeLessThanOrEqual(1); // centred on the greeting
+  }
   expect(await page.locator('[id=logout]').count()).toBe(1);
   const menu = page.locator('footer .languages_menu');
   expect(await menu.evaluate((e) => getComputedStyle(e, '::before').backgroundImage)).toContain('rope.webp');
@@ -368,7 +407,7 @@ test('header and footer: coin credit label, swash staff titles, flags sewn on a 
   expect(Math.abs(tops[0] - tops[4])).toBeLessThan(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize().width);
   await login(page, 'customer', 4);
-  await expect(page.locator('#your_credit')).toHaveText('Doubloons:');
+  await expect(page.locator('#your_credit')).toHaveText('Doubloons');
   await login(page, 'bartender');
   expect(await style(page.locator('#orders_q'), 'fontFamily')).toContain('Pirata One');
 });
@@ -463,20 +502,27 @@ test('drink cards (F8): four torn papers, warm lift on hover and focus, worn sto
   expect(await style(cards.nth(2), 'outlineStyle')).toBe('solid'); // the focus ring stays
   const list = page.locator('.drink_list');
   const bg = await style(list, 'backgroundImage');
-  for (const t of ['rust', 'tarnish', 'board-kelp']) expect(bg).toContain(t);
+  expect(bg).toContain('board-rust'); // one 1024 px tile of random specks; the old 94, 150 and 200 px tiles showed bands and columns
+  for (const t of ['tarnish', 'board-kelp']) expect(bg).not.toContain(t);
   expect(await style(list, 'boxShadow')).toContain('inset');
   const low = page.locator('.drink .low_stock').first();
   expect(await style(low, 'backgroundColor')).toBe('rgba(0, 0, 0, 0)'); // no fill: ink on paper
   expect(await style(low, 'color')).toBe('rgb(106, 18, 30)');
-  expect(await style(low, 'borderTopStyle')).toBe('double');
+  expect(await low.evaluate((e) => getComputedStyle(e, '::before').borderTopStyle)).toBe('double'); // the frame is ::before, so dry-ink gaps miss the letters
   expect(await style(low, 'textTransform')).toBe('uppercase');
-  expect(await style(low, 'rotate')).toBe('-7deg');
+  expect(parseFloat(await style(low, 'rotate'))).toBeGreaterThanOrEqual(-9); // -7 deg, jittered 2 deg per card
+  expect(parseFloat(await style(low, 'rotate'))).toBeLessThanOrEqual(-5);
   expect(await style(low, 'maskImage')).toContain('stamp-wear');
+  expect(await style(low, 'filter')).toContain('ink-t'); // ragged letters
+  expect(await low.evaluate((e) => getComputedStyle(e, '::before').filter)).toContain('ink-b'); // ragged frame with dry gaps
+  const tilts = await page.locator('.drink .low_stock').evaluateAll((l) => l.slice(0, 4).map((e) => getComputedStyle(e).rotate));
+  expect(new Set(tilts).size).toBeGreaterThan(1); // no two neighbours alike
   const out = page.locator('.drink .out_stock').first();
   expect(await style(out, 'color')).toBe('rgb(28, 20, 16)');
   expect(await style(out, 'fontSize')).toBe('20px');
   expect(await style(out, 'position')).toBe('absolute');
-  expect(await style(out, 'rotate')).toBe('-20deg');
+  expect(parseFloat(await style(out, 'rotate'))).toBeLessThanOrEqual(-18); // -20 deg, jittered 2 deg per card
+  expect(parseFloat(await style(out, 'rotate'))).toBeGreaterThanOrEqual(-22);
   const [c, s] = await out.evaluate((e) => [e.closest('.drink').getBoundingClientRect(), e.getBoundingClientRect()].map((r) => [r.left + r.width / 2, r.top + r.height / 2]));
   expect(Math.abs(c[0] - s[0])).toBeLessThan(2); // across the middle of the card
   await expect(out).toHaveText('Out of stock'); // real text for screen readers

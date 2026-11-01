@@ -69,6 +69,12 @@ function message_order_ref (order_id, index) {
     return order_word[index] + " #" + order_id.slice(1);
 }
 
+// Tabs and the Update Orders plate
+var tab_all = ["All Orders", "Alla beställningar", "Tutti gli ordini", "Todos los pedidos", "All Orders"];
+var tab_unpaid = ["Unpaid Orders", "Obetalda beställningar", "Ordini non pagati", "Pedidos sin pagar", "Unpaid Orders"];
+var tab_paid = ["Paid Orders", "Betalda beställningar", "Ordini pagati", "Pedidos pagados", "Paid Orders"];
+var tab_update = ["Update Orders", "Uppdatera beställningar", "Aggiorna ordini", "Actualizar pedidos", "Update Orders"];
+
 // Order cards (F11): pile headings, stamps, and the words only a screen reader hears
 var pile_waiting = ["Waiting", "Väntar", "In attesa", "En espera", "Waitin'"];
 var pile_paid = ["Paid", "Betalda", "Pagati", "Pagados", "Settled"];

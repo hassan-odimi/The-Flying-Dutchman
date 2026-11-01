@@ -127,7 +127,9 @@ function announceOrder(article_id, word) {
 }
 
 function logOut() { 
+    var receipt_no = localStorage.getItem("STOCK_ORDER_NO"); // the stock order numbers run on across log outs
     localStorage.clear();
+    if (receipt_no) localStorage.setItem("STOCK_ORDER_NO", receipt_no);
     window.location.href = "index.html";
 }
 

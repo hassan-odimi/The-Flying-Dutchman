@@ -42,7 +42,7 @@ test('stock badges are translated and an out-of-stock card greys its bottle', as
 
 test('management cards are compact rows and printed in the current language', async ({ page }) => {
   await login(page, 'management', 1);
-  const card = page.locator('#drink_database .drink').first();
+  const card = page.locator('#drink_database .drink:has(.inStock)').first();
   expect((await card.boundingBox()).height).toBeLessThanOrEqual(240);
   await expect(card.locator('.drink_name')).toHaveText('Namn:');
   await expect(card.locator('.inStock')).toHaveText('I lager:');

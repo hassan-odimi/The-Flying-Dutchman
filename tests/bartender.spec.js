@@ -80,8 +80,9 @@ test('fresh load: Update Orders is not lit', async ({ page }) => {
 
 test('paid stamp says "with credit" when no bartender took the payment', async ({ page }) => {
   await page.evaluate(() => { SESSIONS_TRANSACTIONS.push({ ...SESSIONS_TRANSACTIONS[0], transaction_id: 'T99998', paid: true, bartender_id: 'VIP Self-Service' }); rePrintTab(); });
-  await expect(page.locator('#T99998 .o_state')).toHaveText('Paid with credit');
-  await expect(page.locator('.o_state', { hasText: 'Paid by' }).first()).toBeVisible(); // named bartenders still print "by"
+  await expect(page.locator('#T99998 .o_state')).toHaveText('Paid'); // the card face only says Paid
+  await expect(page.locator('.pc:has(#T99998) .stamp')).toHaveText('Paid with credit');
+  await expect(page.locator('.stamp', { hasText: 'Paid by' }).first()).toBeAttached(); // named bartenders still print "by" on the docket
 });
 
 test('a card reads number, customer, time, total, state, and the total says kronor (F11)', async ({ page }) => {
@@ -129,6 +130,36 @@ test('a card opens in place: its pile and the other piles do not move, one open 
   await expect(cards.nth(0)).toBeFocused();
 });
 
+// One open card on the whole table; a click on empty table puts it down
+test('only one card is open on the table, and a click on empty table closes it', async ({ page }) => {
+  const a = page.locator('.pile').nth(0).locator('.accordion').first(), b = page.locator('.pile').nth(1).locator('.accordion').first();
+  await a.click();
+  await expect(a).toHaveAttribute('aria-expanded', 'true');
+  await b.click();
+  await expect(a).toHaveAttribute('aria-expanded', 'false'); // another pile's card closes it
+  await expect(b).toHaveAttribute('aria-expanded', 'true');
+  await page.locator('.pc:has(> .accordion.active) .order').click(); // inside the open card: stays open
+  await expect(b).toHaveAttribute('aria-expanded', 'true');
+  const w = (await page.locator('#all_orders').boundingBox()).width;
+  await page.locator('#all_orders').click({ position: { x: w - 80, y: 120 } }); // the empty baize
+  await expect(b).toHaveAttribute('aria-expanded', 'false');
+});
+
+// Fitts: the top card of each pile opens from its whole face (on the big pip), the cards under it only from their band
+test('the top card of a pile opens from anywhere on its face', async ({ page }) => {
+  const pile = page.locator('.group.waiting .pile').first();
+  const top = pile.locator('.pc').last(), btn = top.locator('.accordion');
+  await top.scrollIntoViewIfNeeded(); // mouse.click does not scroll
+  const b = await top.boundingBox();
+  await page.mouse.click(b.x + b.width / 2, b.y + b.height * 0.65); // on the pip, 250 px below the band
+  await expect(btn).toHaveAttribute('aria-expanded', 'true');
+  expect(await btn.evaluate((e) => getComputedStyle(e, '::after').height)).toBe('auto'); // closed-only: the open card drops the extension
+  await btn.click();
+  await expect(btn).toHaveAttribute('aria-expanded', 'false');
+  expect(await btn.evaluate((e) => getComputedStyle(e, '::after').height)).toBe('258px');
+  await expect(pile.locator('.pc').first().locator('.accordion')).toHaveAttribute('aria-expanded', 'false');
+});
+
 test('marking an order paid moves it to the paid pile and cancelling closes the pile up (F11)', async ({ page }) => {
   const count = () => page.locator('.group.waiting .pc').count();
   const n = await count();
@@ -141,4 +172,12 @@ test('marking an order paid moves it to the paid pile and cancelling closes the 
   await page.locator('.delete#T00018').click();
   expect(await count()).toBe(n - 2);
   await expect(page.locator('.accordion#T00018')).toHaveCount(0);
+});
+
+test('tab labels and the Update Orders plate follow the language', async ({ page }) => {
+  await page.click('#sve');
+  await expect(page.locator('#all')).toHaveText('Alla beställningar');
+  await expect(page.locator('#unpaid')).toHaveText('Obetalda beställningar');
+  await expect(page.locator('#paid')).toHaveText('Betalda beställningar');
+  await expect(page.locator('#retrieve_orders .update_label')).toHaveText('Uppdatera beställningar');
 });

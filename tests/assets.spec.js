@@ -18,6 +18,14 @@ test('every image outside drinks is used by the code and recorded in docs/ASSETS
   }
 });
 
+test('every page uses the brass anchor favicon, once, with a PNG fallback', () => {
+  for (const f of ['index', 'customer', 'bartender', 'management']) {
+    const html = fs.readFileSync(f + '.html', 'utf8');
+    expect(html.match(/<link rel="icon"[^>]*favicon\.svg/g), f).toHaveLength(1);
+    expect(html.match(/<link rel="icon"[^>]*favicon\.png/g), f).toHaveLength(1);
+  }
+});
+
 test('one small WebP per drink in the database, no orphans', () => {
   const files = fs.readdirSync('img/drinks');
   expect(files.filter((f) => !f.endsWith('.webp'))).toEqual([]);
@@ -40,7 +48,7 @@ test('customer loads only the drink images near the screen', async ({ page }) =>
 test('icons come from the local Lucide sprite: no icon font, no letter icons, every symbol exists', () => {
   const sprite = fs.readFileSync('img/icons.svg', 'utf8');
   expect(code).not.toMatch(/font-awesome|class="fa |>X</);
-  for (const [, name] of code.matchAll(/icons\.svg#([\w-]+)/g)) expect(sprite, name).toContain(`<symbol id="${name}"`);
+  for (const [, name] of code.matchAll(/icons\.svg#([\w-]+)/g)) expect(sprite, name).toContain(`<symbol id="${name}" viewBox="0 0 24 24">`); // the space matters: without it the symbol is invalid XML and the whole sprite fails
 });
 
 test('order rows remove with the brush cross; flags keep their 1.6 ratio', async ({ page }) => {

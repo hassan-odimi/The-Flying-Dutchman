@@ -51,11 +51,15 @@ $(document).ready(function() {
         });
     });
 
-    /* Card script (F11): one card open per pile, Esc closes it and gives focus back to the card */
+    /* Card script (F11): one card open on the whole table, a click on empty table or Esc closes it (Esc gives focus back to the card) */
     $(document).on('click','.accordion',function(){
         var open = !this.classList.contains("active");
-        $(this).closest('.pile').find('.accordion.active').each(function() { setOpen(this, false); });
+        $('.accordion.active').each(function() { setOpen(this, false); });
         setOpen(this, open);
+    });
+
+    $('#all_orders').on('click', function(e) {
+        if (!$(e.target).closest('.pc').length) $('.accordion.active').each(function() { setOpen(this, false); });
     });
 
     $(document).on('keydown', function(e) {
@@ -166,7 +170,7 @@ function cardHTML (element) {
         '<span class="sr-only">' + [order_word[L] + ' ' + no, name, time, total_word[L] + ' ' + element.amount + ' ' + kronor_word[L], stateText(element)].join(', ') + '</span>' +
         idx +
         '<span class="o_who" aria-hidden="true">' + name + '</span>' +
-        '<span class="o_when" aria-hidden="true">' + time + '</span>' +
+        '<span class="o_when" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#clock"/></svg>' + time + '</span>' +
         '<span class="o_sum" aria-hidden="true">' + element.amount + ':-</span>' +
         state + '</button>' +
         '<div class="panel"><div class="docket">' +
@@ -249,7 +253,7 @@ function stateText (element) { // the stamp as plain text, for the card's access
 }
 
 function paidStamp (boolean, element){
-    if (boolean) return '<span class="o_state" aria-hidden="true">' + state_paid[lang()] + ' ' + paid_by_text(element) + '</span>';
+    if (boolean) return '<span class="o_state" aria-hidden="true">' + state_paid[lang()] + '</span>'; // who took the payment is on the docket stamp
     return '<span class="o_state" aria-hidden="true">' + state_unpaid[lang()] + '</span>';
 }
 
@@ -360,6 +364,10 @@ function translate (index) {
     $("#orders_q").text(orders_q[index]);
     $("#cancel_order").text(cancel_order[index]);
     $("#mark_paid").text(mark_paid[index]);
+    $("#all").text(tab_all[index]);
+    $("#unpaid").text(tab_unpaid[index]);
+    $("#paid").text(tab_paid[index]);
+    $(".update_label").text(tab_update[index]);
     $(".new_orders_label").text(new_orders_label[index]);
     rePrintTab(); // the cards are built with the language chosen
 }
