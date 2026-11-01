@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>V12 sound cues</title>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=Pirata+One&display=swap" rel="stylesheet">
+<style>
+/* demo for docs/motion-sound-plan.md (D3, D4): every cue synthesized with Web Audio, no files */
+:root {
+  --ink-on-dark: #ffffff; --ink: #000000; --scrim: rgba(0, 0, 0, 0.45); --panel: rgba(0, 0, 0, 0.4);
+  --font-display: 'Pirata One', serif; --font-body: 'Alegreya Sans', sans-serif;
+  --text-xs: 0.8rem; --text-base: 1rem; --text-md: 1.25rem; --text-lg: 1.563rem; --text-xl: 1.953rem;
+  --weight-body: 400; --weight-label: 500; --weight-heading: 700;
+}
+* { box-sizing: border-box; }
+body { margin: 0; padding: 24px 16px 64px; color: var(--ink-on-dark); font-family: var(--font-body); font-size: var(--text-base);
+  background: linear-gradient(var(--scrim), var(--scrim)), url("../../img/wood2.jpg") center / cover fixed; }
+h1 { font-family: var(--font-display); font-size: var(--text-xl); font-weight: var(--weight-body); margin: 0 0 4px; }
+p { max-width: 70ch; }
+table { width: 100%; max-width: 980px; border-collapse: collapse; background: var(--panel); }
+th, td { padding: 8px; text-align: left; vertical-align: top; border-bottom: 1px solid rgba(255, 255, 255, 0.25); }
+th { font-weight: var(--weight-heading); }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+button { font: inherit; font-weight: var(--weight-label); padding: 6px 14px; border: 2px solid var(--ink-on-dark); border-radius: 4px; background: none; color: var(--ink-on-dark); cursor: pointer; }
+button:focus-visible { outline: 3px solid var(--ink-on-dark); box-shadow: 0 0 0 6px var(--ink); }
+.wrap { overflow-x: auto; }
+label { display: inline-flex; gap: 8px; align-items: center; }
+</style>
+</head>
+<body>
+<h1>V12 sound cues (synthesized)</h1>
+<p>Option B of D3: every cue is made in the browser with Web Audio, no files. Press Play. The length is measured by rendering each cue offline and finding the last sample above -60 dB. If the recorded option (A) is chosen, the same table gets a second Play column with the CC0 files.</p>
+<p><label>Volume <input type="range" id="vol" min="0" max="1" step="0.05" value="0.6"></label></p>
+<div class="wrap"><table>
+<thead><tr><th>Cue</th><th>Object and action</th><th>Event (D4 set)</th><th>Length</th><th>Peak</th><th></th></tr></thead>
+<tbody id="rows"></tbody>
+</table></div>
+
+<script>
+// Each cue builds its sound into `out` from time t. All are dry (no reverb) and under 1 s.
+function noise(ctx, len) {
+  var b = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * len), ctx.sampleRate), d = b.getChannelData(0);
+  for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  var s = ctx.createBufferSource(); s.buffer = b; return s;
+}
+function env(ctx, out, t, peak, attack, decay) { // gain node with a fast attack and an exponential decay to silence
+  var g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(peak, t + attack);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay);
+  g.connect(out); return g;
+}
+function tone(ctx, out, t, f, peak, decay, type) {
+  var o = ctx.createOscillator(); o.type = type || "sine"; o.frequency.value = f;
+  o.connect(env(ctx, out, t, peak, 0.003, decay)); o.start(t); o.stop(t + decay + 0.01); return o;
+}
+function burst(ctx, out, t, len, ftype, f, q, peak, decay) {
+  var n = noise(ctx, len), fl = ctx.createBiquadFilter(); fl.type = ftype; fl.frequency.value = f; fl.Q.value = q;
+  n.connect(fl); fl.connect(env(ctx, out, t, peak, 0.002, decay)); n.start(t); n.stop(t + len);
+}
+var CUES = {
+  bell: { what: "Ship's bell, two strikes", when: "New order waiting (bartender)", play: function (ctx, out, t) {
+    [0, 0.32].forEach(function (dt) { // a small bronze bell: inharmonic partials, the hum longest
+      [[1, 0.25, 0.6], [2.0, 0.12, 0.5], [2.4, 0.1, 0.4], [3.0, 0.07, 0.3], [4.2, 0.04, 0.2], [5.4, 0.03, 0.15]].forEach(function (p) {
+        tone(ctx, out, t + dt, 820 * p[0], p[1], p[2]);
+      });
+      burst(ctx, out, t + dt, 0.02, "highpass", 3000, 0.7, 0.08, 0.015); // the clapper's hit
+    });
+  } },
+  snap: { what: "Playing card dealt onto a pile", when: "New card on the table", play: function (ctx, out, t) {
+    burst(ctx, out, t, 0.12, "bandpass", 2400, 0.9, 0.35, 0.09); // slide over the baize
+    burst(ctx, out, t + 0.07, 0.03, "bandpass", 3800, 1.5, 0.5, 0.025); // the snap as it lands
+  } },
+  coin: { what: "Coin set down on wood", when: "Mark as Paid", play: function (ctx, out, t) {
+    [[0, 1], [0.09, 0.55]].forEach(function (h) { // a hit and a small rattle
+      [4100, 6300, 8900].forEach(function (f, i) { tone(ctx, out, t + h[0], f * (1 + h[0] * 0.02), 0.09 * h[1] / (i + 1), 0.28 - i * 0.06); });
+      burst(ctx, out, t + h[0], 0.02, "bandpass", 700, 2, 0.15 * h[1], 0.03); // the wood under it
+    });
+  } },
+  thud: { what: "Rubber stamp pressed on paper", when: "PAID, ORDERED", play: function (ctx, out, t) {
+    var o = ctx.createOscillator(); o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(50, t + 0.12);
+    o.connect(env(ctx, out, t, 0.6, 0.004, 0.14)); o.start(t); o.stop(t + 0.16);
+    burst(ctx, out, t, 0.06, "lowpass", 900, 0.7, 0.3, 0.05); // the pad on the paper
+  } },
+  tear: { what: "Receipt torn off the pad", when: "Place Stock Order", play: function (ctx, out, t) {
+    var len = 0.32, n = noise(ctx, len), fl = ctx.createBiquadFilter(); fl.type = "bandpass"; fl.frequency.value = 3000; fl.Q.value = 0.6;
+    var g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t);
+    for (var s = 0; s < 22; s++) { // fibres giving way one after another
+      var at = t + s * (len / 22) * (0.8 + Math.random() * 0.4); g.gain.setValueAtTime(0.05 + Math.random() * 0.25, at); g.gain.exponentialRampToValueAtTime(0.01, at + 0.012);
+    }
+    g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+    n.connect(fl); fl.connect(g); g.connect(out); n.start(t); n.stop(t + len);
+  } },
+  flick: { what: "Card flicked off the table", when: "Cancel Order", play: function (ctx, out, t) {
+    burst(ctx, out, t, 0.03, "highpass", 2500, 0.7, 0.45, 0.02);
+    var n = noise(ctx, 0.2), fl = ctx.createBiquadFilter(); fl.type = "bandpass"; fl.Q.value = 1.2;
+    fl.frequency.setValueAtTime(3500, t + 0.02); fl.frequency.exponentialRampToValueAtTime(1200, t + 0.2); // sliding away
+    n.connect(fl); fl.connect(env(ctx, out, t + 0.02, 0.2, 0.01, 0.17)); n.start(t + 0.02); n.stop(t + 0.22);
+  } },
+  rustle: { what: "Paper slip handed over", when: "Place Order (customer), set B", play: function (ctx, out, t) {
+    burst(ctx, out, t, 0.22, "lowpass", 3500, 0.5, 0.18, 0.2);
+    burst(ctx, out, t + 0.08, 0.12, "bandpass", 2000, 0.8, 0.12, 0.1);
+  } },
+  knock: { what: "Knock on a locked door", when: "Login error, set B", play: function (ctx, out, t) {
+    [0, 0.13].forEach(function (dt) { burst(ctx, out, t + dt, 0.08, "bandpass", 380, 6, 0.9, 0.07); tone(ctx, out, t + dt, 190, 0.25, 0.06); });
+  } },
+  creak: { what: "Ship's timbers creaking", when: "Ghost ship summoned, set B", play: function (ctx, out, t) {
+    var len = 0.85, o = ctx.createOscillator(); o.type = "sawtooth"; // friction: a pulse train whose rate wanders
+    o.frequency.setValueAtTime(38, t); o.frequency.linearRampToValueAtTime(62, t + 0.35); o.frequency.linearRampToValueAtTime(30, t + len);
+    var fl = ctx.createBiquadFilter(); fl.type = "bandpass"; fl.frequency.value = 650; fl.Q.value = 3;
+    var g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.35, t + 0.1);
+    g.gain.setValueAtTime(0.35, t + len - 0.25); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+    o.connect(fl); fl.connect(g); g.connect(out); o.start(t); o.stop(t + len);
+  } },
+  click: { what: "Brass plate pressed", when: "Primary plates, set C", play: function (ctx, out, t) {
+    burst(ctx, out, t, 0.015, "highpass", 4000, 0.7, 0.3, 0.01);
+    [2400, 3900, 5600].forEach(function (f, i) { tone(ctx, out, t, f, 0.05 / (i + 1), 0.07); });
+  } }
+};
+
+var live, master;
+function play(name) {
+  if (!live) { live = new AudioContext(); master = live.createGain(); master.connect(live.destination); } // made on the first press: the autoplay rule
+  live.resume();
+  master.gain.value = Number(document.getElementById("vol").value);
+  CUES[name].play(live, master, live.currentTime + 0.01);
+}
+
+// measure: render 1.2 s offline, length = last sample above -60 dB (0.001), peak in dBFS
+function measure(name) {
+  var off = new OfflineAudioContext(1, 48000 * 1.2, 48000);
+  CUES[name].play(off, off.destination, 0);
+  return off.startRendering().then(function (buf) {
+    var d = buf.getChannelData(0), last = 0, peak = 0;
+    for (var i = 0; i < d.length; i++) { var a = Math.abs(d[i]); if (a > 0.001) last = i; if (a > peak) peak = a; }
+    return { name: name, ms: Math.round(last / 48), peakDb: Math.round(20 * Math.log10(peak) * 10) / 10 };
+  });
+}
+
+var rows = document.getElementById("rows");
+Object.keys(CUES).forEach(function (k) {
+  rows.insertAdjacentHTML("beforeend", '<tr><th scope="row">' + k + '</th><td>' + CUES[k].what + '</td><td>' + CUES[k].when +
+    '</td><td class="num" id="len_' + k + '">…</td><td class="num" id="pk_' + k + '">…</td><td><button data-cue="' + k + '">Play</button></td></tr>');
+});
+rows.onclick = function (e) { var b = e.target.closest("button"); if (b) play(b.dataset.cue); };
+window.measured = Promise.all(Object.keys(CUES).map(measure)).then(function (all) {
+  all.forEach(function (m) { document.getElementById("len_" + m.name).textContent = m.ms + " ms"; document.getElementById("pk_" + m.name).textContent = m.peakDb + " dBFS"; });
+  return all;
+});
+</script>
+</body>
+</html>

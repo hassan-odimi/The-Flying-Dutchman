@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>V12 motion options</title>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=Pirata+One&display=swap" rel="stylesheet">
+<style>
+/* demo for docs/motion-sound-plan.md; values copied from css/style.css :root, plus the proposed --settle-ease */
+:root {
+  --toast-open: 350ms; --toast-close: 250ms; --toast-distance: 16px;
+  --toast-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --lift-in: 150ms; --lift-out: 250ms;
+  --settle-ease: cubic-bezier(0.34, 1.36, 0.64, 1); /* proposed: 4.3 % overshoot at 64 % */
+  --ink-on-dark: #ffffff; --ink: #000000; --ink-sepia: #2a1709;
+  --stamp-red: #8b0000; --bar-deep: #254540; --stamp-green: #0f3d18;
+  --shadow-lift: rgba(0, 0, 0, 0.65); --scrim: rgba(0, 0, 0, 0.45);
+  --paper: #e9dfc8; --badge-grey: #767676; --rule: rgba(42, 23, 9, 0.35);
+  --font-display: 'Pirata One', serif; --font-body: 'Alegreya Sans', sans-serif;
+  --text-xs: 0.8rem; --text-base: 1rem; --text-md: 1.25rem; --text-lg: 1.563rem; --text-xl: 1.953rem;
+  --weight-body: 400; --weight-label: 500; --weight-heading: 700;
+}
+* { box-sizing: border-box; }
+body { margin: 0; padding: 24px 16px 64px; color: var(--ink-on-dark); font-family: var(--font-body); font-size: var(--text-base);
+  background: linear-gradient(var(--scrim), var(--scrim)), url("../../img/wood2.jpg") center / cover fixed; }
+h1 { font-family: var(--font-display); font-size: var(--text-xl); font-weight: var(--weight-body); margin: 0 0 4px; }
+h2 { font-size: var(--text-lg); font-weight: var(--weight-heading); margin: 40px 0 4px; }
+p.lede { margin: 0 0 12px; max-width: 70ch; }
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.opt { padding: 12px; border-radius: 8px; background: rgba(0, 0, 0, 0.35); }
+.opt h3 { margin: 0 0 4px; font-size: var(--text-md); font-weight: var(--weight-heading); }
+.opt p { margin: 0 0 8px; font-size: var(--text-xs); }
+.go { font: inherit; font-weight: var(--weight-label); padding: 6px 14px; border: 2px solid var(--ink-on-dark); border-radius: 4px; background: none; color: var(--ink-on-dark); cursor: pointer; }
+.go:focus-visible, .mute:focus-visible { outline: 3px solid var(--ink-on-dark); box-shadow: 0 0 0 6px var(--ink); }
+label.rm { display: inline-flex; gap: 8px; align-items: center; margin: 8px 0; }
+
+/* 1. baize with a pile */
+.table { position: relative; height: 300px; margin-top: 8px; border: 10px solid transparent; border-radius: 12px; overflow: hidden;
+  background: url("../../img/textures/felt-green.webp") 0 0 / 256px; box-shadow: inset 0 0 50px var(--shadow-lift); }
+.pile { position: absolute; left: 50%; top: 16px; width: 150px; margin-left: -75px; display: grid; grid-auto-rows: 44px; }
+.pc { width: 150px; height: 210px; border-radius: 10px; padding: 8px 10px; color: var(--stamp-red);
+  background: url("../../img/textures/card-face.webp") 0 0 / 100% 100%, var(--paper);
+  box-shadow: 0 1px 2px var(--shadow-lift), 0 3px 8px var(--shadow-lift); rotate: -0.5deg; }
+.pc:nth-child(even) { rotate: 0.5deg; }
+.pc b { font-family: var(--font-display); font-size: var(--text-lg); font-weight: var(--weight-body); }
+.pc span { color: var(--ink-sepia); font-weight: var(--weight-heading); margin-left: 6px; }
+/* A: dealt from the side */
+@keyframes deal { from { translate: calc(-1 * var(--toast-distance)) calc(-1 * var(--toast-distance)); rotate: -4deg; opacity: 0; } 30% { opacity: 1; } }
+.a .dealt { animation: deal var(--deal-dur, var(--toast-open)) var(--settle-ease); }
+/* B: placed from above */
+@keyframes place { from { scale: 1.04; opacity: 0; box-shadow: 0 3px 5px var(--shadow-lift), 0 14px 22px var(--shadow-lift); } 30% { opacity: 1; } }
+.b .dealt { animation: place var(--toast-open) var(--settle-ease); }
+/* C: fade */
+@keyframes fade { from { opacity: 0; } }
+.c .dealt { animation: fade var(--lift-out) var(--toast-ease); }
+
+/* 2. stamps */
+.sheet { position: relative; height: 150px; margin-top: 8px; border-radius: 8px; display: grid; place-items: center;
+  background: url("../../img/textures/card-face.webp") 0 0 / 100% 100%, var(--paper); }
+.stamp { padding: 6px 14px; border: 3px double currentColor; border-radius: 4px; color: var(--bar-deep); font-weight: var(--weight-heading);
+  font-size: var(--text-md); letter-spacing: 0.08em; text-transform: uppercase; rotate: -6deg;
+  mask: url("../../img/textures/stamp-wear.webp") center / 200px auto; }
+.stamp.hide { visibility: hidden; }
+@keyframes press { from { scale: 1.12; opacity: 0; } 40% { opacity: 1; } }
+@keyframes soak { from { opacity: 0.4; } }
+.a .stamp.on { animation: press var(--lift-out) var(--settle-ease); }
+.b .stamp.on { animation: soak var(--lift-out) var(--toast-ease); }
+
+/* 3. footers */
+.foot { position: relative; display: flex; align-items: center; gap: 10px; min-height: 64px; margin-top: 8px; padding: 8px; border-radius: 6px; background: rgba(0, 0, 0, 0.25); flex-wrap: wrap; }
+.plate { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border: 0; color: var(--ink-on-dark);
+  font: inherit; font-size: var(--text-md); font-weight: var(--weight-label); text-shadow: 0 1px 1px var(--ink); cursor: pointer;
+  background: url("../../img/textures/plate-worn.webp") 0 0 / 100% 100% no-repeat; filter: drop-shadow(0 2px 3px var(--shadow-lift)); }
+.plate:hover { filter: brightness(1.12) drop-shadow(0 2px 3px var(--shadow-lift)); }
+.plate:active { translate: 0 1px; }
+.plate.square { width: 44px; padding: 0; justify-content: center; }
+.plate svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.plate .off { display: none; }
+.plate[aria-pressed="false"] .on { display: none; }
+.plate[aria-pressed="false"] .off { display: inline; }
+.flags { display: flex; gap: 6px; }
+.flags img { width: 48px; height: 30px; border-radius: 3px; }
+.badge { margin-left: auto; padding: 6px 10px; background: var(--badge-grey); color: var(--ink-on-dark); font-weight: var(--weight-heading); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.note-hint { width: 100%; font-size: var(--text-xs); }
+
+/* 4. toast and mist */
+.board { position: relative; height: 230px; margin-top: 8px; border-radius: 6px; overflow: hidden; isolation: isolate; background: rgba(0, 0, 0, 0.25); }
+.board::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; bottom: -40px; height: 220px; opacity: 0;
+  background: url("../../img/textures/mist.webp") 0 0 / 1400px 220px repeat-x; transition: opacity var(--toast-close) var(--toast-ease); }
+.board.open::before { opacity: 0.9; transition-duration: var(--toast-open); animation: drift 40s linear infinite; }
+.a .board.open::before { animation-iteration-count: 0.125; animation-fill-mode: forwards; } /* 5 s of the 40 s loop */
+.b .board.open::before { animation: none; }
+@keyframes drift { to { background-position-x: 1400px; } }
+.toast { position: absolute; left: 50%; bottom: 20px; width: 240px; margin-left: -120px; padding: 14px 18px; color: var(--ink-sepia);
+  border: 18px solid transparent; border-image: url("../../img/textures/note.webp") 40 fill / 18px stretch;
+  opacity: 0; translate: 0 var(--toast-distance); transition: opacity var(--toast-close) var(--toast-ease), translate var(--toast-close) var(--toast-ease); }
+.board.open .toast { opacity: 1; translate: 0 0; transition-duration: var(--toast-open); }
+.toast b { display: block; font-size: var(--text-md); }
+.clock { font-variant-numeric: tabular-nums; margin-left: 8px; }
+
+/* reduced motion: the switch below copies the media query */
+@media (prefers-reduced-motion: reduce) { *, *::before { animation: none !important; transition: none !important; } }
+.rm-on *, .rm-on *::before { animation: none !important; transition: none !important; }
+</style>
+</head>
+<body>
+<h1>V12 motion options</h1>
+<p class="lede">Each option uses the real textures and the project's motion tokens, plus the one proposed token, <code>--settle-ease</code>. Press a button to replay. Recommended option first.</p>
+<label class="rm"><input type="checkbox" id="rm"> Show what reduced motion does</label>
+
+<h2>D1. A new order card arrives</h2>
+<p class="lede">Bartender, after Update Orders. Three cards already on the pile; the new one is laid on top.</p>
+<div class="opts">
+  <div class="opt a"><h3>A. Dealt from the side (recommended)</h3><p>16 px slide, -4 deg tilt that settles flat, settle ease.</p><label class="rm">Speed <select id="dealdur"><option value="350ms">350 ms (today's open)</option><option value="400ms" selected>400 ms</option><option value="500ms">500 ms</option></select></label> <button class="go deal">Deal a card</button><div class="table"><div class="pile"></div></div></div>
+  <div class="opt b"><h3>B. Placed from above</h3><p>Scale 1.04 to 1, shadow from lifted to resting, 350 ms.</p><button class="go deal">Deal a card</button><div class="table"><div class="pile"></div></div></div>
+  <div class="opt c"><h3>C. Fade in</h3><p>Opacity only, 250 ms.</p><button class="go deal">Deal a card</button><div class="table"><div class="pile"></div></div></div>
+</div>
+
+<h2>D2. A stamp lands</h2>
+<p class="lede">PAID on a card (bartender) and ORDERED on the receipt (management) use the same press.</p>
+<div class="opts">
+  <div class="opt a"><h3>A. Pressed down (recommended)</h3><p>1.12 to 1 and opacity 0 to 1, 250 ms, settle ease.</p><button class="go stampit">Stamp</button><div class="sheet"><p class="stamp">Paid</p></div></div>
+  <div class="opt b"><h3>B. Ink soaks in</h3><p>Opacity 0.4 to 1, no movement, 250 ms.</p><button class="go stampit">Stamp</button><div class="sheet"><p class="stamp">Paid</p></div></div>
+  <div class="opt c"><h3>C. No motion</h3><p>The stamp is simply there.</p><button class="go stampit">Stamp</button><div class="sheet"><p class="stamp">Paid</p></div></div>
+</div>
+
+<h2>D5. The mute control</h2>
+<p class="lede">Press to toggle. Off by default. The plate is the existing Log Out plate (white 5.5:1 at rest, 4.58:1 on hover, measured in F6).</p>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></symbol>
+  <symbol id="bell-off" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742"/><path d="m2 2 20 20"/><path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05"/></symbol>
+</defs></svg>
+<div class="opts">
+  <div class="opt"><h3>A. Footer plate, icon and word (recommended)</h3><p>Next to Log Out. The word stays at every width.</p>
+    <div class="foot"><button class="plate">Log Out</button><button class="plate mute" aria-pressed="false"><svg class="on" aria-hidden="true"><use href="#bell"/></svg><svg class="off" aria-hidden="true"><use href="#bell-off"/></svg>Sound</button>
+    <span class="flags"><img src="../../img/textures/flag-eng.webp" alt=""><img src="../../img/textures/flag-sve.webp" alt=""><img src="../../img/textures/flag-pirate.webp" alt=""></span>
+    <span class="note-hint" hidden>Sound starts after your first click.</span></div></div>
+  <div class="opt"><h3>B. Footer plate, icon only</h3><p>44 px square; the word is for screen readers only.</p>
+    <div class="foot"><button class="plate">Log Out</button><button class="plate square mute" aria-pressed="false"><svg class="on" aria-hidden="true"><use href="#bell"/></svg><svg class="off" aria-hidden="true"><use href="#bell-off"/></svg><span class="sr">Sound</span></button>
+    <span class="flags"><img src="../../img/textures/flag-eng.webp" alt=""><img src="../../img/textures/flag-sve.webp" alt=""><img src="../../img/textures/flag-pirate.webp" alt=""></span></div></div>
+  <div class="opt"><h3>C. Header, by the nameplate</h3><p>Top right. The landing and customer pages have no nameplate.</p>
+    <div class="foot"><button class="plate mute" aria-pressed="false"><svg class="on" aria-hidden="true"><use href="#bell"/></svg><svg class="off" aria-hidden="true"><use href="#bell-off"/></svg>Sound</button><span class="badge">Bartender: Bart</span></div></div>
+</div>
+
+<h2>D6. The mist and the 5 second rule</h2>
+<p class="lede">A real "Order paid" toast stays 8.26 s (English). The clock shows how long the mist has moved.</p>
+<div class="opts">
+  <div class="opt a"><h3>A. Drift 5 s, then hang still (recommended)</h3><p>Same speed, fractional iteration count.</p><button class="go toastit" data-ms="8260">Show toast</button><span class="clock"></span><div class="board"><div class="toast"><b>Order paid</b>Paid from your credit.</div></div></div>
+  <div class="opt b"><h3>B. No drift</h3><p>The mist only fades in and out.</p><button class="go toastit" data-ms="8260">Show toast</button><span class="clock"></span><div class="board"><div class="toast"><b>Order paid</b>Paid from your credit.</div></div></div>
+  <div class="opt c"><h3>C. Drift, toast capped at 5 s</h3><p>Less reading time.</p><button class="go toastit" data-ms="5000">Show toast</button><span class="clock"></span><div class="board"><div class="toast"><b>Order paid</b>Paid from your credit.</div></div></div>
+</div>
+
+<script>
+var no = 20;
+document.querySelectorAll(".pile").forEach(function (pile) {
+  for (var i = 0; i < 3; i++) pile.insertAdjacentHTML("beforeend", card(no - i));
+});
+function card(n) { return '<div class="pc"><b>' + n + '</b><span>Zuleika</span></div>'; }
+document.querySelectorAll(".deal").forEach(function (b) {
+  b.onclick = function () {
+    var pile = b.parentNode.querySelector(".pile"), top = Number(pile.firstChild.querySelector("b").textContent) + 1;
+    if (pile.children.length > 4) pile.lastChild.remove();
+    pile.insertAdjacentHTML("afterbegin", card(top));
+    pile.firstChild.classList.add("dealt");
+  };
+});
+document.querySelectorAll(".stampit").forEach(function (b) {
+  b.onclick = function () {
+    var s = b.parentNode.querySelector(".stamp");
+    s.classList.remove("on"); s.classList.add("hide");
+    setTimeout(function () { s.classList.remove("hide"); s.classList.add("on"); }, 200);
+  };
+});
+document.querySelectorAll(".mute").forEach(function (b) {
+  b.onclick = function () {
+    var on = b.getAttribute("aria-pressed") != "true";
+    b.setAttribute("aria-pressed", on);
+    var hint = b.parentNode.querySelector(".note-hint"); if (hint) hint.hidden = true; // here the click itself is the first gesture
+  };
+});
+document.querySelectorAll(".toastit").forEach(function (b) {
+  b.onclick = function () {
+    var board = b.parentNode.querySelector(".board"), clock = b.parentNode.querySelector(".clock"), t0 = performance.now();
+    board.classList.remove("open"); void board.offsetWidth; board.classList.add("open");
+    clearInterval(b.timer);
+    b.timer = setInterval(function () {
+      var anim = board.getAnimations({ subtree: true }).find(function (a) { return a.animationName == "drift"; });
+      var moving = anim && anim.playState == "running";
+      clock.textContent = ((performance.now() - t0) / 1000).toFixed(1) + " s, mist " + (moving ? "moving" : "still");
+    }, 100);
+    setTimeout(function () { board.classList.remove("open"); clearInterval(b.timer); clock.textContent = ""; }, Number(b.dataset.ms));
+  };
+});
+var dd = document.getElementById("dealdur");
+dd.onchange = function () { document.querySelector(".opt.a").style.setProperty("--deal-dur", dd.value); };
+dd.onchange();
+document.getElementById("rm").onchange = function () { document.body.classList.toggle("rm-on", this.checked); };
+</script>
+</body>
+</html>
