@@ -628,11 +628,12 @@ body {
     div.order{
     }
     footer{
-        height: 0px;
+        padding-bottom: var(--space-3);
     }
-    footer .small_button{
+    footer .small_button:not(#sound){
         display: none;
     }
+    footer #sound { display: block; float: none; width: auto; min-height: 44px; margin: var(--space-2) auto 0; padding: 0 24px; } /* V12: under the flags, with its word, like the phone's other plates */
 
     div.menu{
         display: none;
@@ -714,12 +715,16 @@ body {
     #logout_phone { position: absolute; top: 63px; right: 8px; left: auto; float: none; margin: 0; width: auto; padding: 0 12px; min-height: 44px; } /* fixed on the menu row: a floated box would wrap by the label's width */ /* hugs its label; the words stay visible in every language */
 }
 
-/* 320px: the greeting and credit label share one row; Undo, Redo and Log Out share the menu row, Spanish included */
-@media (max-width: 359px) {
+/* up to 389px: Undo, Redo and Log Out share the menu row; Spanish (Cerrar Sesión) overlapped Redo at 360 and 375px */
+@media (max-width: 389px) {
     footer .undo_redo_menu { gap: 2px; }
     footer .undo_redo_menu button { padding: 0 3px; }
     footer .undo_redo_menu .anchor { width: 1.1em; height: 1.1em; }
     #logout_phone { padding: 0 4px; }
+}
+
+/* 320px: the greeting and credit label share one row */
+@media (max-width: 359px) {
     .welcome h1{ font-size: var(--text-md); margin-top: 12px; max-width: calc(100% - 128px); }
     .credit{ padding: 6px 8px; column-gap: 6px; }
     .credit .coin{ width: 24px; height: 24px; }

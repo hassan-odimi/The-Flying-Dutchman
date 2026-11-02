@@ -95,6 +95,8 @@
   --lift-distance: 2px;  /* card hover: quick in, slower out */
   --lift-in: 150ms;
   --lift-out: 250ms;
+  --settle-ease: cubic-bezier(0.34, 1.36, 0.64, 1); /* things that land: 4.3 % overshoot at 64 % of the time (transitions-dev --ease-bounce) */
+  --deal-dur: 400ms; /* a card dealt onto the pile (D1) */
 }
 
 /* Type and spacing scale (V1): 1.25 ratio in rem, so text zooms; 4 px spacing steps */
@@ -436,6 +438,9 @@ footer .languages_menu a:nth-child(2) .languages { translate: 0 3.4px; rotate: a
 footer .languages_menu a:nth-child(3) .languages { translate: 0 6px; }
 footer .languages_menu a:nth-child(4) .languages { translate: 0 3.4px; rotate: atan2(-25.6px, 100cqw - 24px); }
 footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: atan2(-51.2px, 100cqw - 24px); }
+@keyframes swing { 30% { transform: rotate(3deg); } 65% { transform: rotate(-1deg); } } /* a cloth flag tugged on its cord */
+footer .languages.swing { animation: swing calc(2 * var(--lift-out)) var(--settle-ease); }
+@media (prefers-reduced-motion: reduce) { footer .languages.swing { animation: none; } }
 @media (max-width: 768px) {
     footer .languages_menu { --fw: 56px; }
     footer .languages_menu a { min-height: 44px; } /* 56x35 flags, 44px phone target */
@@ -456,6 +461,14 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 @media (max-width: 359px) {
     footer .languages_menu { --fw: 46px; }
 }
+/* V12: the Sound plate and its word need room on the order and stock pages (Spanish is the widest), so their flag line is smaller below 1250px */
+@media (min-width: 769px) and (max-width: 1249px) {
+    footer:has(#pay) button.small_button { padding-inline: 12px; }
+    footer:has(#pay) .languages_menu { --fw: 34px; width: 210px; }
+}
+@media (min-width: 769px) and (max-width: 999px) { footer:has(#pay) .languages_menu { --fw: 30px; width: 180px; } }
+@media (min-width: 769px) and (max-width: 899px) { footer:has(#pay) { flex-wrap: wrap; row-gap: 8px; } footer:has(#pay) #sound { order: 1; } } /* the plate drops to a second row when Spanish does not fit */
+@media (min-width: 1250px) { footer:has(#pay) .languages_menu { --fw: 56px; width: 400px; } }
 
 /*UNDO-REDO MENU*/
 
@@ -584,7 +597,7 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 
 /* Worn iron plates (F6): Log Out, Undo, Redo, and Update Orders on the bartender page (F7). One chipped plate texture (Texturelabs Metal 155 + 132), quieter than the brass Place Order.
    The drop shadow follows the chipped outline; box-shadow would draw a rectangle. White 4.83:1 or better on the worst pixel */
-#logout, #logout_phone, #undo, #redo, #retrieve_orders {
+#logout, #logout_phone, #undo, #redo, #retrieve_orders, #sound {
     background: url("../img/textures/plate-worn.webp") 0 0 / 100% 100% no-repeat;
     border: 0;
     border-radius: 0;
@@ -596,10 +609,13 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 }
 #logout, #logout_phone { rotate: -0.6deg; }
 #redo { rotate: 0.8deg; }
-#logout:hover, #logout_phone:hover, #undo:hover, #redo:hover, #retrieve_orders:hover { filter: brightness(1.12) drop-shadow(0 2px 3px var(--shadow-lift)); }
-#logout:active, #logout_phone:active, #undo:active, #redo:active, #retrieve_orders:active { transform: translateY(1px); filter: drop-shadow(0 1px 2px var(--shadow-lift)); box-shadow: var(--shadow-none); }
+/* V12: sound is on but the browser has not yet allowed audio (needs a first press or key); gone after it */
+.sound_wait { position: absolute; max-width: calc(100% - 2 * var(--space-3)); padding: var(--space-1) var(--space-3); background: var(--ink); color: var(--ink-on-dark); font-size: var(--text-xs); font-weight: var(--weight-label); }
+.sound_wait[hidden] { display: none; }
+#logout:hover, #logout_phone:hover, #undo:hover, #redo:hover, #retrieve_orders:hover, #sound:hover { filter: brightness(1.12) drop-shadow(0 2px 3px var(--shadow-lift)); }
+#logout:active, #logout_phone:active, #undo:active, #redo:active, #retrieve_orders:active, #sound:active { transform: translateY(1px); filter: drop-shadow(0 1px 2px var(--shadow-lift)); box-shadow: var(--shadow-none); }
 
-#logout:focus-visible, #logout_phone:focus-visible, #undo:focus-visible, #redo:focus-visible, #retrieve_orders:focus-visible { box-shadow: 0 0 0 6px var(--ink); } /* keep the ring's dark half that box-shadow: none above would drop */
+#logout:focus-visible, #logout_phone:focus-visible, #undo:focus-visible, #redo:focus-visible, #retrieve_orders:focus-visible, #sound:focus-visible { box-shadow: 0 0 0 6px var(--ink); } /* keep the ring's dark half that box-shadow: none above would drop */
 
 /* Anchor icon (F6) for Undo and Redo: the arrow's turn direction, as a tilt. Undo counter-clockwise, Redo clockwise */
 .anchor {
@@ -614,8 +630,8 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 #redo .anchor { rotate: 32deg; }
 
 @media (prefers-reduced-motion: reduce) {
-    .menu li button, .red, .blue, .light_green, .add_button .h4, .flipper, #login, #close, .close_window, #logout, #logout_phone, #undo, #redo, #retrieve_orders { transition: none; }
-    .red:active, .blue:active, .light_green:active, .add_button:active .h4, .flipper:active, #login:active, #close:active, .close_window:active, #logout:active, #logout_phone:active, #undo:active, #redo:active, #retrieve_orders:active { transform: none; }
+    .menu li button, .red, .blue, .light_green, .add_button .h4, .flipper, #login, #close, .close_window, #logout, #logout_phone, #undo, #redo, #retrieve_orders, #sound { transition: none; }
+    .red:active, .blue:active, .light_green:active, .add_button:active .h4, .flipper:active, #login:active, #close:active, .close_window:active, #logout:active, #logout_phone:active, #undo:active, #redo:active, #retrieve_orders:active, #sound:active { transform: none; }
 }
 
 /* COLORS */
@@ -739,6 +755,7 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 }
 
 /* one ruled row: quantity | bottle | name | price | remove (only the remove is a button) */
+@keyframes row-lay { from { translate: 0 calc(-2 * var(--lift-distance)); opacity: 0; } } /* a line written on the ledger */
 #drink_selection .order {
     position: relative;
     display: grid;
@@ -821,8 +838,10 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 
 #drink_selection .order:has(.delete:is(:hover, :focus-visible)) img { opacity: 0.45; }
 
+#drink_selection .order.laid { animation: row-lay var(--lift-out) var(--toast-ease); }
 @media (prefers-reduced-motion: reduce) {
     #drink_selection .order::after, #drink_selection .order img { transition: none; }
+    #drink_selection .order.laid { animation: none; }
 }
 
 #drink_selection:empty {
@@ -956,7 +975,7 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
     opacity: 0;
     translate: -50% var(--toast-distance);
     pointer-events: none;
-    animation: mist-drift 40s linear infinite paused;
+    animation: mist-drift 40s linear 0.125 forwards paused; /* 5 s of drift, then still (WCAG 2.2.2) */
     transition: opacity var(--toast-close) var(--toast-ease), translate var(--toast-close) var(--toast-ease);
 }
 .toast_wrap::after {
@@ -964,7 +983,7 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
     height: 220px;
     background-size: 1027px 220px;
     --tile: 1027px;
-    animation: mist-drift 55s linear infinite reverse paused;
+    animation: mist-drift 55s linear 0.0909 reverse forwards paused;
 }
 .toast_wrap:has(.is-open)::before, .toast_wrap:has(.is-open)::after {
     opacity: 0.95;
@@ -973,6 +992,9 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
     transition: opacity var(--toast-open) var(--toast-ease), translate var(--toast-open) var(--toast-ease);
 }
 .toast_wrap:has(.is-open)::after { opacity: 0.75; }
+/* V12: a stamp pressed onto paper, a slip laid down */
+@keyframes stamp-press { from { scale: 1.12; opacity: 0; } 40% { opacity: 1; } }
+@keyframes slip-lay { from { translate: 0 calc(-1 * var(--toast-distance)); rotate: 1.5deg; opacity: 0; } 40% { opacity: 1; } }
 @keyframes mist-drift { to { background-position-x: var(--tile, 1400px); } } /* one tile, so the loop is seamless */
 
 @media (max-width: 768px) {

@@ -28,6 +28,7 @@ $(document).ready(function() {
     t1 = window.setInterval(function() {checkOnOrders()}, 2000);
     function checkOnOrders() {
         if (localStorage.getItem("NEWORDER") == 1) {
+            if (!$("#retrieve_orders").hasClass("has-new")) { announce(tab_update[lang()] + new_orders_label[lang()]); sound("bell"); } // once per batch (WCAG 4.1.3)
             $("#retrieve_orders").addClass("has-new");
             localStorage.setItem("NEWORDER", 0);
         }          
@@ -39,7 +40,8 @@ $(document).ready(function() {
             $("#retrieve_orders").removeClass("has-new");
             updateTransactions();
             clearUndone();
-            clearDone();      }
+            done = []; pushStateTo(done); $("#undo").addClass("fade"); // the new orders are the new starting point: Undo must not roll back past them
+        }
     });
     
     // filter orders by category
@@ -103,7 +105,8 @@ $(document).ready(function() {
         sessionStorage.setItem("SESSION_STOCK_INFO",JSON.stringify(SESSION_STOCK_INFO));
 
 
-        rePrintTab(); // the pile closes up
+        animated(rePrintTab); // the pile closes up
+        sound("flick");
         /* Undo-Redo */
         pushStateTo(done);  // update done stack
         clearUndone();      // clear undone stack after a 'proper' action
@@ -132,7 +135,10 @@ $(document).ready(function() {
         /* Update DOM */
         current_tab = "all";
         highlightTab("*#all");
-        rePrintTab();
+        stamping = find_transaction_id;
+        animated(rePrintTab);
+        sound("coin");
+        setTimeout(function () { sound("stamp"); }, 250 + 119); // the stamp comes down after the 250 ms glide and touches the paper 119 ms into its press
         
         /* Undo-Redo */
         pushStateTo(done);  // update done stack
@@ -165,7 +171,9 @@ function cardHTML (element) {
     var L = lang(), no = parseInt(element.transaction_id.slice(1), 10), time = element.timestamp.split(' ')[1].slice(0, 5);
     var idx = '<span class="pc_idx" aria-hidden="true"><b>' + no + '</b><i></i></span>', name = getCustomerName(element.customer_id);
     var state = paidStamp(element.paid, element);
-    var content = '<div class="pc ' + (element.paid ? 'paid' : 'open') + '">' +
+    var n = fresh.indexOf(element.transaction_id);
+    var content = '<div class="pc ' + (element.paid ? 'paid' : 'open') + (n > -1 ? ' dealt' : '') + (element.transaction_id == stamping ? ' stamped' : '') + '"' +
+        ' style="' + (n > -1 ? '--n: ' + Math.min(n, 2) : 'view-transition-name: ' + element.transaction_id) + '">' +
         '<button type="button" class="accordion ' + (element.paid ? 'order_paid' : 'order_open') + '" aria-expanded="false" id="'+ element.transaction_id +'">' +
         '<span class="sr-only">' + [order_word[L] + ' ' + no, name, time, total_word[L] + ' ' + element.amount + ' ' + kronor_word[L], stateText(element)].join(', ') + '</span>' +
         idx +
@@ -287,7 +295,7 @@ function undo() {
     if (done.length <= 1) { $("#undo").addClass("fade"); }
   
     // reprint state
-    rePrintTab();
+    animated(rePrintTab);
 }
 
 function redo() {
@@ -303,14 +311,12 @@ function redo() {
     if (undone.length < 1) { $("#redo").addClass("fade"); }
     
     // reprint state
-    rePrintTab();
+    animated(rePrintTab);
 }
 
 function setStateTo(newState) {  // change the entire state beeing displayed
     // clear current state description
     SESSIONS_TRANSACTIONS = [];
-
-    $("#all_orders").empty();
 
     // add the orders from the the newState
     $.each(newState, function(index, element) {        
@@ -337,12 +343,25 @@ function clearUndone() {
     $("#redo").addClass("fade");
 }
 
+// V12: cards glide to their new places (View Transitions). Not under reduced motion, and not where the browser lacks the API
+function animated(change) {
+    if (!document.startViewTransition || matchMedia("(prefers-reduced-motion: reduce)").matches) return change();
+    document.startViewTransition(change);
+}
+
+var seen = null, fresh = [], stamping = null; // ids already printed (null before the first print, so the first table is not dealt); ids dealt now; id just paid
+
 function rePrintTab() {   // reprint the currently displayed tab: waiting piles, then the paid pile(s)
+    fresh = seen ? $.map(SESSIONS_TRANSACTIONS, function(o) { return seen[o.transaction_id] ? null : o.transaction_id; }) : [];
+    seen = seen || {};
+    if (fresh.length) setTimeout(function () { sound("deal"); }, 190); // once per batch, as the first card touches the pile (47 % of 400 ms)
+    $.each(SESSIONS_TRANSACTIONS, function() { seen[this.transaction_id] = true; });
     var newest = SESSIONS_TRANSACTIONS.slice().reverse(), html = '';
     var waiting = $.grep(newest, function(o) { return !o.paid; }), paid = $.grep(newest, function(o) { return o.paid; });
     if (current_tab != "paid" && waiting.length) html += groupHTML("waiting", pile_waiting[lang()], waiting, 5);
-    if (current_tab != "unpaid" && paid.length) html += current_tab == "paid" ? groupHTML("paid", pile_paid[lang()], paid, 5) : groupHTML("paid", pile_paid[lang()], paid.slice(0, 6), 6);
+    if (current_tab != "unpaid" && paid.length) html += current_tab == "paid" ? groupHTML("paid", pile_paid[lang()], paid, 5) : groupHTML("paid", pile_paid[lang()], paid.slice(0, 10), 10);
     $("#all_orders").html(html);
+    stamping = null;
 }
 
 // highlight the currently displayed tab 
@@ -353,7 +372,7 @@ function highlightTab(new_tab) {
 
 function updateTransactions() { // update the current transactions, local storage
     SESSIONS_TRANSACTIONS = JSON.parse(localStorage.getItem("SESSION"));  
-    rePrintTab();
+    animated(rePrintTab);
 }
 
 function translate (index) {

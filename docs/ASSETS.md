@@ -12,7 +12,7 @@ Every image, font and library the app uses, with what is known about where it ca
 | `favicon.png` | browser tab fallback, 180 px render of favicon.svg | same drawing | own work |
 | `storm.jpg` | landing page background | unknown; the photo carries an artist signature, "Ernest T." | unknown, not cleared |
 | `wood2.jpg` | background of customer, bartender and management, and the login box | unknown stock texture | unknown, not cleared |
-| `icons.svg` | interface icons, all pages (menu, undo, redo, trash, x, check, alert; beer and ship-wheel for the staff label, T6; chevron-down on the bartender order bar, T8; cross-brush, the order-row remove mark, V5; crown, user, flask-conical and log-in for the demo logins, V8; clock before the time on the bartender cards) | [Lucide](https://lucide.dev) icon paths, copied into one sprite in V11; cross-brush drawn in `tools/textures/brush.py` | ISC; cross-brush ours |
+| `icons.svg` | interface icons, all pages (menu, undo, redo, trash, x, check, alert; beer and ship-wheel for the staff label, T6; chevron-down on the bartender order bar, T8; cross-brush, the order-row remove mark, V5; crown, user, flask-conical and log-in for the demo logins, V8; clock before the time on the bartender cards; bell and bell-off on the Sound plate, V12) | [Lucide](https://lucide.dev) icon paths, copied into one sprite in V11; cross-brush drawn in `tools/textures/brush.py` | ISC; cross-brush ours |
 | `tools/textures/src/`: `eng.webp`, `sve.webp`, `ita.webp`, `esp.webp` | not served since V7 (moved out of `img/`); source files for the cloth flags (`tools/textures/gentex10.py`) | unknown image files; the flag designs themselves are national symbols in the public domain | file source unknown |
 | `tools/textures/src/white3.png` | not served since V9 (moved out of `img/`); source file for `logo/aged.webp` | 2018 team's own logo (Pirates of the Caribbean group) | team's own work |
 | `tools/textures/src/pirate.webp` | not served since V7 (moved out of `img/`); source file for the cloth pirate flag, which now carries the drag easter egg | unknown; the original JPEG was edited in Photoshop CC 2015 on 2018-03-26 (EXIF) | unknown, not cleared |
@@ -77,3 +77,16 @@ The flags were cut in V11 from 1200x750 PNG/JPEG (260 KB) to 128x80 WebP, twice 
 | Pirata One (400) | Google Fonts | SIL Open Font License 1.1 |
 | jQuery 3.2.1 | ajax.googleapis.com | MIT |
 | axe-core 4.10.2 (tests only) | cdnjs | MPL 2.0 |
+
+## Sounds (V12)
+
+Chosen by Hassan from the pairing page (`docs/visual-options/v12-pairing.html`), trimmed under 1 s and level-matched with `ffmpeg`. Wired in by `sound()` in `js/login.js` (S8): the app loads copies in `audio/` named by cue (`stamp`, `deal`, `coin`, `flick`, `bell`); the files below are the originals kept with the pairing page. Receipt, landing and customer pages have no cue. The customer page has one looping ambience, `audio/ambience.mp3` (S8b), played at volume 0.25 only while the Sound plate is on.
+
+| File | Used for | Source | Author | Licence | Size | Length |
+|---|---|---|---|---|---|---|
+| `docs/visual-options/audio/stamp/mechanical-soft.mp3` | the PAID and ORDERED stamp landing | [Freesound 814249](https://freesound.org/people/Mihacappy/sounds/814249/) "Old mechanical stamp, pressing four times, paper hits"; one hit cut from the 128 kbps preview, 3 kHz low-pass and a compressor on the hit, -26 LUFS, mono MP3 64 kbps | Mihacappy | CC0 | 5,059 bytes | 0.60 s |
+| `docs/visual-options/audio/deal/card-drop.mp3` | a new order card dealt onto the pile | [Freesound 19244](https://freesound.org/people/deathpie/sounds/19244/) "cardDrop2.wav"; the snap cut from the 128 kbps preview (0.22 s to 0.38 s), -23 LUFS target, mono MP3 64 kbps | deathpie | CC0 | 1,924 bytes | 0.21 s |
+| `docs/visual-options/audio/paid/coin-splash.mp3` | Mark as Paid | [Freesound 547603](https://freesound.org/people/KaysonArgyle/sounds/547603/) "Coin Splash"; whole 128 kbps preview, -23 LUFS target, mono MP3 64 kbps | KaysonArgyle | CC0 | 3,178 bytes | 0.37 s |
+| `docs/visual-options/audio/cancel/paper-flick.mp3` | Cancel Order | [Freesound 422535](https://freesound.org/people/Killersmurf96/sounds/422535/) "Menu_Flick_Sound.wav"; flick cut from the 128 kbps preview (0.15 s to 0.40 s), +28 dB gain, -23 LUFS target, mono MP3 64 kbps | Killersmurf96 | CC0 | 2,551 bytes | 0.29 s |
+| `docs/visual-options/audio/bell/ship-bell-two.mp3` | a new order waiting (bartender bell) | [Freesound 353232](https://freesound.org/people/Sojan/sounds/353232/) "Ship Bell Two Chimes"; two chimes cut from the 128 kbps preview (0.33 s to 1.26 s) with a 0.3 s fade-out, -23 LUFS target, mono MP3 64 kbps | Sojan | CC0 | 7,985 bytes | 0.97 s |
+| `docs/visual-options/audio/ambience/storm-timbers.mp3` | customer page ambience loop (the storm outside) | [Freesound 331435](https://freesound.org/people/Codeine/sounds/331435/) "Storm at Sea", a montage of wind, waves, thunder and creaking timbers made for a staging of The Tempest; 60 s cut from the 128 kbps preview (60 s to 123 s), 3 s crossfade joins the end to the start, -22 LUFS, mono MP3 64 kbps | Codeine | CC0 | 480,488 bytes | 60.0 s |

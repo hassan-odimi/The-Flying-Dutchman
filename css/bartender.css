@@ -180,7 +180,7 @@ h1 {
     rotate: 0deg;
     translate: none;
     box-shadow: var(--shadow-lifted);
-    transition-duration: var(--lift-in);
+    transition-duration: var(--lift-out); /* open and close run the same 250 ms; beats the hover's quick-in, since the pointer is on the card */
 }
 
 /* Corner indices: number over pip, mirrored bottom right while the card is closed. Red ink = waiting, black = paid */
@@ -279,7 +279,7 @@ h1 {
     color: var(--ink-sepia);
     transition: grid-template-rows var(--lift-out) var(--toast-ease), visibility var(--lift-out);
 }
-.accordion.active + .panel { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows var(--lift-in) var(--toast-ease); } /* visible at once on open, so Tab reaches the buttons */
+.accordion.active + .panel { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows var(--lift-out) var(--toast-ease); } /* visible at once on open, so Tab reaches the buttons */
 .docket { min-height: 0; padding-right: 7px; overflow: hidden; } /* gives the order list's bar room to lie in the margin */
 
 .order {
@@ -514,7 +514,17 @@ footer .small_button { width: auto; min-height: 44px; padding: 0 24px; } /* the 
 
 }
 
+/* V12: cards glide (View Transitions), a new order is dealt, a paid card is stamped */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; } /* only the cards move, not the page */
+::view-transition-group(*) { animation-duration: var(--lift-out); animation-timing-function: var(--toast-ease); }
+::view-transition-old(*):only-child { animation: card-leave var(--lift-out) var(--toast-ease) forwards; } /* a cancelled card slides off */
+@keyframes card-leave { to { translate: var(--toast-distance) 0; opacity: 0; } }
+@keyframes deal { from { translate: calc(-1 * var(--toast-distance)) calc(-1 * var(--toast-distance)); rotate: -4deg; opacity: 0; } 30% { opacity: 1; } }
+.pc.dealt { animation: deal var(--deal-dur) var(--settle-ease) calc(var(--n, 0) * var(--lift-in)) backwards; }
+.pc.stamped .o_state { animation: stamp-press var(--lift-out) var(--settle-ease) var(--lift-out) backwards; } /* after the glide */
+
 @media (prefers-reduced-motion: reduce) {
     .pc, .pc:hover, .pc:has(.accordion:focus-visible), .pc:has(> .accordion.active), .panel, .accordion.active + .panel { transition: none; }
     .pc:hover, .pc:has(.accordion:focus-visible) { translate: none; outline: 3px solid var(--paper); } /* no lift: an outline marks the card */
+    .pc.dealt, .pc.stamped .o_state { animation: none; }
 }

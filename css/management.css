@@ -196,6 +196,7 @@ header{
 .receipt {
     margin: var(--space-4) var(--space-3) var(--space-5);
     filter: drop-shadow(0 3px 3px var(--shadow-lift));
+    animation: slip-lay var(--toast-open) var(--settle-ease);
 }
 
 .receipt_slip {
@@ -259,6 +260,7 @@ header{
     text-shadow: 1px 1px 0 color-mix(in srgb, var(--stamp-green) 30%, transparent);
     rotate: -12deg;
     transform: skewX(-2deg);
+    animation: stamp-press var(--lift-out) var(--settle-ease) var(--toast-open) backwards; /* comes down after the slip has landed */
     filter: url(#rough);
     mask:
         url("../img/textures/stamp-wear.webp") 30% 70% / 210px auto,
@@ -509,7 +511,7 @@ footer .small_button{
         clear: both;
     }
 
-    footer .logout, footer #pay {
+    footer .logout, footer #sound, footer #pay {
         float: none;
         width: auto;
         height: auto;
@@ -541,3 +543,5 @@ footer .small_button{
     }
 
 }
+
+@media (prefers-reduced-motion: reduce) { .receipt, .receipt_stamp { animation: none; } }

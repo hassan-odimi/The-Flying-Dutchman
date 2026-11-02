@@ -36,6 +36,7 @@ test('place stock order is confirmed once and keeps focus', async ({ page }) => 
 });
 
 test('axe: no WCAG 2.2 AA violations at rest and in use', async ({ page }) => {
+  test.setTimeout(150000); // two axe runs over the whole drink list take 27 s in Firefox alone, more when the suite runs in parallel
   await axe(page);
   await tabTo(page, /Add \+1/);
   await page.keyboard.press('Enter');

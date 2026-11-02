@@ -298,10 +298,10 @@ test('bartender (F11): playing-card orders on a green baize, torn tabs on the ra
   expect(await style(page.locator('#unpaid'), 'height')).toBe('50px');
   // hover lifts the card 14 px; open cards stay put
   await open.locator('.accordion').hover(); // the band: the next card lies over the rest
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(600);
   expect(await style(open, 'translate')).toBe('0px -14px');
   await open.locator('.accordion').click();
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(600);
   expect(await style(open, 'translate')).toBe('none');
   expect(Math.round((await open.boundingBox()).width)).toBe(284);
   const docket = open.locator('.panel');

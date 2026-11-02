@@ -17,6 +17,8 @@ function setLanguage(index) {
     document.documentElement.lang = ["en", "sv", "it", "es", "en"][index]; // Pirate is English
     $(".undo_label").text(undo_label[index]);
     $(".redo_label").text(redo_label[index]);
+    $(".sound_label").text(sound_label[index]);
+    $(".sound_wait").text(sound_wait[index]);
     $("#remove_word").text(remove_word[index]);
     $(".languages_menu a").removeAttr("aria-current");
     $("#" + flags[index]).attr("aria-current", "true");
@@ -28,6 +30,8 @@ $(document).ready(function () { /*Call setLanguage() on menu (flags) selection*/
     $.each(flags, function (index, flag) {
         $("#" + flag).click(function () {
             localStorage.setItem("index", index); /*Save selected index for the next loaded pages (and for texts built in translate())*/
+            var cloth = this.querySelector(".languages");
+            cloth.classList.remove("swing"); void cloth.offsetWidth; cloth.classList.add("swing"); // the cloth swings on its cord
             setLanguage(index);
             return false; // stop href="#" jumping to the top
         });

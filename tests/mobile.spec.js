@@ -144,3 +144,16 @@ for (const role of ['customer', 'bartender', 'management']) {
     }
   });
 }
+
+// Spanish "Cerrar Sesión" overlapped Redo at 360 and 375 px on the customer phone
+for (const width of [320, 360, 375, 389]) {
+  test(`customer: Undo, Redo and Log Out stay apart at ${width} px in Spanish`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 700 });
+    await loginMobile(page, 'customer', 3);
+    expect(await noScroll(page)).toBe(true);
+    const [undo, redo, out] = await Promise.all(['#undo', '#redo', '#logout_phone'].map((id) => page.locator(id).boundingBox()));
+    expect(undo.x + undo.width, 'Undo and Redo').toBeLessThanOrEqual(redo.x);
+    expect(redo.x + redo.width, 'Redo and Log Out').toBeLessThanOrEqual(out.x);
+    expect(out.x + out.width).toBeLessThanOrEqual(width);
+  });
+}

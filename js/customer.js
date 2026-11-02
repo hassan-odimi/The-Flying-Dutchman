@@ -271,7 +271,7 @@ function addOrder (article_id) {
         $.each(SESSION_STOCK_INFO, function(element){
             if (this.article_id == article_id){ // retrieve article from the database
                 $("#drink_selection").prepend(
-                    '<div class="order " id="'+ this.article_id +'">' +
+                    '<div class="order laid" id="'+ this.article_id +'">' +
                     '<b class="qty">1\u00d7</b>' +
                     '<button type="button" class="delete" aria-labelledby="remove_word name' + this.article_id + '"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#cross-brush"/></svg></button>' +
                     '<h4 class="price">SEK <span class="hidden_price">' + parseInt(this.sale_price) + '</span>:-</h4>' +
@@ -373,6 +373,7 @@ function setOrderTo(newOrder) {  // change the entire order beeing displayed
             q--;
         }
     });
+    $("#drink_selection .order").removeClass("laid"); // undo/redo rewrite the ledger; only a new line is laid down
     updateTotal();
 }
 

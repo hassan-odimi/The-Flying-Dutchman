@@ -25,7 +25,7 @@ async function startSR(page) {
 
 // Everything spoken since the last call, then the log is cleared
 async function heard(page) {
-  await page.waitForTimeout(150); // announce() writes the live region after 50 ms
+  await page.evaluate(() => new Promise((r) => setTimeout(r, 150))); // announce() writes the live region after 50 ms; a timer in the page runs after it even when the machine is slow
   return page.evaluate(async () => { const log = await sr.spokenPhraseLog(); await sr.clearSpokenPhraseLog(); return log; });
 }
 

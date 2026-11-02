@@ -96,6 +96,38 @@ $(document).on("input", ".t-input", function () {
 */
 function lang() { return parseInt(localStorage.getItem("index")) || 0; }
 
+function soundOn() { return localStorage.getItem("SOUND") == "on"; }
+function setSound(on) {
+    localStorage.setItem("SOUND", on ? "on" : "off");
+    $("#sound").attr("aria-pressed", on).find("use").attr("href", "img/icons.svg#" + (on ? "bell" : "bell-off"));
+    $("#sound_wait").prop("hidden", !(on && navigator.userActivation && !navigator.userActivation.hasBeenActive)); // sound is on, but the browser still refuses audio
+    placeWait();
+}
+
+// V12 ambience (customer page only): the storm outside, a loop that plays only while the Sound plate is on.
+// It starts at a press or key (the plate's own click is one), never on load, and stops with the plate or while the tab is hidden
+var ambience, ambient = false;
+function setAmbience(on) {
+    ambient = on;
+    ambience = ambience || Object.assign(new Audio("audio/ambience.mp3"), { loop: true, volume: 0.25 });
+    if (on && !document.hidden) ambience.play().catch(function () {}); else ambience.pause();
+}
+
+// the note sits just above the plate. It is placed by script because a positioned footer would move the phone's Undo and Redo, which hang from the page
+function placeWait() {
+    var note = $("#sound_wait"), box = $("#sound")[0].getBoundingClientRect(), w = note.outerWidth();
+    note.css({ left: Math.min(Math.max(box.right - w, 12), document.documentElement.clientWidth - w - 12), top: box.top + scrollY - note.outerHeight() - 8 });
+}
+
+// V12 sound cues: off unless the Sound plate is on. Browsers allow audio only after a press or key on the page,
+// so an earlier cue plays nothing (play() is refused) and the visual and spoken signals carry the event alone
+function sound(name) {
+    if (!soundOn()) return;
+    var cue = new Audio("audio/" + name + ".mp3");
+    cue.volume = 0.6;
+    cue.play().catch(function () {});
+}
+
 function announce(message) {
     var live = $("#live");
     live.text(""); // clear first so a repeated message is read again
@@ -110,6 +142,7 @@ function showToast(title, detail, isError) {
     toast.find(".toast_title").text(title);
     toast.find(".toast_detail").text(detail || "");
     toast.addClass("is-open");
+    $(".toast_wrap")[0].getAnimations({ subtree: true }).forEach(function (a) { a.currentTime = 0; }); // the mist drifts 5 s from each new toast
     clearTimeout(toastTimer);
     toastTimer = setTimeout(hideToast, 4000 + (title.length + (detail || "").length) * 60); // longer messages stay longer
 }
@@ -128,8 +161,10 @@ function announceOrder(article_id, word) {
 
 function logOut() { 
     var receipt_no = localStorage.getItem("STOCK_ORDER_NO"); // the stock order numbers run on across log outs
+    var sound_choice = localStorage.getItem("SOUND"); // and the sound choice stays with the browser
     localStorage.clear();
     if (receipt_no) localStorage.setItem("STOCK_ORDER_NO", receipt_no);
+    if (sound_choice) localStorage.setItem("SOUND", sound_choice);
     window.location.href = "index.html";
 }
 
@@ -138,6 +173,21 @@ $(function () {
     $("body").append('<div id="live" class="sr-only" aria-live="polite"></div>' +
         '<div class="toast_wrap"><div id="toast" class="toast t-toast" aria-hidden="true">' +
         '<span class="toast_ribbon"></span><span class="toast_icon"></span><span class="toast_text"><b class="toast_title"></b><span class="toast_detail"></span></span></div></div>');
+    var plate = $('<button type="button" id="sound" class="small_button" aria-pressed="false">' +
+        '<svg class="icon" aria-hidden="true"><use href="img/icons.svg#bell-off"/></svg> <span class="sound_label"></span></button>');
+    if ($("#logout").length) plate.insertAfter("#logout"); else $("footer").first().append(plate); // beside Log Out; the landing page has none
+    plate.after('<small id="sound_wait" class="sound_wait" hidden></small>');
+    $(".sound_label").text(sound_label[lang()]); // login.js runs after multilanguage.js has set the language, so set the words here too
+    $(".sound_wait").text(sound_wait[lang()]);
+    setSound(soundOn());
+    $(window).on("load resize", placeWait);
+    var customer = /customer\.html$/.test(location.pathname);
+    $(document).one("pointerup keydown", function (e) { // pointerup: on a touch screen a press counts as a gesture when the finger lifts
+        $("#sound_wait").prop("hidden", true);
+        if (customer && soundOn() && !$(e.target).closest("#sound").length) setAmbience(true); // sound was left on: the first press starts it
+    });
+    if (customer) document.addEventListener("visibilitychange", function () { if (ambience) setAmbience(ambient); });
+    $(document).on("click", "#sound", function () { setSound(!soundOn()); if (customer) setAmbience(soundOn()); });
     $("#toast").hover(function () { clearTimeout(toastTimer); }, function () { toastTimer = setTimeout(hideToast, 4000); });
 
     var pending = sessionStorage.getItem("toast");

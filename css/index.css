@@ -74,6 +74,12 @@
     margin: 2%;
 }
 body > footer { margin-top: var(--space-5); } /* V7: the V6 flag line hangs under the customer sign */
+/* V12: the Sound plate sits right of the centred flag line, and under it on phones */
+body > footer { position: relative; }
+body > footer #sound { position: absolute; right: var(--space-3); top: 50%; translate: 0 -50%; float: none; width: auto; min-height: 44px; margin: 0; padding: 0 24px; }
+@media (max-width: 768px) {
+    body > footer #sound { position: static; translate: none; display: block; margin: var(--space-2) auto var(--space-3); }
+}
 
 html { min-height: 100%; } /* the storm covers the screen when the page is shorter (it repeated below 550px at 800x800) */
 
@@ -539,25 +545,25 @@ input[type=password], select {
 
 /* transitions-dev: Error state shake (no auto-revert; typing clears the error) */
 .t-input {
-  transition: border-color 150ms ease-out;
+  transition: border-color var(--lift-in) var(--toast-ease);
   will-change: transform;
 }
 .t-input.is-error {
-  transition: border-color var(--revert-dur, 280ms) ease-out;
+  transition: border-color var(--revert-dur) var(--toast-ease);
 }
 
 .t-error-msg {
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity    var(--revert-dur, 280ms) ease-out,
-    visibility 0s linear var(--revert-dur, 280ms);
+    opacity    var(--revert-dur) var(--toast-ease),
+    visibility 0s linear var(--revert-dur);
 }
 .t-input-wrap.is-error .t-error-msg {
   opacity: 1;
   visibility: visible;
   transition:
-    opacity    var(--revert-dur, 280ms) ease-out,
+    opacity    var(--revert-dur) var(--toast-ease),
     visibility 0s linear 0s;
 }
 

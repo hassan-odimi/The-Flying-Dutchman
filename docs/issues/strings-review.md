@@ -9,6 +9,8 @@ Open points:
 ## js/view/view_common.js
 - title_login_failed: EN="Login failed" | SV="Inloggningen misslyckades" | IT="Accesso non riuscito" | ES="Error de inicio de sesión" | Pirate="Boardin' failed"
 - title_access_denied: EN="Access denied" | SV="Åtkomst nekad" | IT="Accesso negato" | ES="Acceso denegado" | Pirate="No entry, matey!"
+- sound_label: EN="Sound" | SV="Ljud" | IT="Suono" | ES="Sonido" | Pirate="Shanty" (V12)
+- sound_wait: EN="Sound starts after your first click." | SV="Ljudet startar efter ditt första klick." | IT="Il suono parte dopo il tuo primo clic." | ES="El sonido empieza después de tu primer clic." | Pirate="Sound starts after yer first click." (V12; shown in S8)
 ## js/view/view_index.js
 - about_lede: EN="A bar ordering system, built in 2018 for User Interface Programming I at Uppsala University. Plain HTML, CSS and jQuery, no framework." | SV="Ett beställningssystem för en bar, byggt 2018 i kursen User Interface Programming I vid Uppsala universitet. Ren HTML, CSS och jQuery, inget ramverk." | IT="Un sistema di ordinazione per un bar, creato nel 2018 per il corso User Interface Programming I all'Università di Uppsala. Solo HTML, CSS e jQuery, nessun framework." | ES="Un sistema de pedidos para un bar, creado en 2018 para el curso User Interface Programming I de la Universidad de Uppsala. HTML, CSS y jQuery, sin frameworks." | Pirate="A tavern orderin' system, built in 2018 fer User Interface Programming I at Uppsala University. Plain HTML, CSS 'n jQuery, no framework, arr."
 - about_try_title: EN="Try it" | SV="Testa" | IT="Provalo" | ES="Pruébalo" | Pirate="Try it, matey"

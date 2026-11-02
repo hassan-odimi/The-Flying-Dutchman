@@ -2,6 +2,9 @@
 const { test, expect } = require('@playwright/test');
 const { login, startSR, heard, count, tabTo, axe } = require('./helpers');
 
+// V12: a View Transition updates the table a frame after the click. These tests read the table at once, so they run without motion; tests/motion.spec.js covers the motion
+test.use({ contextOptions: { reducedMotion: 'reduce' } });
+
 test.beforeEach(async ({ page }) => {
   await login(page, 'bartender');
   await startSR(page);
@@ -94,13 +97,13 @@ test('a card reads number, customer, time, total, state, and the total says kron
   await expect(page.locator('.group h2').first()).toHaveText('Väntar');
 });
 
-test('orders lie in piles: waiting piles of five newest first, one paid pile of six; tabs filter (F11)', async ({ page }) => {
+test('orders lie in piles: waiting piles of five newest first, one paid pile of ten; tabs filter (F11)', async ({ page }) => {
   const n = await page.evaluate(() => ({ open: SESSIONS_TRANSACTIONS.filter((o) => !o.paid).length, paid: SESSIONS_TRANSACTIONS.filter((o) => o.paid).length }));
   const sizes = (sel) => page.locator(sel + ' .pile').evaluateAll((p) => p.map((e) => e.querySelectorAll('.pc').length));
   const waiting = await sizes('.group.waiting');
   expect(waiting.reduce((a, b) => a + b, 0)).toBe(n.open);
   expect(waiting.slice(0, -1).every((c) => c === 5)).toBe(true);
-  expect(await sizes('.group.paid')).toEqual([Math.min(6, n.paid)]);
+  expect(await sizes('.group.paid')).toEqual([Math.min(10, n.paid)]);
   await expect(page.locator('.group.waiting .pc').first().locator('.pc_idx b').first()).toHaveText('20'); // newest on top
   await page.click('#unpaid');
   await expect(page.locator('.group.paid')).toHaveCount(0);
@@ -180,4 +183,25 @@ test('tab labels and the Update Orders plate follow the language', async ({ page
   await expect(page.locator('#unpaid')).toHaveText('Obetalda beställningar');
   await expect(page.locator('#paid')).toHaveText('Betalda beställningar');
   await expect(page.locator('#retrieve_orders .update_label')).toHaveText('Uppdatera beställningar');
+});
+
+test('Update Orders makes the new orders the starting point: Undo cannot roll back past them', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.locator('.accordion#T00020').click();
+  await page.locator('.pay#T00020').click();
+  await expect(page.locator('#undo')).not.toHaveClass(/fade/);
+  await page.evaluate(() => {
+    const orders = JSON.parse(localStorage.getItem('SESSION')) || SESSIONS_TRANSACTIONS;
+    orders.push({ ...orders[0], transaction_id: 'T99999', paid: false });
+    localStorage.setItem('SESSION', JSON.stringify(orders));
+    localStorage.setItem('NEWORDER', 1);
+  });
+  await expect(page.locator('#retrieve_orders')).toHaveClass(/has-new/, { timeout: 5000 });
+  await page.click('#retrieve_orders');
+  await expect(page.locator('#undo')).toHaveClass(/fade/);
+  await expect(page.locator('#redo')).toHaveClass(/fade/);
+  await page.evaluate(() => undo());
+  await expect(page.locator('.accordion[id="T99999"]')).toHaveCount(1);
+  expect(errors).toEqual([]);
 });

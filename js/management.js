@@ -192,6 +192,7 @@ $(document).ready(function() {
             resetPage();
             var no = showReceipt(lines, receipt_sum);
             showToast(title_placed_order[lang()], message_receipt(no, receipt_sum, lang()));
+            setTimeout(function () { sound("stamp"); }, 350 + 119); // ORDERED comes down 350 ms after the slip lands and touches the paper 119 ms into its press
 
         } else { showToast(title_empty_order[lang()], message_empty_order[lang()], true); }
 
@@ -338,7 +339,7 @@ function addOrder (article_id, number) {
         $.each(DB_SYSTEMBOLAGET.concat(DB_MIKES), function(element){ // the database, then the specials
             if (this.artikelid == article_id){ // retrieve article from the database
                 $("#drink_selection").prepend(
-                    '<div class="order" id="'+ this.artikelid +'">' +
+                    '<div class="order laid" id="'+ this.artikelid +'">' +
                     '<b class="qty">' + number + '\u00d7</b>' +
                     '<button type="button" class="delete" aria-labelledby="remove_word name' + this.artikelid + '"><svg class="icon" aria-hidden="true"><use href="img/icons.svg#cross-brush"/></svg></button>' +
                     '<h4 class="price">SEK <span class="hiden_price_sum">' + (parseInt(this.prisinklmoms) * number) + '</span>:-</h4>' +
@@ -459,6 +460,7 @@ function setOrderTo(newOrder) {  // change the entire order beeing displayed
 
     // add the beers from the newOrder
     $.each(newOrder[0], function(i) {addOrder(this, newOrder[1][i]); });
+    $("#drink_selection .order").removeClass("laid"); // undo/redo rewrite the ledger; only a new line is laid down
     updateTotal();
 }
 

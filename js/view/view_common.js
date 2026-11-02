@@ -51,6 +51,19 @@ var undo_label = ["Undo",
                   "Deshacer",
                   "Belay that"];
 
+// Sound plate (V12): the label, and the note that browsers keep a page silent until the first click
+var sound_label = ["Sound",
+                   "Ljud",
+                   "Suono",
+                   "Sonido",
+                   "Shanty"];
+
+var sound_wait = ["Sound starts after your first click.",
+                  "Ljudet startar efter ditt första klick.",
+                  "Il suono parte dopo il tuo primo clic.",
+                  "El sonido empieza después de tu primer clic.",
+                  "Sound starts after yer first click."];
+
 var redo_label = ["Redo",
                   "Gör om",
                   "Ripeti",
