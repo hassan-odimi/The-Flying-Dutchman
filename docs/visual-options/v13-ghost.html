@@ -76,9 +76,9 @@ label.rm { display: inline-flex; gap: 8px; align-items: center; margin: 8px 0; p
 .skull::before { content: ""; position: absolute; inset: 0;
   background: url("../../img/textures/tarnish.webp") 0 0 / 200px 100px, url("../../img/textures/mist.webp") 0 0 / 300px 100%, #b9b59c;
   background-blend-mode: multiply, screen, normal; /* old bone: yellowed, stained by tarnish */
-  -webkit-mask: url("skull.svg") center / contain no-repeat luminance, url("../../img/textures/stamp-wear.webp") 0 0 / 200px 100px;
+  -webkit-mask: url("../../img/skull.svg") center / contain no-repeat luminance, url("../../img/textures/stamp-wear.webp") 0 0 / 200px 100px;
   -webkit-mask-composite: source-in;
-  mask: url("skull.svg") center / contain no-repeat luminance, url("../../img/textures/stamp-wear.webp") 0 0 / 200px 100px;
+  mask: url("../../img/skull.svg") center / contain no-repeat luminance, url("../../img/textures/stamp-wear.webp") 0 0 / 200px 100px;
   mask-composite: intersect; }
 .skull.blow { animation: skull-blow 1400ms ease-in forwards; }
 @keyframes skull-blow { to { opacity: 0; scale: 1.2; translate: -50% -58%; } }

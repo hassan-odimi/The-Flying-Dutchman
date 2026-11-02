@@ -153,6 +153,7 @@ test('About and Passwords open as opaque parchment nailed at the top, with the b
     await page.click('#' + id);
     const win = page.locator(`#${id}_window`), close = win.locator('.close_window');
     await expect(win).toBeVisible();
+    await expect(win).toHaveCSS('scale', 'none'); // the dialog has finished condensing
     expect(await style(win, 'backgroundImage')).toMatch(/rivet.*rivet.*paper-list/);
     expect(await style(win, 'backgroundColor')).toBe('rgb(255, 255, 255)'); // opaque under the paper: nothing shows through
     expect(await style(win, 'color')).toBe('rgb(42, 23, 9)');
@@ -252,6 +253,7 @@ test('order bars: rusty iron plates, rivets on the header only, and a rope seam 
 
 test('bartender (F11): playing-card orders on a green baize, torn tabs on the rail, the open card is a docket', async ({ page }) => {
   await login(page, 'bartender');
+  await page.evaluate(() => document.activeViewTransition && document.activeViewTransition.finished); // V12b G5: the page fog (1.4 s) swallows the forced clicks below
   const list = page.locator('.order_list');
   expect(await style(list, 'backgroundImage')).toMatch(/radial-gradient.*felt-green.*wood2/s); // vignette, baize, then the rail wood
   expect(await style(list, 'borderTopWidth')).toBe('14px');
@@ -486,6 +488,7 @@ test('demo logins: grouped with role icons, Use fills the form, fits 1280x720, 4
 
 test('drink cards (F8): four torn papers, warm lift on hover and focus, worn stock stamps, kelp list with a rim', async ({ page }) => {
   await login(page, 'customer');
+  await expect(page.locator('#drink_database')).not.toHaveClass(/intro/, { timeout: 10000 }); // V12b G3: the first-load intro has ended
   const cards = page.locator('#drink_database .drink');
   for (let i = 0; i < 4; i++) expect(await style(cards.nth(i), 'backgroundImage')).toContain(`card-paper${i + 1}`);
   expect(await style(cards.nth(4), 'backgroundImage')).toContain('card-paper1'); // 4n+1 again
@@ -534,6 +537,7 @@ test('About (F10): one sheet, three ruled columns, three textured icons, no inne
   await page.click('#about');
   const win = page.locator('#about_window');
   await expect(win).toBeVisible();
+  await expect(win).toHaveCSS('scale', 'none'); // the dialog has finished condensing
   expect(await win.evaluate((e) => e.scrollHeight <= e.clientHeight)).toBe(true); // no scrolling
   expect((await win.boundingBox()).width).toBe(920);
   await expect(page.locator('.about_cols section')).toHaveCount(3);

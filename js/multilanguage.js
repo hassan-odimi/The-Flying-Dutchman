@@ -30,8 +30,6 @@ $(document).ready(function () { /*Call setLanguage() on menu (flags) selection*/
     $.each(flags, function (index, flag) {
         $("#" + flag).click(function () {
             localStorage.setItem("index", index); /*Save selected index for the next loaded pages (and for texts built in translate())*/
-            var cloth = this.querySelector(".languages");
-            cloth.classList.remove("swing"); void cloth.offsetWidth; cloth.classList.add("swing"); // the cloth swings on its cord
             setLanguage(index);
             return false; // stop href="#" jumping to the top
         });

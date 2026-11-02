@@ -178,7 +178,7 @@ body {
 }
 
 /* About and Passwords (V4): torn slips of Paper 328 nailed to the top edge with a rusted nail
-   (Texturelabs Details 144). Sepia text 5.22:1 or better; they straighten and drop 4px on hover */
+   (Texturelabs Details 144). Sepia text 5.22:1 or better; they swing in the draught of the V12b wind (js/login.js addSprings) */
 #about, #passwords {
     position: fixed;
     top: 0;
@@ -195,20 +195,18 @@ body {
     background: url("../img/textures/slip1.webp") 0 0 / 100% 100% no-repeat;
     filter: drop-shadow(0 3px 4px var(--shadow-lift));
     transform-origin: 50% 10px;
-    transition: transform var(--lift-out) var(--toast-ease);
     z-index: 999;
     cursor: pointer;
 }
-#about { right: 84px; transform: rotate(-2deg); }
-#passwords { right: 22px; transform: rotate(1.5deg); background-image: url("../img/textures/slip2.webp"); }
+#about { right: 84px; rotate: -2deg; } /* the property, so the wind's transform does not erase the tilt */
+#passwords { right: 22px; rotate: 1.5deg; background-image: url("../img/textures/slip2.webp"); }
 #about span, #passwords span { display: none; } /* the "<" arrow belonged to the 2018 slide-out */
 
-#about:hover, #about:focus-visible, #passwords:hover, #passwords:focus-visible,
-#passwords.full_length, #about.full_length {
-    transform: translateY(4px);
-    transition-duration: var(--lift-in);
-}
 #passwords.full_length, #about.full_length { pointer-events: none; }
+/* No wind under reduced motion, so a hovered or focused slip still answers: it sits 4px lower, at once */
+@media (prefers-reduced-motion: reduce) and (min-width: 769px) {
+    #about:is(:hover, :focus-visible, .full_length), #passwords:is(:hover, :focus-visible, .full_length) { translate: 0 4px; }
+}
 
 
 /* About and Passwords windows (T3): an opaque sheet of Paper 328 held by two rusted nails.
@@ -386,6 +384,39 @@ body {
     z-index: 5;
     overflow: hidden;
     font-size: var(--text-md);
+    transition: opacity calc(var(--toast-open) + var(--lift-out)) var(--toast-ease), visibility 0s;
+}
+#overlay.hidden {
+    opacity: 0;
+    pointer-events: none; /* a fading scrim never catches a click */
+    transition: opacity calc(var(--toast-open) + var(--lift-out)) var(--toast-ease), visibility 0s calc(var(--toast-open) + var(--lift-out));
+}
+
+/* V12b G6: a dialog condenses out of the mist (pale, blurred, a touch large) and dissolves again; a bank of mist passes behind it as it opens */
+#overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: url("../img/textures/mist.webp") 0 50% / 900px 100% repeat-x;
+}
+#overlay:not(.hidden)::after { animation: mist-pass var(--fog-pass) ease-in-out; }
+#loginBox, #about_window, #passwords_window {
+    transition: opacity var(--ghost-open) var(--toast-ease), filter var(--ghost-open) var(--toast-ease), scale var(--ghost-open) var(--toast-ease), visibility 0s;
+}
+#loginBox.hidden, #about_window.hidden, #passwords_window.hidden {
+    opacity: 0;
+    filter: var(--ghost-tint) blur(var(--ghost-blur));
+    scale: 1.03;
+    transition: opacity var(--ghost-close) var(--toast-ease), filter var(--ghost-close) var(--toast-ease), scale var(--ghost-close) var(--toast-ease), visibility 0s var(--ghost-close);
+}
+@media (prefers-reduced-motion: reduce) { /* opacity only: no blur, no scale, no puff */
+    #loginBox, #about_window, #passwords_window { transition: opacity var(--lift-out) var(--toast-ease), visibility 0s; }
+    #loginBox.hidden, #about_window.hidden, #passwords_window.hidden { filter: none; scale: none; transition: opacity var(--lift-out) var(--toast-ease), visibility 0s var(--lift-out); }
+    #overlay { transition: opacity var(--lift-out) var(--toast-ease), visibility 0s; }
+    #overlay.hidden { transition: opacity var(--lift-out) var(--toast-ease), visibility 0s var(--lift-out); }
+    #overlay::after { display: none; }
 }
 
 .login {
@@ -395,7 +426,6 @@ body {
 }
 
 .login {
-    display: none;
     position: absolute;
     border-radius: var(--radius-sm);
     /* T4: the scrimmed wood2 of the working views (one wood site-wide) with iron corner brackets */
@@ -584,10 +614,6 @@ input[type=password], select {
   .t-input { animation: none !important; transform: none !important; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    #about, #passwords { transition: none; }
-}
-
 /* Phones and tablets: About and Passwords become labelled bottom buttons (no slide-out),
    windows become near full-width sheets, login box and inputs fit a finger.
    Fills are opaque: white on #8e1f2c is 8.81:1, white on #1e6b2b is 6.58:1 */
@@ -612,12 +638,8 @@ input[type=password], select {
         color: var(--ink-on-dark);
         background-image: none;
         filter: none;
-        transform: none;
-    }
-
-    #about:hover, #about:focus-visible, #passwords:hover, #passwords:focus-visible,
-    #passwords.full_length, #about.full_length {
-        transform: none;
+        rotate: none;
+        transform: none !important; /* the wind (js/login.js) may have started before the window was narrowed */
     }
 
     #about { left: 12px; background-color: var(--flag-red); }

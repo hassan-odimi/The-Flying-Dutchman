@@ -97,6 +97,20 @@
   --lift-out: 250ms;
   --settle-ease: cubic-bezier(0.34, 1.36, 0.64, 1); /* things that land: 4.3 % overshoot at 64 % of the time (transitions-dev --ease-bounce) */
   --deal-dur: 400ms; /* a card dealt onto the pile (D1) */
+  /* V12b ghost motion: a thing forming out of the fog shows the Dutchman's lantern green; at rest it has no tint */
+  --ghost-tint: sepia(1) hue-rotate(110deg) saturate(0.5) brightness(1.5);
+  --ghost-blur: 8px;
+  --ghost-form: 500ms; /* a card condensing (G3) */
+  --ghost-open: 900ms; /* a dialog condensing (G6) */
+  --ghost-close: 400ms; /* a dialog dissolving (G6) */
+  --fog-pass: 1400ms; /* a bank of mist passing (G5, G6) */
+  --page-out: 700ms; /* the old page sinks into the fog (G5) */
+  --page-in: 900ms; /* the new page condenses (G5) */
+  --page-delay: 500ms; /* ...after waiting while the old page sinks (G5) */
+  --ghost-blow: 2700ms; /* the skull holds until here, then the fog takes it back and the card wisps appear (G3) */
+  --ghost-wait: 3100ms; /* the cards condense (G3) */
+  --ghost-stagger: 40ms; /* between cards (G3) */
+  --bone: #b9b59c; /* the skull of smoke (G3) */
 }
 
 /* Type and spacing scale (V1): 1.25 ratio in rem, so text zooms; 4 px spacing steps */
@@ -313,6 +327,7 @@ button {
 
 /* The drink list on both pages: kelp-green board with random rust specks under the cards (F8); one 1024 px tile, gentex13.py */
 .drink_list {
+    position: relative; /* the skull and wisps of the first load (G3) sit in it */
     background: url("../img/textures/board-rust.webp") 0 0 / 1024px 1024px, var(--control-strong);
     background-blend-mode: multiply, normal;
     box-shadow: var(--shadow-well);
@@ -438,9 +453,6 @@ footer .languages_menu a:nth-child(2) .languages { translate: 0 3.4px; rotate: a
 footer .languages_menu a:nth-child(3) .languages { translate: 0 6px; }
 footer .languages_menu a:nth-child(4) .languages { translate: 0 3.4px; rotate: atan2(-25.6px, 100cqw - 24px); }
 footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: atan2(-51.2px, 100cqw - 24px); }
-@keyframes swing { 30% { transform: rotate(3deg); } 65% { transform: rotate(-1deg); } } /* a cloth flag tugged on its cord */
-footer .languages.swing { animation: swing calc(2 * var(--lift-out)) var(--settle-ease); }
-@media (prefers-reduced-motion: reduce) { footer .languages.swing { animation: none; } }
 @media (max-width: 768px) {
     footer .languages_menu { --fw: 56px; }
     footer .languages_menu a { min-height: 44px; } /* 56x35 flags, 44px phone target */
@@ -995,7 +1007,80 @@ footer .languages.swing { animation: swing calc(2 * var(--lift-out)) var(--settl
 /* V12: a stamp pressed onto paper, a slip laid down */
 @keyframes stamp-press { from { scale: 1.12; opacity: 0; } 40% { opacity: 1; } }
 @keyframes slip-lay { from { translate: 0 calc(-1 * var(--toast-distance)); rotate: 1.5deg; opacity: 0; } 40% { opacity: 1; } }
+@keyframes mist-pass { 0% { opacity: 0; } 40% { opacity: 0.95; } 100% { opacity: 0; background-position-x: 300px; } } /* a bank of mist passing (G5, G6) */
 @keyframes mist-drift { to { background-position-x: var(--tile, 1400px); } } /* one tile, so the loop is seamless */
+/* V12b G5: a page change through the fog. The old page sinks, a bank of mist passes (js/login.js), the new page condenses.
+   Chromium only; elsewhere pages load plainly. Not under reduced motion */
+@keyframes breathe-out { to { opacity: 0; filter: blur(3px); scale: 1.02; } }
+@keyframes condense { from { opacity: 0; filter: var(--ghost-tint) blur(3px); } }
+.mist_bank {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    pointer-events: none;
+    opacity: 0;
+    background: url("../img/textures/mist.webp") 0 50% / 900px 100% repeat-x;
+    view-transition-name: mist; /* its own layer, so it stays above the page while the page fades */
+    animation: mist-pass var(--fog-pass) ease-in-out;
+}
+/* V12b G3: the first load of a drink list. A skull of smoke condenses out of fog (js/login.js ghostIntro), holds, and is taken back as
+   card-shaped wisps appear. The cards are in the DOM from the start, hidden by the delay, and condense out of the wisps */
+@keyframes ghost-in { from { opacity: 0; filter: var(--ghost-tint) blur(var(--ghost-blur)); translate: 0 6px; } 60% { opacity: 0.9; } }
+@keyframes wisp-out { to { opacity: 0; filter: blur(var(--ghost-blur)); scale: 1.04; } }
+@keyframes wisp-wait { from, to { opacity: 0; } }
+@keyframes skull-blow { to { opacity: 0; scale: 1.2; translate: -50% -58%; } }
+@keyframes card-fade { from { opacity: 0; } }
+.drink_list.intro { pointer-events: none; } /* no hidden card takes a click */
+.intro .drink { animation: ghost-in var(--ghost-form) var(--toast-ease) calc(var(--ghost-wait) + var(--i, 0) * var(--ghost-stagger)) backwards; }
+.intro_fx { position: absolute; inset: 0; pointer-events: none; }
+.wisp {
+    position: absolute;
+    border-radius: var(--radius-md);
+    opacity: 0.45;
+    --tile: 200px;
+    background: url("../img/textures/mist.webp") 0 0 / 600px 100% repeat-x;
+    -webkit-mask: var(--paper) 0 0 / 100% 100%; /* the shape of the card it will become */
+    mask: var(--paper) 0 0 / 100% 100%;
+    animation: wisp-wait var(--ghost-blow) linear, mist-drift var(--fog-pass) linear var(--ghost-blow) forwards, wisp-out var(--ghost-form) var(--toast-ease) calc(var(--ghost-wait) + var(--i, 0) * var(--ghost-stagger)) forwards;
+}
+/* The skull is the project's skull-and-crossbones drawing: its white fill shows, its black lines are gaps (luminance mask), worn through by the stamp-wear grit.
+   The #smoke filter is on the parent, and the masks are on ::before, because CSS masks after filtering */
+.skull {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(70%, 260px);
+    aspect-ratio: 510 / 490;
+    translate: -50% -50%;
+    z-index: 2;
+    filter: url(#smoke) blur(0.6px);
+    opacity: 0.85;
+    animation: skull-blow var(--fog-pass) ease-in var(--ghost-blow) forwards;
+}
+.skull::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("../img/textures/tarnish.webp") 0 0 / 200px 100px, url("../img/textures/mist.webp") 0 0 / 300px 100%, var(--bone);
+    background-blend-mode: multiply, screen, normal; /* old bone: yellowed, stained by tarnish */
+    -webkit-mask: url("../img/skull.svg") center / contain no-repeat luminance, url("../img/textures/stamp-wear.webp") 0 0 / 200px 100px;
+    -webkit-mask-composite: source-in;
+    mask: url("../img/skull.svg") center / contain no-repeat luminance, url("../img/textures/stamp-wear.webp") 0 0 / 200px 100px;
+    mask-composite: intersect;
+}
+/* V12b G4: a tab switch. The leaving cards and the echoes are loose copies in this layer (js/login.js ghostSwap), so none takes a click.
+   It is cut to the list's height, so a copy at an old seat cannot stretch the scroll */
+.swap_fx { position: absolute; left: 0; right: 0; top: 0; overflow: clip; pointer-events: none; }
+.swap_fx .drink { position: absolute; margin: 0; }
+@media (prefers-reduced-motion: reduce) {
+    .intro .drink { animation: card-fade var(--lift-out) backwards; }
+}
+@media (prefers-reduced-motion: no-preference) {
+    @view-transition { navigation: auto; types: page; }
+    :active-view-transition-type(page)::view-transition-old(root) { animation: breathe-out var(--page-out) ease-in forwards; mix-blend-mode: normal; }
+    :active-view-transition-type(page)::view-transition-new(root) { animation: condense var(--page-in) var(--toast-ease) var(--page-delay) backwards; mix-blend-mode: normal; }
+    ::view-transition-new(mist) { animation: none; } /* the bank fades itself */
+}
 
 @media (max-width: 768px) {
     .toast_wrap { bottom: 16px; }

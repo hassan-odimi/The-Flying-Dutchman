@@ -17,13 +17,14 @@ if (localStorage.getItem("index") == null){
 function openLogin(elem, show, user) {
     localStorage.setItem('usertype', user);
     $("#overlay").removeClass("hidden");
-    $('#loginBox').show();
+    $('#loginBox').removeClass("hidden");
+    sound("ghost-whoosh", 0.7);
     $('#user_name_input').focus(); // move keyboard users into the dialog
 }
 
 function closeLogin(){
     $("#overlay").addClass("hidden");
-    $('#loginBox').hide();
+    $('#loginBox').addClass("hidden");
 }
 
 // the pirate flag dropped on the logo, or a press of it, crossfades to the ghost ship (css/index.css)
@@ -43,6 +44,7 @@ $(document).on('click','#about',function() {
 
     $("#about").addClass("full_length");
     $("#about_window").removeClass("hidden");
+    sound("ghost-whoosh", 0.7);
 
     $("#overlay").removeClass("hidden");
     hideToast(); // the toast would sit on the window; the live region already announced it
@@ -54,6 +56,7 @@ $(document).on('click','#passwords',function() {
 
     $("#passwords_window").removeClass("hidden");
     $("#passwords").addClass("full_length");
+    sound("ghost-whoosh", 0.7);
 
     $("#overlay").removeClass("hidden");
     hideToast(); // the toast would sit on the window; the live region already announced it
@@ -98,3 +101,17 @@ function translate (index) {
     $.each(["use_label", "role_customer", "role_bartender", "role_manager"],
         function (i, c) { $("." + c).text(window[c][index]); });
 }
+
+// G2: the slips swing in the draught, About slow and heavy, Passwords quick with a paper flutter. Not on phones: there they are bottom buttons
+var lastFlap = 0;
+$(function () {
+    if (matchMedia("(max-width: 768px)").matches) return;
+    addSprings($("#about, #passwords"), [
+        { max: 5, k: 14, c: 2.6, f: 330, sk: 0.03 },
+        { max: 5, k: 26, c: 2.8, f: 190, sk: 0.14, flutter: 1 }
+    ], function () {
+        if (Date.now() - lastFlap < 2500) return; // a sweep across both slips is one sound
+        lastFlap = Date.now();
+        sound("paper-flap", 0.35);
+    });
+});

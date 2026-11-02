@@ -23,81 +23,50 @@ var undone = new Array(); //keeps track of 'redone' actions
 
 $(document).ready(function() {
     retrieveDB();         // load database on page load
+    ghostIntro();         // V12b G3: the cards condense out of fog, the first time only
     highlightTab(".all"); // highlight the 'all'-tab
     
     // filter drinks by category
     $(".all").click(function() {
         highlightTab("*#all");
         current_tab = "all";
-        $("#drink_database").empty(); // empty current <div> contents
-        retrieveDB();
-     //   $(this).addClass('highlight');
+        showTab();
     });
 
     $(".beers").click(function(){
         highlightTab("*#beers");
         current_tab = "beer";
-        $("#drink_database").empty(); // empty current <div> contents
-        $.each(SESSION_STOCK_INFO, function(element){
-            if (this.beer == true){
-                printToDOM(this);// Call method to print to DOM
-            };
-        });
+        showTab("beer");
     });
 
     $(".wines").click(function(){
         highlightTab("*#wines");
         current_tab = "wine";
-        $("#drink_database").empty(); // empty current <div> contents
-        $.each(SESSION_STOCK_INFO, function(element){
-            if (this.wine == true){
-                printToDOM(this);// Call method to print to DOM
-            };
-        });
+        showTab("wine");
     });
 
     $(".spirits").click(function(){
         highlightTab("*#spirits");
         current_tab = "spirit";
-        $("#drink_database").empty(); // empty current <div> contents
-        $.each(SESSION_STOCK_INFO, function(element){
-            if (this.spirit == true){
-                printToDOM(this);// Call method to print to DOM
-            };
-        });
+        showTab("spirit");
     });
 
     $(".kosher").click(function(){
         highlightTab("*#kosher");
         current_tab = "kosher";
-        $("#drink_database").empty(); // empty current <div> contents
-        $.each(SESSION_STOCK_INFO, function(element){
-            if (this.kosher == true){
-                printToDOM(this);// Call method to print to DOM
-            };
-        });
+        showTab("kosher");
     });
 
     $(".ecologic").click(function(){
         highlightTab("*#ecologic");
         current_tab = "ecologic";
-        $("#drink_database").empty(); // empty current <div> contents
-        $.each(SESSION_STOCK_INFO, function(element){
-            if (this.ecologic == true){
-                printToDOM(this);// Call method to print to DOM
-            };
-        });
+        showTab("ecologic");
     });
 
     $(".specials").click(function(){
         highlightTab("*#specials");
         current_tab = "special";
-        $("#drink_database").empty(); // empty current <div> contents
-        $.each(SESSION_STOCK_INFO, function(element){
-            if (this.special == true){
-                printToDOM(this);// Call method to print to DOM
-            };
-        });
+        showTab("special");
     });
 
     $(document).on('click','#undo',function() {
@@ -255,7 +224,7 @@ function printToDOM (element) {
     }
 
     $("#drink_database").append(
-        '<button type="button" class="drink' + classes + '"' + disabled + '>' +
+        '<button type="button" class="drink' + classes + '"' + disabled + ' data-id="' + element.article_id + '">' +
         '<span class="h4">' + element.name + '</span>' +
         '<img src="img/drinks/' + element.article_id + '.webp" alt="" loading="lazy">' +
         '<span class="h4 price">SEK ' + parseInt(element.sale_price) + ':- ' +  stock_message +'</span>' +
@@ -449,6 +418,17 @@ function resetPage() {
 }
 
 // highlight the currently displayed tab 
+// V12b G4: the spectral trail runs the tab's own empty-and-print. flag: the drink property the tab filters on; none: every drink the user may see
+function showTab(flag) {
+    ghostSwap(function() {
+        $("#drink_database").empty(); // empty current <div> contents
+        if (!flag) return retrieveDB();
+        $.each(SESSION_STOCK_INFO, function(){
+            if (this[flag] == true) printToDOM(this); // Call method to print to DOM
+        });
+    });
+}
+
 function highlightTab(new_tab) {
     $(".menu_tabs button, .dropdown-content button").attr("aria-pressed", "false");
     $(new_tab).attr("aria-pressed", "true");

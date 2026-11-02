@@ -24,47 +24,46 @@ $(document).ready(function() {
 
     //addBackground();
     retrieveSystembolaget(); // load database on page load
+    ghostIntro();            // V12b G3: the cards condense out of fog, the first time only
     highlightTab("drinks_list");
     
     $("#drinks_list").click(function(){ /* Retrieve from Systembolaget*/
         highlightTab("drinks_list");
-        $("#drink_database").empty();
-        //addBackground();
-        retrieveSystembolaget();
+        showTab(retrieveSystembolaget);
     });
 
     $("#specials_db").click(function(){ /* Retrieve from Mike's Specials*/
         highlightTab("specials_db");
-        $("#drink_database").empty();
-        //addBackground();
-        $.each(DB_MIKES, function(element){
-            printToDOM(this);
+        showTab(function(){
+            $.each(DB_MIKES, function(element){
+                printToDOM(this);
+            });
         });
     });
 
     $("#check_stock").click(function(){ /* Retrieve in stock*/
         highlightTab("check_stock");
-        $("#drink_database").empty();
-        //addBackground();
-        $.each(DB_SYSTEMBOLAGET, function(element){
-            if (checkStock(this.artikelid) > 0){
-                printToDOM(this);
-            };
+        showTab(function(){
+            $.each(DB_SYSTEMBOLAGET, function(element){
+                if (checkStock(this.artikelid) > 0){
+                    printToDOM(this);
+                };
+            });
         });
     });
 
     $("#shortage_alert").click(function(){ /* Retrieve on shortage alert*/
         highlightTab("shortage_alert");
-        $("#drink_database").empty();
-        //addBackground();
-        $.each(DB_SYSTEMBOLAGET, function(element){
-            if (checkStock(this.artikelid) > 0 && checkStock(this.artikelid) < 15){
-                printToDOM(this);}
-        });
+        showTab(function(){
+            $.each(DB_SYSTEMBOLAGET, function(element){
+                if (checkStock(this.artikelid) > 0 && checkStock(this.artikelid) < 15){
+                    printToDOM(this);}
+            });
 
-        $.each(DB_MIKES, function(element){
-            if (checkStock(this.artikelid) > 0 && checkStock(this.artikelid) < 15){
-                printToDOM(this);}
+            $.each(DB_MIKES, function(element){
+                if (checkStock(this.artikelid) > 0 && checkStock(this.artikelid) < 15){
+                    printToDOM(this);}
+            });
         });
     });
 
@@ -295,7 +294,7 @@ function printToDOM (element) {
     }
 
     $("#drink_database").append(
-        '<div class="drink">'+
+        '<div class="drink" data-id="' + element.artikelid + '">'+
 
         '<div class="c1">' +
         '<img src="img/drinks/' + element.artikelid + '.webp" alt="" loading="lazy">' +
@@ -511,6 +510,14 @@ function resetPage() {
 }
 
 // highlight the currently displayed tab 
+// V12b G4: the spectral trail runs the tab's own empty-and-print
+function showTab(fill) {
+    ghostSwap(function(){
+        $("#drink_database").empty();
+        fill();
+    });
+}
+
 function highlightTab(new_tab) {
     $(".type_menu button").attr("aria-pressed", "false");
     $('#' + new_tab).attr("aria-pressed", "true");

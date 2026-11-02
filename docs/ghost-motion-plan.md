@@ -1,6 +1,6 @@
 # V12b ghost motion: picks
 
-Status 2026-11-02: plan final, ready to build. Motion and sound are picked for every spot, and a new session builds them from section "Build guide" below, step by step. Hassan picked one option per spot with the interactive demo `docs/visual-options/v13-ghost.html` (open it via `http://localhost:8080`). This builds on V12 (`docs/motion-sound-plan.md`) and is separate from V13 (empty and error states).
+Status 2026-11-02: built (steps B1 to B11), not committed. Motion and sound are in the app for every spot; what differs from the demo is listed in `docs/audit-baseline.md`, "V12b done". The build guide below is kept as the record. Hassan picked one option per spot with the interactive demo `docs/visual-options/v13-ghost.html` (open it via `http://localhost:8080`). This builds on V12 (`docs/motion-sound-plan.md`) and is separate from V13 (empty and error states).
 
 ## The principle
 
@@ -149,12 +149,12 @@ Tests: open the login, and 1 s later the box has opacity 1 and the input has foc
 
 1. In `css/style.css`: `@view-transition { navigation: auto; types: page; }`.
    - `css/bartender.css` turns the root crossfade off for its card glide (search `::view-transition-old(root), ::view-transition-new(root) { animation: none`).
-   - Scope that rule to same-document transitions: in `animated()` (`js/bartender.js`) pass a type (`document.startViewTransition({ update: change, types: ["cards"] })`). Then select the bartender rule with `:active-view-transition-type(cards)` and the page fog with `:active-view-transition-type(page)`.
+   - As built: that rule stays plain, and the page fog (`:active-view-transition-type(page)`) wins it by specificity. A type on `animated()` (`startViewTransition({ update, types: ["cards"] })`) was tried and dropped: browsers with only `startViewTransition(callback)` (Chrome 111 to 124, Safari before 18.2) throw on the object form and would skip the card update.
    - Check the bartender card glide still works afterwards.
 2. Root keyframes under `:active-view-transition-type(page)`:
    - old: `breathe-out` over `var(--page-out)` ease-in (opacity 0, blur 3 px, scale 1.02)
    - new: `condense` over `var(--page-in)`, delayed 500 ms (from opacity 0 and `var(--ghost-tint) blur(3px)`). The 500 ms is `calc(var(--page-out) - 200ms)` or a token; ask Hassan.
-3. The mist bank: a fixed, `aria-hidden` element added by `js/login.js`. It animates `mist-pass` over `var(--fog-pass)` only when the page arrived through a view transition: listen for `pagereveal` and check `e.viewTransition`. Firefox has no cross-document view transitions: it loads plainly and shows no mist.
+3. The mist bank: a fixed, `aria-hidden` element added by `js/fog.js` (loaded `blocking="render"` in the head of the four pages, because `pagereveal` fires at first paint, before scripts at the end of the body run). It animates `mist-pass` over `var(--fog-pass)` only when the page arrived through a view transition: listen for `pagereveal` and check `e.viewTransition`. Firefox has no cross-document view transitions: it loads plainly and shows no mist.
 4. The foghorn plays on the old page at the press. Add `function depart(url)` to `js/login.js`:
    - When `soundOn()`: `sound("foghorn", 0.8)`, then `setTimeout` 700 ms, then `location.href = url`.
    - Otherwise navigate at once.

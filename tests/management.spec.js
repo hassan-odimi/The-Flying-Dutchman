@@ -75,6 +75,7 @@ test('a sold-out drink carries the NOT STOCKED seal and a never-carried one the 
 // F12: torn paper rows, and the shared paper ledger
 test('rows are torn paper in four variants, the stock count is 40 px, Add buttons share a row', async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
+  await expect(page.locator('#drink_database')).not.toHaveClass(/intro/, { timeout: 10000 }); // V12b G3: the first-load intro has ended
   const bgs = await page.locator('.drink').evaluateAll((a) => a.slice(0, 5).map((e) => getComputedStyle(e).backgroundImage.match(/row-paper(\d)/)[1]));
   expect(bgs).toEqual(['1', '2', '3', '4', '1']);
   const row = page.locator('.drink').first();

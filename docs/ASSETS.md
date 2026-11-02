@@ -95,18 +95,16 @@ Chosen by Hassan from the pairing page (`docs/visual-options/v12-pairing.html`),
 
 | File | Used for | Source | Author | Licence | Size |
 |---|---|---|---|---|---|
-| `docs/visual-options/skull.svg` (moves to `img/skull.svg` in build step B6) | the skull of smoke over the drink grid on first load (G3, `docs/ghost-motion-plan.md`); so far only in the demo `docs/visual-options/v13-ghost.html` | [Wikimedia Commons, File:Skull_and_crossbones.svg](https://commons.wikimedia.org/wiki/File:Skull_and_crossbones.svg), original file unchanged | unknown | public domain (ineligible for copyright: simple geometry) | 4,030 bytes |
+| `img/skull.svg` | the skull of smoke over the drink list on first load, customer and management (G3, `.skull::before` in `css/style.css`, `docs/ghost-motion-plan.md`); the demo `docs/visual-options/v13-ghost.html` loads it from here | [Wikimedia Commons, File:Skull_and_crossbones.svg](https://commons.wikimedia.org/wiki/File:Skull_and_crossbones.svg), original file unchanged | unknown | public domain (ineligible for copyright: simple geometry) | 4,030 bytes |
 
-## Sounds (V12b ghost motion, candidates)
+## Sounds (V12b ghost motion)
 
-Candidates for the ghost-motion pairing in `docs/visual-options/v13-ghost.html`; none is wired into the app yet. Picked 2026-11-02: `paper-flap` (slips), `creepy-long` (skull), `creepy-tab` (tab switch), `foghorn` (page change), `ghost-whoosh` (dialogs). Not picked: `flag-flap`, `creepy-short`, `ai-whisper`. Each is cut from the Freesound 128 kbps preview, faded in and out, gain-matched to about -23 LUFS (measured with `ebur128`), and saved as mono MP3 at 64 kbps. All are CC0.
+The five picked cues are in the app as `audio/<name>.mp3` (same file names as below) and play through `sound()` in `js/login.js`: `paper-flap` (G2, `js/index.js`), `creepy-long` (G3 skull, `ghostIntro()`), `creepy-tab` (G4 tab switch, `ghostSwap()`), `foghorn` (G5 page change, `depart()`) and `ghost-whoosh` (G6 dialogs, `js/index.js`). The files below are the originals kept with the demo `docs/visual-options/v13-ghost.html`. Picked 2026-11-02: `paper-flap` (slips), `creepy-long` (skull), `creepy-tab` (tab switch), `foghorn` (page change), `ghost-whoosh` (dialogs). Not picked: `flag-flap`, `creepy-short`, `ai-whisper`. Each is cut from the Freesound 128 kbps preview, faded in and out, gain-matched to about -23 LUFS (measured with `ebur128`), and saved as mono MP3 at 64 kbps. All are CC0.
 
 | File (`docs/visual-options/audio/ghost/`) | Source | Author | Cut | Size | Length |
 |---|---|---|---|---|---|
-| `flag-flap.mp3` | [Freesound 386796](https://freesound.org/people/RichieMcMullen/sounds/386796/) "flag_flap_3.wav" | RichieMcMullen | 4.2 s to 5.4 s | 10,075 bytes | 1.23 s |
 | `paper-flap.mp3` | [Freesound 344370](https://freesound.org/people/Brokenphono/sounds/344370/) "Flapping_Paper_Rustling.wav" | Brokenphono | 15.4 s to 16.6 s | 10,075 bytes | 1.23 s |
-| `creepy-long.mp3`, `creepy-short.mp3` | [Freesound 840812](https://freesound.org/people/SoundEffectsForAll/sounds/840812/) "Creepy Whoosh Subtle" (recorded on a phone, processed in Audacity) | SoundEffectsForAll | 0.2 s to 4.0 s; 0.3 s to 2.5 s | 30,973; 18,225 bytes | 3.84 s; 2.25 s |
+| `creepy-long.mp3` | [Freesound 840812](https://freesound.org/people/SoundEffectsForAll/sounds/840812/) "Creepy Whoosh Subtle" (recorded on a phone, processed in Audacity) | SoundEffectsForAll | 0.2 s to 4.0 s | 30,973 bytes | 3.84 s |
 | `creepy-tab.mp3` | [Freesound 840812](https://freesound.org/people/SoundEffectsForAll/sounds/840812/) "Creepy Whoosh Subtle" | SoundEffectsForAll | 0.3 s to 3.1 s, 1.1 s fade-out | 23,031 bytes | 2.85 s |
 | `ghost-whoosh.mp3` | [Freesound 850767](https://freesound.org/people/TommasoMotteran/sounds/850767/) "Ghostly Whoosh - Horror Game UI" | TommasoMotteran | 0 s to 1.6 s | 13,418 bytes | 1.65 s |
-| `ai-whisper.mp3` | [Freesound 856169](https://freesound.org/people/brktkrgll/sounds/856169/) "Spectral Ghost Whisper Breeze Whoosh", **generated with ElevenLabs AI**, not recorded | brktkrgll | 0.5 s to 2.2 s | 14,254 bytes | 1.75 s |
 | `foghorn.mp3` | [Freesound 140898](https://freesound.org/people/exuberate/sounds/140898/) "Foghorn_GoldenGateBridge_0312.wav", recorded from a distance | exuberate | 0.6 s to 3.4 s, 2.5 kHz low-pass | 23,031 bytes | 2.85 s |
