@@ -74,6 +74,20 @@ Written so a new session (Sonnet) can build V12b without this conversation. Code
 - Scope: the landing page (G1, G2, G5, G6), the customer and management drink lists (G3, G4), and the flags and page change on every page (G1, G5). The bartender page keeps its V12 card glide; G3 and G4 do not touch it.
 - New tests go at the end of `tests/motion.spec.js`, named `G1: ...` to `G6: ...`. Default to `reducedMotion: 'reduce'` as V12 does, and opt in with `page.emulateMedia({ reducedMotion: 'no-preference' })`.
 
+### Skills: when to invoke them
+
+The `interfaces` plugin (installed 2026-11-02, user scope) adds review and workbench skills. Hassan types the slash commands, because those skills cannot be started by Claude. Claude loads the others itself at the step named.
+
+| When | Who | Skill | What for |
+| --- | --- | --- | --- |
+| Any stop point with 2-3 visual options (B4 overlay 600 ms, B5 500 ms delay, B10 fps fixes, any demo mismatch) | Hassan | `/interfaces:variant` | The options go behind a picker in the real page, so the pick is made in the app, not on paper. |
+| After B7, before B8 | Hassan | `/interfaces:break` on `#drink_database` | Stress the drink list under G3 and G4: 0, 1 and 200 drinks, long names, sold-out seals, 320 px, 200 % zoom, a tab switch mid-intro. Fix what breaks before B8. |
+| B9 | Claude | `interfaces:better-accessibility` | Load it before the axe and screen-reader pass. It checks motion and zoom against WCAG 2.2, including 2.2.2 (motion over 5 s). |
+| After B11, before Hassan asks for a commit | Hassan | `/interfaces:interface-review` | Reviews the uncommitted V12b change for interface regressions. Then run `/code-review` for correctness. |
+| V13 (empty and error states), not V12b | Hassan | `/interfaces:state-machine`, then Claude loads `interfaces:better-writing` | Every empty and error state on one throwaway page with a switcher, then the copy for each. |
+
+Do not take motion values from `interfaces:better-ui`. Its 150-200 ms ease-out timings conflict with the slower ghost motion picked here, and the demo stays the reference.
+
 ### B1. Tokens, the shared filter and `sound()` volume
 
 1. In `:root` of `css/style.css`, after `--deal-dur`, add:
