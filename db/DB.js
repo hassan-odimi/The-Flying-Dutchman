@@ -80,7 +80,7 @@ var DB_CUSTOMERS = [
         "last_name": "Odimi",
         "email": "hassan.odimi@it.uu.se",
         "phone": "0705349276",
-        "credit": 955,
+        "credit": 2675,
         "vip": true
     },
     {
@@ -320,8 +320,8 @@ var DB_BARTENDERS = [
         "bartender_id": "B00000",
         "password": "test",
         "username": "test",
-        "first_name": "Bart",
-        "last_name": "Ender",
+        "first_name": "Test User",
+        "last_name": "Test",
         "email": "bart.ender@it.uu.se",
         "phone": "0000000000"
     },
@@ -329,8 +329,8 @@ var DB_BARTENDERS = [
         "bartender_id": "B00001",
         "password": "hassan123",
         "username": "hassan",
-        "first_name": "HASSAN",
-        "last_name": "Blackjack",
+        "first_name": "Hassan",
+        "last_name": "Horseman",
         "email": "hassan.odimi@it.uu.se",
         "phone": "0705794586"
     },
@@ -348,7 +348,7 @@ var DB_BARTENDERS = [
         "password": "mauro123",
         "username": "mauro",
         "first_name": "Mauro",
-        "last_name": "The Godfather",
+        "last_name": "Godfather",
         "email": "eulalia.coughlan@it.uu.se",
         "phone": "0702647034"
     },
@@ -386,7 +386,7 @@ var DB_MANAGERS =[
         "manager_id": "M00000",
         "password": "test",
         "username": "test",
-        "first_name": "Mana",
+        "first_name": "Test Manager",
         "last_name": "Ger",
         "email": "mana.ger@it.uu.se",
         "phone": "0000000000"
