@@ -615,7 +615,7 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 
 /* Worn iron plates (F6): Log Out, Undo, Redo, and Update Orders on the bartender page (F7). One chipped plate texture (Texturelabs Metal 155 + 132), quieter than the brass Place Order.
    The drop shadow follows the chipped outline; box-shadow would draw a rectangle. White 4.83:1 or better on the worst pixel */
-#logout, #logout_phone, #undo, #redo, #retrieve_orders, #sound {
+#logout, #undo, #redo, #retrieve_orders, #sound {
     background: url("../img/textures/plate-worn.webp") 0 0 / 100% 100% no-repeat;
     border: 0;
     border-radius: 0;
@@ -625,15 +625,15 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
     filter: drop-shadow(0 2px 3px var(--shadow-lift));
     transition: transform var(--lift-in) var(--toast-ease), filter var(--lift-in) var(--toast-ease);
 }
-#logout, #logout_phone { rotate: -0.6deg; }
+#logout { rotate: -0.6deg; }
 #redo { rotate: 0.8deg; }
 /* V12: sound is on but the browser has not yet allowed audio (needs a first press or key); gone after it */
 .sound_wait { position: absolute; max-width: calc(100% - 2 * var(--space-3)); padding: var(--space-1) var(--space-3); background: var(--ink); color: var(--ink-on-dark); font-size: var(--text-xs); font-weight: var(--weight-label); }
 .sound_wait[hidden] { display: none; }
-#logout:hover, #logout_phone:hover, #undo:hover, #redo:hover, #retrieve_orders:hover, #sound:hover { filter: brightness(1.12) drop-shadow(0 2px 3px var(--shadow-lift)); }
-#logout:active, #logout_phone:active, #undo:active, #redo:active, #retrieve_orders:active, #sound:active { transform: translateY(1px); filter: drop-shadow(0 1px 2px var(--shadow-lift)); box-shadow: var(--shadow-none); }
+#logout:hover, #undo:hover, #redo:hover, #retrieve_orders:hover, #sound:hover { filter: brightness(1.12) drop-shadow(0 2px 3px var(--shadow-lift)); }
+#logout:active, #undo:active, #redo:active, #retrieve_orders:active, #sound:active { transform: translateY(1px); filter: drop-shadow(0 1px 2px var(--shadow-lift)); box-shadow: var(--shadow-none); }
 
-#logout:focus-visible, #logout_phone:focus-visible, #undo:focus-visible, #redo:focus-visible, #retrieve_orders:focus-visible, #sound:focus-visible { box-shadow: 0 0 0 6px var(--ink); } /* keep the ring's dark half that box-shadow: none above would drop */
+#logout:focus-visible, #undo:focus-visible, #redo:focus-visible, #retrieve_orders:focus-visible, #sound:focus-visible { box-shadow: 0 0 0 6px var(--ink); } /* keep the ring's dark half that box-shadow: none above would drop */
 
 /* Anchor icon (F6) for Undo and Redo: the arrow's turn direction, as a tilt. Undo counter-clockwise, Redo clockwise */
 .anchor {
@@ -648,8 +648,8 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 #redo .anchor { rotate: 32deg; }
 
 @media (prefers-reduced-motion: reduce) {
-    .menu li button, .red, .blue, .light_green, .add_button .h4, .flipper, #login, #close, .close_window, #logout, #logout_phone, #undo, #redo, #retrieve_orders, #sound { transition: none; }
-    .red:active, .blue:active, .light_green:active, .add_button:active .h4, .flipper:active, #login:active, #close:active, .close_window:active, #logout:active, #logout_phone:active, #undo:active, #redo:active, #retrieve_orders:active, #sound:active { transform: none; }
+    .menu li button, .red, .blue, .light_green, .add_button .h4, .flipper, #login, #close, .close_window, #logout, #undo, #redo, #retrieve_orders, #sound { transition: none; }
+    .red:active, .blue:active, .light_green:active, .add_button:active .h4, .flipper:active, #login:active, #close:active, .close_window:active, #logout:active, #undo:active, #redo:active, #retrieve_orders:active, #sound:active { transform: none; }
 }
 
 /* COLORS */

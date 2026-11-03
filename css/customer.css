@@ -441,26 +441,6 @@ body {
      display: block;
  }
 
-.log_button{
-    display: none;
-    position: relative;
-    margin-top: -13%;
-    margin-bottom: 3%;
-
-    left: -15px;
-  /*  z-index: -1; */
-    float:right;
-    width: 30%;
-    height: 30px;
-    text-align: center;
-    border: thin;
-    border-color: var(--ink);
-    border-style: solid;
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-float);
-
-}
-
 .pay_button{
     display: none;
     position: relative;
@@ -487,26 +467,6 @@ body {
 
 @media only screen and (min-width:320px) and (max-width:768px) /*reminder :Check with Elsa*/
 {
-    /* hide the language menu on the small screens*/
-    footer .languages_menu {
-        width: 95%;
-        margin-left: 2.5%;
-        margin-top: 5%;
-    }
-    footer .undo_redo_menu{
-        display: none;
-    }
-
-    .languages img
-    {
-
-        width: 15%;
-        height: 15%;
-        margin: 2%; /* the old padding spacing, so five flags fit one row */
-    }
-    .languages {
-        margin-left: 2%
-    }
     div.drink_list{
         width: 96%;
         height: 100%;
@@ -627,13 +587,9 @@ body {
     }    
     div.order{
     }
-    footer{
-        padding-bottom: var(--space-3);
+    footer #pay{
+        display: none; /* the checkout bar has Place Order */
     }
-    footer .small_button:not(#sound){
-        display: none;
-    }
-    footer #sound { display: block; float: none; width: auto; min-height: 44px; margin: var(--space-2) auto 0; padding: 0 24px; } /* V12: under the flags, with its word, like the phone's other plates */
 
     div.menu{
         display: none;
@@ -641,9 +597,6 @@ body {
     div.dropdown{
         display: inline-block;
 
-    }
-    button.log_button{
-        display: inline-block;
     }
     button.pay_button{
         display: inline-block;
@@ -696,31 +649,41 @@ body {
         padding-top: 14px;
     }
 
-    /* top row, in the gap between the menu button and Log Out */
+    /* the bartender's footer: Log Out and Sound, then Undo and Redo, then the flags on their own row */
+    footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 2% var(--space-3);
+    }
+
+    footer .logout, footer #sound {
+        float: none;
+        width: auto;
+        min-height: 44px;
+        margin: 0;
+        padding: 0 16px;
+        white-space: nowrap;
+    }
+
     footer .undo_redo_menu {
         display: flex;
-        position: absolute;
-        top: 60px; /* 8px under the 52px greeting row */
-        left: 52px; /* 6px right of the menu button */
-        gap: 6px;
-        z-index: 2;
+        gap: 8px;
     }
 
     footer .undo_redo_menu button {
         min-width: 44px;
         min-height: 44px;
-        padding: 0 10px;
     }
 
-    #logout_phone { position: absolute; top: 63px; right: 8px; left: auto; float: none; margin: 0; width: auto; padding: 0 12px; min-height: 44px; } /* fixed on the menu row: a floated box would wrap by the label's width */ /* hugs its label; the words stay visible in every language */
-}
-
-/* up to 389px: Undo, Redo and Log Out share the menu row; Spanish (Cerrar Sesión) overlapped Redo at 360 and 375px */
-@media (max-width: 389px) {
-    footer .undo_redo_menu { gap: 2px; }
-    footer .undo_redo_menu button { padding: 0 3px; }
-    footer .undo_redo_menu .anchor { width: 1.1em; height: 1.1em; }
-    #logout_phone { padding: 0 4px; }
+    footer .languages_menu {
+        order: 2;
+        display: flex;
+        justify-content: space-between;
+        float: none;
+        width: 100%;
+    }
 }
 
 /* 320px: the greeting and credit label share one row */

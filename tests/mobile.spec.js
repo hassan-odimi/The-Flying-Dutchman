@@ -126,7 +126,7 @@ for (const role of ['customer', 'bartender', 'management']) {
     await page.setViewportSize({ width: 320, height: 700 });
     await loginMobile(page, role, 3);
     expect(await noScroll(page)).toBe(true);
-    const ids = ['#undo', '#redo', role === 'customer' ? '#logout_phone' : '#logout'];
+    const ids = ['#undo', '#redo', '#logout'];
     const boxes = [];
     for (const id of ids) {
       const el = page.locator(id), b = await el.boundingBox();
@@ -145,15 +145,15 @@ for (const role of ['customer', 'bartender', 'management']) {
   });
 }
 
-// Spanish "Cerrar Sesión" overlapped Redo at 360 and 375 px on the customer phone
+// Spanish "Cerrar Sesión" overlapped Redo at 360 and 375 px on the customer phone; Log Out now sits in the footer above Undo and Redo
 for (const width of [320, 360, 375, 389]) {
   test(`customer: Undo, Redo and Log Out stay apart at ${width} px in Spanish`, async ({ page }) => {
     await page.setViewportSize({ width, height: 700 });
     await loginMobile(page, 'customer', 3);
     expect(await noScroll(page)).toBe(true);
-    const [undo, redo, out] = await Promise.all(['#undo', '#redo', '#logout_phone'].map((id) => page.locator(id).boundingBox()));
+    const [undo, redo, out] = await Promise.all(['#undo', '#redo', '#logout'].map((id) => page.locator(id).boundingBox()));
     expect(undo.x + undo.width, 'Undo and Redo').toBeLessThanOrEqual(redo.x);
-    expect(redo.x + redo.width, 'Redo and Log Out').toBeLessThanOrEqual(out.x);
+    expect(out.y + out.height, 'Log Out above Undo and Redo').toBeLessThanOrEqual(undo.y);
     expect(out.x + out.width).toBeLessThanOrEqual(width);
   });
 }

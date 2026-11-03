@@ -320,7 +320,7 @@ for (const role of PAGES) {
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `${w} px, language ${l}`).toBe(true);
         const hit = await page.evaluate(() => {
           const r = (e) => e.getBoundingClientRect(), s = r(document.querySelector('#sound'));
-          return { h: s.height, left: s.left, right: s.right, over: [...document.querySelectorAll('footer button, footer a, #logout_phone')].filter((e) => e.id != 'sound' && e.offsetParent).filter((e) => { const o = r(e); return o.left < s.right - 1 && s.left < o.right - 1 && o.top < s.bottom - 1 && s.top < o.bottom - 1; }).map((e) => e.id || e.className) };
+          return { h: s.height, left: s.left, right: s.right, over: [...document.querySelectorAll('footer button, footer a')].filter((e) => e.id != 'sound' && e.offsetParent).filter((e) => { const o = r(e); return o.left < s.right - 1 && s.left < o.right - 1 && o.top < s.bottom - 1 && s.top < o.bottom - 1; }).map((e) => e.id || e.className) };
         });
         expect(hit.h, `${w} px, language ${l}`).toBeGreaterThanOrEqual(44);
         expect(hit.left).toBeGreaterThanOrEqual(0);

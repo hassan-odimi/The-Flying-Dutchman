@@ -437,7 +437,7 @@ function highlightTab(new_tab) {
 function translate (index) {
     $("#page_title").text(page_title[index]);
     $("#title").text(title[index]);
-    $("#logout, #logout_phone").text(logout[index]);
+    $("#logout").text(logout[index]);
     $("#customer").text(customer[index]);
     $("#credit").text(credit[index]);
     $("#drink_list").text(drink_list[index]);
