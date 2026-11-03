@@ -48,7 +48,7 @@ Success means:
 
 ## Evidence on Hand
 
-- Group members: Mauro José Pappaterra, Jenny Olsson, Hassan Odimi, Yawen Yi, Elsa Slättegård.
+- Group members: Hassan Odimi, Mauro José Pappaterra, Jenny Olsson, Yawen Yi, Elsa Slättegård.
 - The 2018 implementation and its git history (473 commits).
 - No user testing data, metrics, or testimonials exist. Do not fabricate any.
 

@@ -1,7 +1,7 @@
 /** The Flying Dutchman
  *  DB.js
- *  Created by 'Pirates of the Caribbean' on 17 of February 2018.
- *  Updated by Hassan Odimi
+ *  Version 2.0 (October 2026): updated by Hassan Odimi.
+ *  Version 1.0: created by 'Pirates of the Caribbean' on 17 February 2018.
  */
 
 /*DB of all users saved as an array of objects, each object represents a single user*/

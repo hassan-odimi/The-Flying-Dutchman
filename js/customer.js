@@ -1,8 +1,8 @@
 /** The Flying Dutchman
  *  customer.js
- *  Created by 'Pirates of the Caribbean' on 11 of February 2018.
- *  Updated on 16 March
  *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
+ *  Version 1.0: created by 'Pirates of the Caribbean' on 11 February 2018.
+ *  Updated on 16 March
  */
 
 /*CUSTOMER PAGE SCRIPTS

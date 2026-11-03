@@ -1,7 +1,7 @@
 /** The Flying Dutchman
  *  login.js
- *  Created by 'Pirates of the Caribbean' on .. of February 2018.
  *  Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
+ *  Version 1.0: created by 'Pirates of the Caribbean' in February 2018.
  */
 
 /*LOGIN PAGE SCRIPTS

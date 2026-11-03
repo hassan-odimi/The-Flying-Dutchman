@@ -1,7 +1,7 @@
 /* The Flying Dutchman
    style.css
-   Created by 'Pirates of the Caribbean' on 09 of February 2018.
    Version 2.0 (October 2026): full visual redesign, accessibility and polish by Hassan Odimi.
+   Version 1.0: created by 'Pirates of the Caribbean' on 09 February 2018.
 */
 
 /*Style Sheet common to all pages*/
@@ -251,8 +251,8 @@ header{
    Gold name 6.24:1 and role 9.4:1 or better on the worst pixel */
 .info {
     position: absolute;
-    top: 0;
-    right: 50px;
+    top: 15px;                 /* centred on the 40 px heading line at 21 px, as the credit label is on the greeting */
+    right: max(0px, calc(2% - 16px)); /* ends on the panel's right edge, like .credit in customer.css; never past the screen at 769 px */
     display: grid;
     grid-template-columns: auto auto;
     column-gap: 10px;
@@ -286,6 +286,9 @@ header{
 }
 @media (max-width: 1023px) {
     #orders_q, #title { padding-top: 52px; } /* the heading drops below the label (the management title reaches it at 800px) */
+}
+@media (max-width: 768px) {
+    .info { top: 0; right: 4px; } /* as .credit on phones: the panel-edge offset would push the label off screen */
 }
 
 

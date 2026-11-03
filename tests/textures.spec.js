@@ -213,6 +213,7 @@ test('staff label: role icon and gold swash name on the wood, no plate, clear of
     expect(await style(info.locator('span'), 'fontFamily')).toContain('Pirata One');
     const a = await info.boundingBox(), h = await page.locator(heading).evaluate((e) => { const g = document.createRange(); g.selectNodeContents(e); return g.getBoundingClientRect().toJSON(); });
     expect(a.y + a.height <= h.top || a.x + a.width <= h.left || h.right <= a.x).toBe(true);
+    expect(Math.abs(a.y + a.height / 2 - (h.top + h.bottom) / 2)).toBeLessThan(3); // centred on the heading, like the customer credit
   }
 });
 
