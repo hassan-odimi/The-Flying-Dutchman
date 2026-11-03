@@ -80,7 +80,7 @@ The flags were cut in V11 from 1200x750 PNG/JPEG (260 KB) to 128x80 WebP, twice 
 
 ## Sounds (V12)
 
-Chosen by Hassan from the pairing page (`docs/visual-options/v12-pairing.html`), trimmed under 1 s and level-matched with `ffmpeg`. Wired in by `sound()` in `js/login.js` (S8): the app loads copies in `audio/` named by cue (`stamp`, `deal`, `coin`, `flick`, `bell`); the files below are the originals kept with the pairing page. Receipt, landing and customer pages have no cue. The customer page has one looping ambience, `audio/ambience.mp3` (S8b), played at volume 0.25 only while the Sound plate is on.
+Chosen by Hassan from the pairing page (`docs/visual-options/v12-pairing.html`), trimmed under 1 s and level-matched with `ffmpeg`. Wired in by `sound()` in `js/login.js` (S8): the app loads copies in `audio/` named by cue (`stamp`, `deal`, `coin`, `flick`, `bell`); the files below are the originals kept with the pairing page. Receipt, landing and customer pages have no cue. The customer page has one looping ambience, `audio/ambience.mp3` (S8b), played at volume 0.25 only while the Sound plate is on. While any cue plays over it (the ghost cues on that page) it drops to 0.08 and returns when the last cue ends, because its creaking masked the tab-switch cue (2026-11-03).
 
 | File | Used for | Source | Author | Licence | Size | Length |
 |---|---|---|---|---|---|---|

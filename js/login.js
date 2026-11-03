@@ -117,10 +117,10 @@ function setSound(on) {
 
 // V12 ambience (customer page only): the storm outside, a loop that plays only while the Sound plate is on.
 // It starts at a press or key (the plate's own click is one), never on load, and stops with the plate or while the tab is hidden
-var ambience, ambient = false;
+var ambience, ambient = false, AMBIENCE = 0.25, HUSH = 0.08, hushed = 0; // hushed: cues now playing over the loop
 function setAmbience(on) {
     ambient = on;
-    ambience = ambience || Object.assign(new Audio("audio/ambience.mp3"), { loop: true, volume: 0.25 });
+    ambience = ambience || Object.assign(new Audio("audio/ambience.mp3"), { loop: true, volume: AMBIENCE });
     if (on && !document.hidden) ambience.play().catch(function () {}); else ambience.pause();
 }
 
@@ -137,7 +137,12 @@ function sound(name, volume, from) { // from: seconds into the cue
     var cue = new Audio("audio/" + name + ".mp3");
     cue.volume = volume || 0.6;
     if (from) cue.currentTime = from;
-    cue.play().catch(function () {});
+    cue.play().then(function () { // the rain hushes while a cue plays, or its creaking masks the cue
+        if (!ambience) return;
+        hushed++;
+        ambience.volume = HUSH;
+        cue.onended = function () { if (!--hushed) ambience.volume = AMBIENCE; };
+    }).catch(function () {});
 }
 
 function announce(message) {

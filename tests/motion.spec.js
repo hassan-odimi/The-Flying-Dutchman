@@ -510,6 +510,28 @@ test('S8b: ambience does not play on load, starts at the first press, loops at 0
   expect(await page.evaluate(() => [ambience.loop, ambience.volume])).toEqual([true, 0.25]);
 });
 
+test('S8b: the rain hushes to 0.08 while a cue plays and returns to 0.25 when the last one ends', async ({ page }) => {
+  await recordAll(page);
+  await page.addInitScript(() => {
+    window.els = [];
+    const play = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function () { window.els.push(this); return play.call(this); };
+  });
+  await enter(page, 'customer');
+  await page.reload();
+  await expect(page.locator('#drink_database')).not.toHaveClass(/intro/, { timeout: 10000 }); // the skull's own cue is over
+  await press(page);
+  await waitPlayed(page, ['ambience.mp3']);
+  const vol = () => page.evaluate(() => ambience.volume);
+  await page.evaluate(() => { sound('creepy-tab', 0.5); sound('creepy-long', 0.5); });
+  await expect.poll(vol).toBe(0.08);
+  const end = (name) => page.evaluate((n) => window.els.find((e) => e.src.includes(n)).dispatchEvent(new Event('ended')), name);
+  await end('creepy-tab');
+  expect(await vol()).toBe(0.08); // the other cue still plays
+  await end('creepy-long');
+  expect(await vol()).toBe(0.25);
+});
+
 test('S8b: a first key starts it too, but not the key that turns the plate off', async ({ page }) => {
   await recordAll(page);
   await enter(page, 'customer');
