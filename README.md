@@ -11,7 +11,7 @@
 
 <a href="https://the-flying-dutchman.h-odimi.workers.dev/"><img src="docs/readme/hero.webp" alt="The Flying Dutchman landing page: an aged-parchment ship logo in a green storm, a brass Order your Drinks sign and five tattered language flags" width="760"></a>
 
-**[Live demo](https://the-flying-dutchman.h-odimi.workers.dev/)** &nbsp;·&nbsp; [Case study](https://TODO-hassan-odimi.se)
+**[Live demo](https://the-flying-dutchman.h-odimi.workers.dev/)**
 
 </div>
 
@@ -78,5 +78,3 @@ npm install && npx playwright install && npm test
 
 - **v2 (2026):** Hassan Odimi. Design, polish, tests and docs.
 - **v1 (2018):** Hassan Odimi, Mauro José Pappaterra, Jenny Olsson, Yawen Yi and Elsa Slättegård, for Interface Design I at Uppsala University.
-
-[Design system](DESIGN.md) · [Audit numbers](docs/audit-baseline.md) · [Asset licences](docs/ASSETS.md)
