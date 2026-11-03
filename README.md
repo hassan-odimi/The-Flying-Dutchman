@@ -4,7 +4,7 @@
 
 **A pirate-bar ordering system, rebuilt for keyboards, screen readers and phones.**
 
-**Version 2 · designed, directed and tested by [Hassan Odimi](https://TODO-hassan-odimi.se)**
+**Version 2 · designed, directed and tested by [Hassan Odimi](https://hassan-odimi.se)**
 
 ![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2%20AA-1f6f5c)
 ![Stack: HTML, CSS and jQuery, no framework](https://img.shields.io/badge/HTML%20%C2%B7%20CSS%20%C2%B7%20jQuery-no%20framework-555)
