@@ -384,11 +384,7 @@ h1 {
     color: var(--danger-text);
 }
 
-/* FOOTER*/
-footer {
-    background-color: var(--bar-deep);
-}
-
+/* FOOTER: on the wood, like the customer and management pages */
 .logout {
     float: left;
     clear: none;
