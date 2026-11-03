@@ -1,4 +1,4 @@
-// Bartender order queue, from docs/orca-checklist.md
+// Bartender order queue
 const { test, expect } = require('@playwright/test');
 const { login, startSR, heard, count, tabTo, axe } = require('./helpers');
 

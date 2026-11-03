@@ -1,6 +1,15 @@
 .idea
 .vscode
-.claude/skills/
 node_modules/
 test-results/
 playwright-report/
+__pycache__/
+
+# Private planning and assistant config
+CLAUDE.md
+.claude/
+.impeccable/
+docs/*-plan.md
+docs/issues/
+docs/orca-checklist.md
+docs/orca-findings.md

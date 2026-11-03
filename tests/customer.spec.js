@@ -1,4 +1,4 @@
-// Customer ordering, from docs/orca-checklist.md
+// Customer ordering
 const { test, expect } = require('@playwright/test');
 const { login, startSR, heard, readAll, count, tabTo, axe } = require('./helpers');
 

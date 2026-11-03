@@ -1,4 +1,4 @@
-// V12 micro-motion tests (docs/motion-sound-plan.md)
+// V12 micro-motion tests
 const { test, expect } = require('@playwright/test');
 const fs = require('fs');
 const { login, startSR, heard, count, axe, readAll, tabTo } = require('./helpers');
@@ -603,7 +603,7 @@ test('S8b: the screen reader hears the same on the customer page with ambience o
   expect(await run(true)).toEqual(off);
 });
 
-// V12b ghost motion (docs/ghost-motion-plan.md)
+// V12b ghost motion
 test('G0: ghost tokens', async ({ page }) => {
   await page.goto('/index.html');
   const v = await page.evaluate(() => { const c = getComputedStyle(document.documentElement); return ['--ghost-tint', '--ghost-blur', '--ghost-form', '--ghost-open', '--ghost-close', '--fog-pass', '--page-out', '--page-in', '--bone'].map((n) => c.getPropertyValue(n).trim()); });
@@ -768,7 +768,7 @@ test('G6: reduced motion fades opacity only: no blur, no scale, no puff', async 
   expect(await page.evaluate(() => getComputedStyle(document.getElementById('overlay'), '::after').display)).toBe('none');
 });
 
-// G5: the page change through the fog (docs/ghost-motion-plan.md)
+// G5: the page change through the fog
 test('G5: the fog is CSS on tokens, only when motion is allowed', () => {
   const css = fs.readFileSync('css/style.css', 'utf8');
   expect(css).toMatch(/@media \(prefers-reduced-motion: no-preference\) \{\s*@view-transition \{ navigation: auto; types: page; \}/);

@@ -40,7 +40,7 @@ rgb.resize((16, H // S)).save(f'{OUT}/coil.webp', quality=90)  # 16x32, tiles in
 lum = lambda c: (lambda v: v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4)(c / 255)
 rust = Image.open(T + 'Texturelabs_Metal_132L.jpg').convert('RGB').resize((1060, 707))
 
-# plate-worn 360x96: Metal 155 iron face, rust rim, chipped outline, light top bevel (recipe docs/issues/recipes/plate.py)
+# plate-worn 360x96: Metal 155 iron face, rust rim, chipped outline, light top bevel
 random.seed(11)
 w, h = 360, 96
 face = Image.open(T + 'Texturelabs_Metal_155M.jpg').convert('RGB').crop((200, 700, 1400, 1020)).resize((w, h))
@@ -159,7 +159,7 @@ a.paste(Image.composite(tail, a.crop((0, 0, 200, MH)), ImageOps.mirror(Image.lin
 a = a.point(lambda v: min(255, int(1.5 * 255 * (v / 255) ** 0.9)))
 mist = Image.new('RGBA', (MW, MH), (255, 255, 255, 0)); mist.putalpha(a); mist.save(f'{OUT}/mist.webp', quality=70)
 
-# seal-red / seal-green 160x160: Hassan's wax-seal photo cut out by colour (redness), holes filled, imprint sharpened; green is a hue shift (recipe docs/issues/recipes/seal.py)
+# seal-red / seal-green 160x160: Hassan's wax-seal photo cut out by colour (redness), holes filled, imprint sharpened; green is a hue shift
 sp = Image.open(T + 'paolo-chiabrando-21VlmPMZEtw-unsplash.jpg').convert('RGB'); sp.thumbnail((1200, 1200)); sp = sp.crop((380, 130, 870, 660))
 sr, sg, _ = sp.split()
 sm = ImageChops.multiply(ImageChops.subtract(sr, sg).point(lambda v: 255 if v > 70 else 0), sg.point(lambda v: 255 if v < 90 else 0))

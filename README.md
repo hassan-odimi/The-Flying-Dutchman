@@ -9,9 +9,9 @@
 ![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2%20AA-1f6f5c)
 ![Stack: HTML, CSS and jQuery, no framework](https://img.shields.io/badge/HTML%20%C2%B7%20CSS%20%C2%B7%20jQuery-no%20framework-555)
 
-<a href="https://TODO-hassan-odimi.se"><img src="docs/readme/hero.webp" alt="The Flying Dutchman landing page: an aged-parchment ship logo in a green storm, a brass Order your Drinks sign and five tattered language flags" width="760"></a>
+<a href="https://the-flying-dutchman.hassan-odimi.workers.dev/"><img src="docs/readme/hero.webp" alt="The Flying Dutchman landing page: an aged-parchment ship logo in a green storm, a brass Order your Drinks sign and five tattered language flags" width="760"></a>
 
-**[Live demo](https://TODO-hassan-odimi.se)** &nbsp;·&nbsp; [Case study](https://TODO-hassan-odimi.se)
+**[Live demo](https://the-flying-dutchman.hassan-odimi.workers.dev/)** &nbsp;·&nbsp; [Case study](https://TODO-hassan-odimi.se)
 
 </div>
 
@@ -76,7 +76,7 @@ npm install && npx playwright install && npm test
 
 ## Credits
 
-- **v2 (2026):** Hassan Odimi. Design, polish, tests and docs. Coded with Claude Code under my direction.
-- **v1 (2018):** Mauro José Pappaterra, Jenny Olsson, Hassan Odimi, Yawen Yi and Elsa Slättegård, for Interface Design I at Uppsala University.
+- **v2 (2026):** Hassan Odimi. Design, polish, tests and docs.
+- **v1 (2018):** Hassan Odimi, Mauro José Pappaterra, Jenny Olsson, Yawen Yi and Elsa Slättegård, for Interface Design I at Uppsala University.
 
 [Design system](DESIGN.md) · [Audit numbers](docs/audit-baseline.md) · [Asset licences](docs/ASSETS.md)

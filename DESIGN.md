@@ -256,7 +256,7 @@ Each order is a `<button class="accordion">` row showing the order number and cu
 
 ## Ghost motion (V12b)
 
-Where V12 moves like a tavern (a stamp, a card dealt, a coin), V12b gives the app the Flying Dutchman's haunting: things form out of fog and smoke and dissolve into it, and cloth and paper move in a draught. A forming thing shows a lantern-green tint and a blur; at rest nothing has a tint, a blur or a transform. Every spot is built with the demo `docs/visual-options/v13-ghost.html` as the reference, and the picks and values are in `docs/ghost-motion-plan.md`.
+Where V12 moves like a tavern (a stamp, a card dealt, a coin), V12b gives the app the Flying Dutchman's haunting: things form out of fog and smoke and dissolve into it, and cloth and paper move in a draught. A forming thing shows a lantern-green tint and a blur; at rest nothing has a tint, a blur or a transform. Every spot is built with the demo `docs/visual-options/v13-ghost.html` as the reference.
 
 **Tokens (`:root` in `css/style.css`).** `--ghost-tint` (sepia, hue-rotate 110deg, saturate .5, brightness 1.5), `--ghost-blur` 8px, `--ghost-form` 500ms, `--ghost-open` 900ms, `--ghost-close` 400ms, `--fog-pass` 1400ms, `--page-out` 700ms, `--page-in` 900ms, `--page-delay` 500ms, `--depart-fade` 2400ms, `--depart-mist` 1000ms, `--ghost-blow` 2700ms, `--ghost-wait` 3100ms, `--ghost-stagger` 40ms, `--bone` for the skull. Durations used only by script (the springs, the skull's fog, the echoes) are named constants in `js/login.js`.
 

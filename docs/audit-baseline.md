@@ -135,7 +135,7 @@ axe cannot compute contrast for text over a background image or a gradient, so i
 
 ## Automated screen-reader tests (2026-10-28)
 
-The manual Orca pass is on hold: Orca crashed the whole desktop under Wayland. It is replaced by automated tests that follow `docs/orca-checklist.md`.
+The manual Orca pass is on hold: Orca crashed the whole desktop under Wayland. It is replaced by automated tests.
 
 Setup: Playwright 1.64.1 drives the keyboard in Chromium and Firefox at 1280x800. The Guidepup Virtual Screen Reader 0.33.0 records what a screen reader would say. axe-core 4.10.2 runs in the same suite with the same tags as above. Run it with `npm test`; the dev-only packages live in `package.json`, and the tests are in `tests/`.
 
@@ -472,7 +472,7 @@ Tests added in `tests/textures.spec.js`: the inactive tab is a paper note and th
 
 ### T1 done (2026-10-30): small action buttons
 
-First step of the texture plan (`docs/texture-plan.md`); Hassan approved the T1 to T9 order as written. He chose option A (textured plates, no rivets) "with a bit more rust", then A1 of three rust strengths: rust specks from Texturelabs Metal 132 in colour at 70 %. Mockups: `docs/visual-options/t1-buttons.png`, `t1-rust.png`. After screenshots: `docs/visual-after/t1-*.png`.
+First step of the texture plan; Hassan approved the T1 to T9 order as written. He chose option A (textured plates, no rivets) "with a bit more rust", then A1 of three rust strengths: rust specks from Texturelabs Metal 132 in colour at 70 %. Mockups: `docs/visual-options/t1-buttons.png`, `t1-rust.png`. After screenshots: `docs/visual-after/t1-*.png`.
 
 - **Brass:** management Add +1 / +10 / +100 and bartender Mark as Paid get the brass of Place Order (tarnish over the gold gradient, `--shadow-brass`) plus the rust layer, without rivets. Add buttons now share the V4 hover (88 %) and 1 px press; their old `--gold-deep` hover is gone.
 - **Rust-red:** `.red` (Cancel Order; Log Out keeps its outline) is the flag-red gradient down to the new `--rust-dark`, with tarnish and rust, and `--shadow-rust`.
@@ -777,7 +777,7 @@ Test added in `tests/textures.spec.js`: the logo button's name and `aria-pressed
 
 ## V12b done (2026-11-02): ghost motion
 
-Built from `docs/ghost-motion-plan.md` in steps B1 to B11, one at a time, with Hassan approving each. Spots G1 to G6 are described in `DESIGN.md`, "Ghost motion (V12b)". Not committed when this was written.
+Built in steps B1 to B11, one at a time, with Hassan approving each. Spots G1 to G6 are described in `DESIGN.md`, "Ghost motion (V12b)". Not committed when this was written.
 
 - **Tests:** `npx playwright test --list` went from 352 to 472 tests (120 new, at the end of `tests/motion.spec.js`: one or more per spot, a reduced-motion sweep of every spot on every page (B8) and the accessibility pass (B9)). Existing assertions changed in five tests (B5: 1, B6: 4), each approved by Hassan. Last full run: 467 passed, 2 skipped, 3 failed under machine load (load average 9 to 16 from a VM): `G1: a hovered flag swings in the wind...` in Chromium and Firefox, and `customer: full order by touch...` in the mobile project. The mobile test and the Chromium G1 test pass alone; the Firefox G1 test also failed alone while the machine was loaded and passed in earlier steps when it was not. G1 waits 3.5 s for the flags to rest, and the spring slows when frames drop. Hassan chose to leave it.
 - **axe:** 0 violations (WCAG 2.2 AA tags, same build as above) on the landing page with the login, About and Passwords dialogs open and the flags and slips swinging; on customer and management during the skull, after it and in the middle of a tab switch (clones present); and in every existing axe test.

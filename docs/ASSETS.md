@@ -96,7 +96,7 @@ Chosen by Hassan from the pairing page (`docs/visual-options/v12-pairing.html`),
 
 | File | Used for | Source | Author | Licence | Size |
 |---|---|---|---|---|---|
-| `img/skull.svg` | the skull of smoke over the drink list on first load, customer and management (G3, `.skull::before` in `css/style.css`, `docs/ghost-motion-plan.md`); the demo `docs/visual-options/v13-ghost.html` loads it from here | [Wikimedia Commons, File:Skull_and_crossbones.svg](https://commons.wikimedia.org/wiki/File:Skull_and_crossbones.svg), original file unchanged | unknown | public domain (ineligible for copyright: simple geometry) | 4,030 bytes |
+| `img/skull.svg` | the skull of smoke over the drink list on first load, customer and management (G3, `.skull::before` in `css/style.css`); the demo `docs/visual-options/v13-ghost.html` loads it from here | [Wikimedia Commons, File:Skull_and_crossbones.svg](https://commons.wikimedia.org/wiki/File:Skull_and_crossbones.svg), original file unchanged | unknown | public domain (ineligible for copyright: simple geometry) | 4,030 bytes |
 
 ## Sounds (V12b ghost motion)
 

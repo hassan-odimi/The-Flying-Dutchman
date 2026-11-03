@@ -1,4 +1,4 @@
-// Landing page and login, from docs/orca-checklist.md
+// Landing page and login
 const { test, expect } = require('@playwright/test');
 const { startSR, heard, readAll, count, tabTo, axe } = require('./helpers');
 
