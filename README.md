@@ -9,9 +9,9 @@
 ![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2%20AA-1f6f5c)
 ![Stack: HTML, CSS and jQuery, no framework](https://img.shields.io/badge/HTML%20%C2%B7%20CSS%20%C2%B7%20jQuery-no%20framework-555)
 
-<a href="https://the-flying-dutchman.hassan-odimi.workers.dev/"><img src="docs/readme/hero.webp" alt="The Flying Dutchman landing page: an aged-parchment ship logo in a green storm, a brass Order your Drinks sign and five tattered language flags" width="760"></a>
+<a href="https://the-flying-dutchman.h-odimi.workers.dev/"><img src="docs/readme/hero.webp" alt="The Flying Dutchman landing page: an aged-parchment ship logo in a green storm, a brass Order your Drinks sign and five tattered language flags" width="760"></a>
 
-**[Live demo](https://the-flying-dutchman.hassan-odimi.workers.dev/)** &nbsp;·&nbsp; [Case study](https://TODO-hassan-odimi.se)
+**[Live demo](https://the-flying-dutchman.h-odimi.workers.dev/)** &nbsp;·&nbsp; [Case study](https://TODO-hassan-odimi.se)
 
 </div>
 
@@ -47,7 +47,7 @@
   </tr>
   <tr>
     <td align="center"><img src="docs/readme/phone-before.png" alt="2018 customer view at phone width: one drink per row on grey cards, a red Log Out button and the flags below the order bar" width="170"></td>
-    <td align="center"><img src="docs/readme/phone-after.webp" alt="2026 customer view at phone width: two parchment drink cards per row, the credit coin, and the order total with Place Order in a bar at the bottom" width="170"></td>
+    <td align="center"><img src="docs/readme/phone-after.webp" alt="2026 customer view at phone width: two parchment drink cards per row, the credit coin, the order total with Place Order, and Log Out and Sound below" width="170"></td>
   </tr>
 </table>
 
