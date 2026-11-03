@@ -47,7 +47,7 @@ Limits found:
 | G2 | Slips | paper flapping | `paper-flap.mp3` (344370) | 0.35 | At most once every 2.5 s, and only after the first click on the page. |
 | G3 | Skull | creepy whoosh, long | `creepy-long.mp3` (840812) | 0.8 | The page has no click yet on first load. Build: if Sound is on, start the cue at the first click or key press while the skull is still on screen, offset to the skull's progress, and play nothing once it has gone. |
 | G4 | Tab switch | creepy whoosh, 2.8 s (cut for the tab switch, so it outlasts the 2.2 s wave) | `creepy-tab.mp3` (840812) | 0.5 | Plays on every switch. |
-| G5 | Page arrival and Log Out | distant foghorn | `foghorn.mp3` (140898) | 0.8 | Played on the old page at the Login or Log Out press, and the navigation waits about 700 ms. With Sound off there is no wait. |
+| G5 | Page arrival and Log Out | distant foghorn | `foghorn.mp3` (140898) | 0.8 | Played on the old page at the Login or Log Out press, and the navigation waits 2900 ms, so the whole horn (2.85 s) plays (changed 2026-11-03 from 700 ms, which cut it at a quarter). With Sound off there is no wait. |
 | G6 | Login, About, Passwords dialogs | ghostly whoosh | `ghost-whoosh.mp3` (850767) | 0.7 | Login therefore plays the whoosh when the dialog opens and the foghorn when it is submitted. |
 
 Not used: `flag-flap`, `creepy-short`, `ai-whisper`. Delete them from `docs/visual-options/audio/ghost/` at build time, and copy the picked files to `audio/`.

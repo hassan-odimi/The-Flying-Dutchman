@@ -795,7 +795,7 @@ test('G5: the bartender page arrives with the page, its cards do not take their 
   expect(await page.evaluate(() => window.fog)).toEqual(expect.arrayContaining(['breathe-out', 'condense'])); // css/bartender.css's plain root rule must not beat the fog
 });
 
-// the foghorn: a stub records each cue with its volume in sessionStorage, which outlives the page that leaves. goToUserPage and logOut play it on the old page, then wait 700 ms
+// the foghorn: a stub records each cue with its volume in sessionStorage, which outlives the page that leaves. goToUserPage and logOut play it on the old page, then wait 2900 ms (the horn lasts 2.85 s and leaving the page stops it)
 const recordVolumes = (page, on) => page.addInitScript((on) => {
   HTMLMediaElement.prototype.play = function () { sessionStorage.setItem('cues', JSON.stringify(JSON.parse(sessionStorage.getItem('cues') || '[]').concat([[this.src.split('/').pop(), this.volume]]))); return Promise.resolve(); };
   if (on) localStorage.setItem('SOUND', 'on'); else localStorage.removeItem('SOUND');
@@ -810,15 +810,15 @@ const timersOf = (page, go) => page.evaluate((src) => { // the delays of the tim
   return delays;
 }, go);
 for (const [name, go, to, from] of departs) {
-  test(`G5: ${name} with Sound on plays the foghorn at 0.8, and the page leaves after about 700 ms`, async ({ page }) => {
+  test(`G5: ${name} with Sound on plays the foghorn at 0.8, and the page leaves after the whole horn (2900 ms)`, async ({ page }) => {
     await recordVolumes(page, true);
     await page.goto('/' + from);
     await page.evaluate(() => localStorage.setItem('usertype', 'customer'));
     const t0 = Date.now();
-    expect(await timersOf(page, go)).toEqual([700]);
+    expect(await timersOf(page, go)).toEqual([2900]);
     await page.waitForURL('**/' + to, { waitUntil: 'commit' });
-    expect(Date.now() - t0).toBeGreaterThanOrEqual(650);
-    expect(Date.now() - t0).toBeLessThan(2000); // the timer above pins the 700 ms; this only catches a stuck page, and a loaded machine adds time
+    expect(Date.now() - t0).toBeGreaterThanOrEqual(2850);
+    expect(Date.now() - t0).toBeLessThan(6000); // the timer above pins the 2900 ms; this only catches a stuck page, and a loaded machine adds time
     expect(await cues(page)).toEqual([['foghorn.mp3', 0.8]]);
   });
 
@@ -831,6 +831,18 @@ for (const [name, go, to, from] of departs) {
     expect(await cues(page)).toEqual([]);
   });
 }
+
+test('G5: during the horn wait the page fades into the fog and a mist bank crosses it', async ({ page }) => {
+  await recordVolumes(page, true);
+  await page.goto('/index.html');
+  await page.evaluate(() => depart('customer.html'));
+  await page.waitForTimeout(1500);
+  const s = await page.evaluate(() => ({ departing: document.documentElement.classList.contains('departing'), body: +getComputedStyle(document.body).opacity, banks: document.querySelectorAll('.mist_bank').length }));
+  expect(s.departing).toBe(true);
+  expect(s.body).toBeLessThan(0.9); // fading, not frozen
+  expect(s.banks).toBe(1);
+  await page.waitForURL('**/customer.html');
+});
 
 test('G5: an access-denied redirect has no foghorn, even with Sound on', async ({ page }) => {
   await recordVolumes(page, true);

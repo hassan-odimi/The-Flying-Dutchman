@@ -37,13 +37,16 @@ function goToUserPage(usertype, instant) {
     if (instant) window.location.href = url; else depart(url);
 }
 
-// V12b G5: the foghorn plays here, on the old page, at the press (a gesture, so the browser allows it). The page waits 700 ms
-// so the horn is heard as the page sinks into the fog. Sound off: no wait
+// V12b G5: the foghorn plays here, on the old page, at the press (a gesture, so the browser allows it). The page waits for the
+// whole horn (2.85 s), because leaving the page stops the sound. The page fades into the fog meanwhile (css/style.css, html.departing),
+// so the wait is not a frozen screen. Sound off: no wait
 function depart(url) {
     if (!soundOn()) { window.location.href = url; return; }
     sound("foghorn", 0.8);
-    document.body.inert = true; // the old page is leaving: no press in the 700 ms acts on a cleared session, and a second press cannot restart the wait
-    setTimeout(function () { window.location.href = url; }, 700);
+    document.body.inert = true; // the old page is leaving: no press during the wait acts on a cleared session, and a second press cannot restart it
+    document.documentElement.classList.add("departing");
+    var bank = mistBank(); // fog.js: crosses the fading page, and is gone before the view transition takes its snapshot
+    setTimeout(function () { bank.remove(); window.location.href = url; }, 2900);
 }
 
 // login the user if they have valid credentials

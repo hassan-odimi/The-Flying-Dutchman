@@ -107,6 +107,8 @@
   --page-out: 700ms; /* the old page sinks into the fog (G5) */
   --page-in: 900ms; /* the new page condenses (G5) */
   --page-delay: 500ms; /* ...after waiting while the old page sinks (G5) */
+  --depart-fade: 2400ms; /* the page fades while the foghorn plays (G5) */
+  --depart-mist: 1000ms; /* ...and a bank of mist crosses it, ending as the fade does */
   --ghost-blow: 2700ms; /* the skull holds until here, then the fog takes it back and the card wisps appear (G3) */
   --ghost-wait: 3100ms; /* the cards condense (G3) */
   --ghost-stagger: 40ms; /* between cards (G3) */
@@ -1023,6 +1025,10 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
     view-transition-name: mist; /* its own layer, so it stays above the page while the page fades */
     animation: mist-pass var(--fog-pass) ease-in-out;
 }
+/* ...and the wait for the foghorn (js/login.js depart): the page fades while a bank of mist crosses it. Opacity is not motion, so it stays under reduced motion; the bank does not */
+html.departing body { opacity: 0; transition: opacity var(--depart-fade) ease-in; } /* slow at first, so the page is still half there when the mist crosses it */
+html.departing .mist_bank { animation-delay: var(--depart-mist); }
+@media (prefers-reduced-motion: reduce) { html.departing .mist_bank { display: none; } }
 /* V12b G3: the first load of a drink list. A skull of smoke condenses out of fog (js/login.js ghostIntro), holds, and is taken back as
    card-shaped wisps appear. The cards are in the DOM from the start, hidden by the delay, and condense out of the wisps */
 @keyframes ghost-in { from { opacity: 0; filter: var(--ghost-tint) blur(var(--ghost-blur)); translate: 0 6px; } 60% { opacity: 0.9; } }
