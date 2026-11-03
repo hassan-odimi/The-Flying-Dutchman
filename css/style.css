@@ -154,6 +154,7 @@
   --shadow-none: none;
   --shadow-well: inset 0 0 50px var(--list-edge), var(--shadow-raised);               /* the drink list: a dark rim inside, lifted outside */
   --felt: url("../img/textures/felt-green.webp") 0 0 / 512px;                       /* the card table baize (F11) */
+  --rail: url("../img/textures/rail.webp") 0 0 / 256px;                             /* the table's rail: aged walnut, apart from the plank floor */
   --felt-vignette: rgba(0, 0, 0, 0.45);
   --shadow-contact: rgba(0, 0, 0, 0.85);                                           /* the dark patch under a torn tab */
   --shadow-felt: inset 0 0 70px var(--felt-vignette), var(--shadow-raised);        /* the table: dark rim inside, lifted outside */

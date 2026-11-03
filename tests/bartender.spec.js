@@ -97,13 +97,21 @@ test('a card reads number, customer, time, total, state, and the total says kron
   await expect(page.locator('.group h2').first()).toHaveText('Väntar');
 });
 
-test('orders lie in piles: waiting piles of five newest first, one paid pile of ten; tabs filter (F11)', async ({ page }) => {
+test('orders lie in piles spread across the table: even piles newest first, the ten newest paid; tabs filter (F11)', async ({ page }) => {
   const n = await page.evaluate(() => ({ open: SESSIONS_TRANSACTIONS.filter((o) => !o.paid).length, paid: SESSIONS_TRANSACTIONS.filter((o) => o.paid).length }));
   const sizes = (sel) => page.locator(sel + ' .pile').evaluateAll((p) => p.map((e) => e.querySelectorAll('.pc').length));
+  const even = (s) => Math.max(...s) - Math.min(...s) <= 1 && s.every((c, i) => i === 0 || c <= s[i - 1]);
+  const oneRow = () => page.locator('.pile').evaluateAll((p) => new Set(p.map((e) => Math.round(e.getBoundingClientRect().top))).size === 1);
   const waiting = await sizes('.group.waiting');
   expect(waiting.reduce((a, b) => a + b, 0)).toBe(n.open);
-  expect(waiting.slice(0, -1).every((c) => c === 5)).toBe(true);
-  expect(await sizes('.group.paid')).toEqual([Math.min(10, n.paid)]);
+  expect(even(waiting)).toBe(true);
+  const paid = await sizes('.group.paid');
+  expect(paid.reduce((a, b) => a + b, 0)).toBe(Math.min(10, n.paid));
+  expect(even(paid)).toBe(true);
+  expect(await oneRow()).toBe(true); // a pile grows taller before a second row starts
+  await page.evaluate(() => { window.all = SESSIONS_TRANSACTIONS; SESSIONS_TRANSACTIONS = all.slice(-3); rePrintTab(); });
+  expect(await page.locator('.pile').evaluateAll((p) => p.map((e) => e.children.length))).toEqual([1, 1, 1]); // a short queue lies spread out
+  await page.evaluate(() => { SESSIONS_TRANSACTIONS = all; rePrintTab(); });
   await expect(page.locator('.group.waiting .pc').first().locator('.pc_idx b').first()).toHaveText('20'); // newest on top
   await page.click('#unpaid');
   await expect(page.locator('.group.paid')).toHaveCount(0);
@@ -111,7 +119,7 @@ test('orders lie in piles: waiting piles of five newest first, one paid pile of 
   await expect(page.locator('.group.waiting')).toHaveCount(0);
   const paidPiles = await sizes('.group.paid');
   expect(paidPiles.reduce((a, b) => a + b, 0)).toBe(n.paid);
-  expect(paidPiles.slice(0, -1).every((c) => c === 5)).toBe(true);
+  expect(even(paidPiles)).toBe(true);
   expect(await page.locator('.pc').evaluateAll((l) => l.some((e) => /SEK/.test(e.textContent)))).toBe(false); // the :- already says kronor
 });
 

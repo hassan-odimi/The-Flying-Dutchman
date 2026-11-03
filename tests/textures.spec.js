@@ -255,7 +255,7 @@ test('bartender (F11): playing-card orders on a green baize, torn tabs on the ra
   await login(page, 'bartender');
   await page.evaluate(() => document.activeViewTransition && document.activeViewTransition.finished); // V12b G5: the page fog (1.4 s) swallows the forced clicks below
   const list = page.locator('.order_list');
-  expect(await style(list, 'backgroundImage')).toMatch(/radial-gradient.*felt-green.*wood2/s); // vignette, baize, then the rail wood
+  expect(await style(list, 'backgroundImage')).toMatch(/radial-gradient.*felt-green.*rail\.webp/s); // vignette, baize, then the rail's own aged walnut, apart from the floor
   expect(await style(list, 'borderTopWidth')).toBe('14px');
   const pseudo = (loc, which, prop) => loc.evaluate((e, [w, p]) => getComputedStyle(e, w)[p], [which, prop]);
   const open = page.locator('.pc.open').first(), paid = page.locator('.pc.paid').first();

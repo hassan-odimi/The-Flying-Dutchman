@@ -116,7 +116,7 @@ h1 {
     overflow: auto;
     background: radial-gradient(ellipse at 50% 35%, transparent 40%, var(--felt-vignette)) padding-box,
                 var(--felt) padding-box,
-                var(--wood) border-box;
+                var(--rail) border-box;
     box-shadow: var(--shadow-felt);
     display: flex;
     flex-wrap: wrap;

@@ -202,11 +202,26 @@ function cardHTML (element) {
         '<span class="pc_idx pc_idx_end" aria-hidden="true"><b>' + no + '</b><i></i></span></div>';
 }
 
-// piles of `size` cards, newest first, under one heading
+// cards per pile for groups of `counts` cards: the fewest that still lay every pile in one row, so a short queue is
+// spread across the table and a long one stacks taller piles (the table scrolls down only then).
+// A pile is 244 px wide and 32 px from the next; groups are 48 px apart. Phones stack piles, so they keep five
+function pileSize(counts) {
+    if (matchMedia("(max-width: 768px)").matches) return 5;
+    var table = document.getElementById("all_orders"), s = getComputedStyle(table);
+    var wide = table.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight);
+    var row = function (n) { return counts.reduce(function (w, c) { var k = Math.ceil(c / n); return w + k * 244 + (k - 1) * 32 + 48; }, -48); };
+    var n = 1;
+    while (row(n) > wide && n < Math.max.apply(null, counts)) n++;
+    return n;
+}
+
+// piles of at most `size` cards, newest first, under one heading; split evenly, so 10 cards lie 4 + 3 + 3, not 4 + 4 + 2
 function groupHTML (kind, heading, orders, size) {
     var piles = '';
-    for (var i = 0; i < orders.length; i += size) {
-        piles += '<div class="pile">' + $.map(orders.slice(i, i + size), cardHTML).join('') + '</div>';
+    for (var i = 0, k = Math.ceil(orders.length / size); k > 0; k--) {
+        var n = Math.ceil((orders.length - i) / k);
+        piles += '<div class="pile">' + $.map(orders.slice(i, i + n), cardHTML).join('') + '</div>';
+        i += n;
     }
     return '<section class="group ' + kind + '"><h2>' + heading + '</h2><div class="piles">' + piles + '</div></section>';
 }
@@ -350,6 +365,8 @@ function animated(change) {
 }
 
 var seen = null, fresh = [], stamping = null; // ids already printed (null before the first print, so the first table is not dealt); ids dealt now; id just paid
+var pile_size = 0, pile_counts = []; // cards per pile and group sizes at the last print; a resize that changes the size lays the piles out again
+$(window).on("resize", function () { if (pile_size && pileSize(pile_counts) != pile_size) rePrintTab(); });
 
 function rePrintTab() {   // reprint the currently displayed tab: waiting piles, then the paid pile(s)
     fresh = seen ? $.map(SESSIONS_TRANSACTIONS, function(o) { return seen[o.transaction_id] ? null : o.transaction_id; }) : [];
@@ -358,8 +375,11 @@ function rePrintTab() {   // reprint the currently displayed tab: waiting piles,
     $.each(SESSIONS_TRANSACTIONS, function() { seen[this.transaction_id] = true; });
     var newest = SESSIONS_TRANSACTIONS.slice().reverse(), html = '';
     var waiting = $.grep(newest, function(o) { return !o.paid; }), paid = $.grep(newest, function(o) { return o.paid; });
-    if (current_tab != "paid" && waiting.length) html += groupHTML("waiting", pile_waiting[lang()], waiting, 5);
-    if (current_tab != "unpaid" && paid.length) html += current_tab == "paid" ? groupHTML("paid", pile_paid[lang()], paid, 5) : groupHTML("paid", pile_paid[lang()], paid.slice(0, 10), 10);
+    if (current_tab == "paid") waiting = []; else if (current_tab == "unpaid") paid = []; else paid = paid.slice(0, 10);
+    pile_counts = $.grep([waiting.length, paid.length], function (c) { return c > 0; });
+    pile_size = pileSize(pile_counts);
+    if (waiting.length) html += groupHTML("waiting", pile_waiting[lang()], waiting, pile_size);
+    if (paid.length) html += groupHTML("paid", pile_paid[lang()], paid, pile_size);
     $("#all_orders").html(html);
     stamping = null;
 }
