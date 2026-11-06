@@ -175,6 +175,10 @@ body {
     text-shadow: 0 1px 2px var(--ink);
     height: auto; /* the fixed 40px let a wrapped "Drinks!" fall off the plate at 415-767px */
     min-height: 44px;
+    align-self: center; /* the page grid stretched the plate to fill its row: 614x181 at 1920x1080 */
+}
+@media (min-width: 415px) { /* phones keep their 70 % plate */
+    #customer { box-sizing: border-box; width: min(30%, 360px); margin-inline: auto; }
 }
 
 /* About and Passwords (V4): torn slips of Paper 328 nailed to the top edge with a rusted nail
@@ -367,7 +371,7 @@ body {
 
 /*Log in window*/
 
-/* T4: while the login is open, "Order your Drinks!" hides instead of peeking out under the box */
+/* T4: while the login is open, "Order Your Drinks!" hides instead of peeking out under the box */
 #overlay:not(.hidden) ~ #customer { visibility: hidden; }
 
 .hidden {

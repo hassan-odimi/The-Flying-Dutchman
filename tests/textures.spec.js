@@ -173,7 +173,7 @@ test('About and Passwords open as opaque parchment nailed at the top, with the b
   expect(await style(link, 'textDecorationLine')).toBe('underline');
 });
 
-test('login box: wood2 planks with iron corners, Alegreya Sans fields, and "Order your Drinks!" hides while it is open', async ({ page }) => {
+test('login box: wood2 planks with iron corners, Alegreya Sans fields, and "Order Your Drinks!" hides while it is open', async ({ page }) => {
   await page.goto('/index.html');
   const order = page.locator('#customer');
   await expect(order).toBeVisible();
@@ -189,7 +189,7 @@ test('login box: wood2 planks with iron corners, Alegreya Sans fields, and "Orde
   await expect(order).toBeVisible();
 });
 
-test('landing signs: brass "Order your Drinks!" stays on its plate, staff logins are iron at 16 px', async ({ page }) => {
+test('landing signs: brass "Order Your Drinks!" stays on its plate, staff logins are iron at 16 px', async ({ page }) => {
   await page.goto('/index.html');
   const order = page.locator('#customer');
   expect(await style(order, 'backgroundImage')).toContain('tarnish');

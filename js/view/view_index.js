@@ -25,11 +25,11 @@ var welcome = ["Welcome to The Flying Dutchman!",
                "Bienvenidos al Holandés Volador!",
                "Ahoy t' Th' Flyin' Dutchman!"];
 
-var customer = ["Order your Drinks!",
+var customer = ["Order Your Drinks!",
                 "Logga in som gäst",
                 "Accesso avventore",
                 "Acceso cliente",
-                "Order yer Drinks"];
+                "Order Yer Drinks"];
 
 var bartender = ["Bartender login",
                  "Logga in som bartender",
