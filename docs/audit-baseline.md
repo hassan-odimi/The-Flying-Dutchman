@@ -1,3 +1,5 @@
+> Paths under `docs/visual-*` and `docs/mobile-*` are on the `archive/design-evidence` branch.
+
 # Audit Baseline (before polish)
 
 Date: 2026-10-28. Branch `polish`, no code changes yet. Target: WCAG 2.2 AA.

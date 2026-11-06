@@ -1,3 +1,5 @@
+> Paths under `docs/visual-*` and `docs/mobile-*` are on the `archive/design-evidence` branch.
+
 # Assets: sources and licences
 
 Every image, font and library the app uses, with what is known about where it came from. Recorded 2026-10-29 during the visual polish (V10). The 2018 team recorded no sources, and the image files carry no metadata that names one, so "unknown" below means exactly that. Nothing here has been replaced; new assets must be free or Creative Commons, with source and licence added to this file (PRODUCT.md).
