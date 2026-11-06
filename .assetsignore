@@ -1,0 +1,9 @@
+docs/
+tests/
+tools/
+*.md
+.gitignore
+package.json
+package-lock.json
+playwright.config.js
+wrangler.jsonc
