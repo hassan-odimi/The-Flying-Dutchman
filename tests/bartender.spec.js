@@ -171,6 +171,16 @@ test('the top card of a pile opens from anywhere on its face', async ({ page }) 
   await expect(pile.locator('.pc').first().locator('.accordion')).toHaveAttribute('aria-expanded', 'false');
 });
 
+test('marking an order paid from Unpaid Orders stays on that tab', async ({ page }) => {
+  await page.click('#unpaid');
+  await page.locator('.accordion#T00020').click();
+  await page.locator('.pay#T00020').click();
+  await expect(page.locator('#unpaid')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('#all')).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('.accordion#T00020')).toHaveCount(0);
+  await expect(page.locator('.group.paid')).toHaveCount(0);
+});
+
 test('marking an order paid moves it to the paid pile and cancelling closes the pile up (F11)', async ({ page }) => {
   const count = () => page.locator('.group.waiting .pc').count();
   const n = await count();

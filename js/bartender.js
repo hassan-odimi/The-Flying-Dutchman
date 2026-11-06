@@ -133,8 +133,6 @@ $(document).ready(function() {
         sessionStorage.setItem("SESSION_TRANSACTIONS",JSON.stringify(SESSIONS_TRANSACTIONS));
 
         /* Update DOM */
-        current_tab = "all";
-        highlightTab("*#all");
         stamping = find_transaction_id;
         animated(rePrintTab);
         sound("coin");

@@ -29,7 +29,7 @@ test('passwords panel opens and closes from the keyboard', async ({ page }) => {
 });
 
 test('login fields are labelled and a wrong password is read once', async ({ page }) => {
-  await tabTo(page, /Order your Drinks/);
+  await tabTo(page, /Order Your Drinks/);
   await page.keyboard.press('Enter');
   expect(await page.evaluate(() => sr.lastSpokenPhrase())).toMatch(/^textbox, User name/); // focus moves into the dialog
   await page.keyboard.type('test');
@@ -59,7 +59,16 @@ test('axe: no WCAG 2.2 AA violations', async ({ page }) => {
   await axe(page);
 });
 
-test('closed toast does not block clicks on Order your Drinks', async ({ page }) => {
+test('Order Your Drinks stays a 360 px plate on a big screen, centred, not stretched by the page grid', async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.goto('/index.html');
+  const b = await page.locator('#customer').boundingBox();
+  expect(b.width).toBe(360);
+  expect(b.height).toBeLessThan(90);
+  expect(b.x + b.width / 2).toBe(960);
+});
+
+test('closed toast does not block clicks on Order Your Drinks', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 }); // common laptop height, where the toast area overlaps the button
   await page.click('#customer', { timeout: 3000 });
   await expect(page.locator('#loginBox')).toBeVisible();

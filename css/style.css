@@ -728,7 +728,7 @@ footer .languages_menu a:nth-child(5) .languages { translate: 0 -4px; rotate: at
 .main_section > .checkout::before { top: 0; }
 
 /* Landing signs (T5): riveted iron plates on the storm, white 7.36:1 or better on the worst pixel.
-   index.css turns "Order your Drinks!" into brass */
+   index.css turns "Order Your Drinks!" into brass */
 .flipper {
     background:
         url("../img/textures/rivet.webp") left 3px top 3px / 12px 12px no-repeat,

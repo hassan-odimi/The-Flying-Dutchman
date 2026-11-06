@@ -1281,7 +1281,7 @@ test('B9: the login dialog and the About window read as before with the motion o
   expect((await readAll(page)).some((p) => /User name/.test(p))).toBe(false); // closed, so not read
   await page.evaluate(() => sr.stop());
   await startSR(page);
-  await tabTo(page, /Order your Drinks/);
+  await tabTo(page, /Order Your Drinks/);
   await page.keyboard.press('Enter');
   expect(await page.evaluate(() => sr.lastSpokenPhrase())).toMatch(/^textbox, User name/); // focus moves into the dialog at once
   await page.keyboard.press('Escape');
