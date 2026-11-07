@@ -11,7 +11,7 @@
 
 <a href="https://the-flying-dutchman.h-odimi.workers.dev/"><img src="docs/readme/hero.webp" alt="The Flying Dutchman landing page: an aged-parchment ship logo in a green storm, a brass Order Your Drinks sign and five tattered language flags" width="760"></a>
 
-**[Live demo](https://the-flying-dutchman.h-odimi.workers.dev/)**
+**[Live demo](https://dutchman.hassan-odimi.se/)**
 
 </div>
 
